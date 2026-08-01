@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "./fonts.css";
 
+:root {
+  /* SVG feTurbulence noise overlay, used by <Grain>. A raw value, not a
+     theme scale, so it lives outside @theme (no utility class needed). */
+  --grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+}
+
 @theme {
   /* ── Palette — from the brand's ABColorType token map ─────────────── */
   --color-bone: #f1ece0; /* off-white — paper / highlights */
@@ -62,5 +68,71 @@
     background: var(--color-pitch);
     color: var(--color-bone);
     font-family: var(--font-mono);
+  }
+}
+
+@layer components {
+  /*
+   * Gold-foil shimmer — GoldText, GoldBar, and any `shiny` brand mark.
+   * The animated gradient itself lives once as an SVG <linearGradient
+   * id="togGoldFoil"> in the root layout; <Rune gold> etc. reference it
+   * via fill/stroke="url(#togGoldFoil)". These CSS-only variants (a flat
+   * gradient sweeping via background-position) are for HTML elements,
+   * where an SVG gradient can't be referenced directly.
+   */
+  .tog-gold-foil {
+    background-image: linear-gradient(
+      118deg,
+      #6e4815 0%,
+      #a87a26 14%,
+      #d9b25a 28%,
+      #f5dc7e 42%,
+      #fff4c0 50%,
+      #f5dc7e 58%,
+      #d9b25a 72%,
+      #a87a26 86%,
+      #6e4815 100%
+    );
+    background-size: 220% 100%;
+    background-position: 0% 50%;
+    animation: tog-shine 8s linear infinite;
+  }
+
+  .tog-gold-text {
+    background-image: linear-gradient(
+      118deg,
+      #6e4815 0%,
+      #a87a26 14%,
+      #d9b25a 28%,
+      #f5dc7e 42%,
+      #fff4c0 50%,
+      #f5dc7e 58%,
+      #d9b25a 72%,
+      #a87a26 86%,
+      #6e4815 100%
+    );
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: tog-shine 9s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tog-gold-foil,
+    .tog-gold-text {
+      animation: none;
+      background-position: 30% 50%;
+    }
+  }
+}
+
+@keyframes tog-shine {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
   }
 }
