@@ -1,40 +1,43 @@
-import { getTranslations } from "next-intl/server";
-import { Wordmark } from "@/components/brand/Wordmark";
-import { getNextShow } from "@/lib/content/shows";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Footer } from "@/components/layout/Footer";
+import { BandBlurb } from "@/components/sections/BandBlurb";
+import { Hero } from "@/components/sections/Hero";
+import { Marquee } from "@/components/sections/Marquee";
+import { MemberGrid } from "@/components/sections/MemberGrid";
+import { NextShowCard } from "@/components/sections/NextShowCard";
+import { currentRelease } from "@/content/releases";
+import { slogans } from "@/content/slogans";
 
-/**
- * Stage 1 smoke-test stub only — exercises the layout, i18n, fonts, theme
- * tokens, and the markdown content layer end to end. Replaced by the real
- * landing page (Hero, Marquee, BandBlurb, MemberGrid, NextShowCard) in
- * Stage 4.
- */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("Landing");
+  return {
+    title: "Tears of God",
+    description: t("bandBody"),
+  };
+}
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations("Shows");
-  const nextShow = await getNextShow();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-      <Wordmark color="var(--color-gold)" width={280} />
-      <p className="text-steel-text font-mono text-xs tracking-widest uppercase">
-        Stage 1 foundation smoke test — replaced by the real landing page in Stage 4
-      </p>
-      {nextShow ? (
-        <div className="border-gold text-bone font-mono border p-4 text-sm">
-          <p className="text-gold tracking-wide uppercase">{t("nextShow")}</p>
-          <p>
-            {new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "short" }).format(
-              new Date(nextShow.date),
-            )}
-          </p>
-          <p>
-            {nextShow.venue} · {nextShow.city}
-          </p>
-          <p className="uppercase">{t(`status.${nextShow.status}`)}</p>
+    <>
+      <Hero release={currentRelease} />
+      <Marquee items={slogans.marquee} />
+      <div className="grid gap-8 px-6 py-10 md:grid-cols-[1.3fr_1fr] md:gap-10 md:px-10 md:py-14">
+        <div>
+          <BandBlurb />
+          <MemberGrid />
         </div>
-      ) : (
-        <p>No upcoming shows.</p>
-      )}
-    </div>
+        <NextShowCard locale={locale} />
+      </div>
+      <Footer variant="landing" />
+    </>
   );
 }

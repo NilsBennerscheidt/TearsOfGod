@@ -1,6 +1,8 @@
 interface WordmarkProps {
-  /** Any valid CSS color, or "currentColor" (the default) to inherit from a parent. */
+  /** Any valid CSS color, or "currentColor" (the default) to inherit from a parent. Ignored when shiny is true. */
   color?: string;
+  /** Fills with the animated gold-foil gradient instead of a flat color, matching MaskEmblem/LogoMonogram's shiny prop. */
+  shiny?: boolean;
   width?: number;
   className?: string;
   /** Accessible name. The wordmark reads "Tears of God" even though the glyphs below are a text placeholder, not the real logotype. */
@@ -18,6 +20,7 @@ interface WordmarkProps {
  */
 export function Wordmark({
   color = "currentColor",
+  shiny = false,
   width = 240,
   className,
   title = "Tears of God",
@@ -36,7 +39,7 @@ export function Wordmark({
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
-        fill={color}
+        fill={shiny ? "url(#togGoldFoil)" : color}
         fontFamily="'Archivo Black', sans-serif"
         fontSize="110"
         letterSpacing="-0.02em"

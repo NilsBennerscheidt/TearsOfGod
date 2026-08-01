@@ -2,7 +2,9 @@
   "Nav": {
     "home": "Start",
     "tour": "Tour",
-    "skipToContent": "Zum Inhalt springen"
+    "skipToContent": "Zum Inhalt springen",
+    "menu": "Menü",
+    "close": "Schließen"
   },
   "Shows": {
     "status": {
@@ -24,5 +26,25 @@
   },
   "Footer": {
     "copyright": "© {year} · Tears of God GbR"
+  },
+  "Landing": {
+    "releaseEyebrow": "NEUE EP · JETZT ERHÄLTLICH",
+    "listen": "HÖREN",
+    "watch": "ANSEHEN",
+    "comingSoon": "Demnächst",
+    "bandEyebrow": "01 · DIE BAND",
+    "bandHeadline": "Fünf aus dem Ruhrpott.",
+    "bandBody": "Unter der Woche im Gym. Freitags am Kiosk. Samstags im Keller. Wir spielen Hardcore, weil wir müssen. Wir spielen laut, weil die Wände uns verzeihen.",
+    "nextShowEyebrow": "02 · NÄCHSTE SHOW",
+    "noUpcomingShows": "Aktuell keine Termine angekündigt."
+  },
+  "Band": {
+    "jonasRole": "Gesang · Booking"
+  },
+  "Tour": {
+    "eyebrow": "TERMINE · 2026",
+    "title": "Shows",
+    "dateCount": "{count, plural, one {# TERMIN} other {# TERMINE}}",
+    "noUpcomingShows": "Aktuell keine Termine angekündigt."
   }
 }

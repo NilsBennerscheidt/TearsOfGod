@@ -31,6 +31,8 @@ export const showFrontmatterSchema = z.object({
   date: isoDateTime, // ISO 8601 with offset, e.g. "2026-06-19T20:00:00+02:00"
   city: z.string().min(1),
   venue: z.string().min(1),
+  /** Optional bill/event title, for bookings that are themed multi-band nights rather than just "the band plays this venue" (e.g. "THIS IS HALLOWEEN 12.0"). Proper noun — not translated, same reasoning as city/venue above. */
+  name: z.string().min(1).optional(),
   status: showStatusSchema,
   ticketUrl: z.string().url().optional(),
   price: showPriceSchema.optional(),

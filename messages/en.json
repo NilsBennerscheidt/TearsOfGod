@@ -2,7 +2,9 @@
   "Nav": {
     "home": "Home",
     "tour": "Tour",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "menu": "Menu",
+    "close": "Close"
   },
   "Shows": {
     "status": {
@@ -24,5 +26,25 @@
   },
   "Footer": {
     "copyright": "© {year} · Tears of God GbR"
+  },
+  "Landing": {
+    "releaseEyebrow": "NEW EP · OUT NOW",
+    "listen": "LISTEN",
+    "watch": "WATCH",
+    "comingSoon": "Coming soon",
+    "bandEyebrow": "01 · THE BAND",
+    "bandHeadline": "Five from the Ruhrpott.",
+    "bandBody": "Gym on weekdays. Kiosk on Fridays. Basement on Saturdays. We play hardcore because we have to. We play loud because the walls forgive us.",
+    "nextShowEyebrow": "02 · NEXT SHOW",
+    "noUpcomingShows": "No shows announced right now."
+  },
+  "Band": {
+    "jonasRole": "Vocals · Booking"
+  },
+  "Tour": {
+    "eyebrow": "DATES · 2026",
+    "title": "Shows",
+    "dateCount": "{count, plural, one {# DATE} other {# DATES}}",
+    "noUpcomingShows": "No shows announced right now."
   }
 }

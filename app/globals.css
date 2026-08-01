@@ -52,6 +52,38 @@
    * fixed value for anything that scales with viewport width.
    */
   --spacing-gutter: 1.75rem;
+
+  /* ── Fluid type scale ─────────────────────────────────────────────
+   * The web artboards were drawn at 820px wide with hardcoded px type
+   * sizes — comp values, not layout values. These clamp() from the
+   * plan's remapping table; a 12px meta / 15px body floor throughout,
+   * since the mockup's 8-11px sizes are illegible at 1:1 on a real
+   * screen, especially under the wide letter-spacing used everywhere.
+   */
+  --text-meta: 0.75rem; /* 12px floor — eyebrows, captions, meta strips */
+  --text-body: 0.9375rem; /* 15px floor — paragraph copy */
+  --text-venue: clamp(1.125rem, 2vw, 1.5rem);
+  --text-hero: clamp(1.75rem, 4vw, 3rem); /* hero EP title */
+  --text-section-h2: clamp(2rem, 5vw, 3.75rem); /* landing section headline */
+  --text-next-show-date: clamp(2.5rem, 6vw, 4rem);
+  --text-tour-h1: clamp(3.5rem, 11vw, 9rem); /* tour page display title */
+
+  /* ── Marquee ──────────────────────────────────────────────────────
+   * Not present as real motion in the mockup (the ticker text just
+   * overflowed a clipped container). A working seamless loop needs the
+   * track duplicated in markup (see Marquee.tsx) and reduced-motion
+   * handled via Tailwind's motion-reduce: variant at the call site.
+   */
+  --animate-marquee: tog-marquee 22s linear infinite;
+}
+
+@keyframes tog-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @layer base {
@@ -61,6 +93,11 @@
 
   html {
     color-scheme: dark;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
   }
 
   body {
@@ -125,6 +162,46 @@
       animation: none;
       background-position: 30% 50%;
     }
+  }
+
+  /*
+   * Minimal targeted styling for the rendered markdown body of the legal
+   * pages (Impressum / Datenschutz) — just the handful of elements those
+   * two documents actually use. Not a general prose system; no typography
+   * plugin in the dependency list, and nothing else on the site injects
+   * raw markdown HTML like this.
+   */
+  .legal-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-gold);
+    text-transform: uppercase;
+  }
+  .legal-content h2:first-child {
+    margin-top: 0;
+  }
+  .legal-content p {
+    margin-bottom: 1rem;
+    font-size: var(--text-body);
+    line-height: 1.7;
+    color: var(--color-bone);
+  }
+  .legal-content a {
+    color: var(--color-gold);
+    text-underline-offset: 2px;
+  }
+  .legal-content strong {
+    color: var(--color-gold-hi);
+  }
+  .legal-content hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid var(--color-ash);
+  }
+  .legal-content em {
+    color: var(--color-steel-text);
   }
 }
 
