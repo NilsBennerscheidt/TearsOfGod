@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+@theme {
+  /* ── Palette — from the brand's ABColorType token map ─────────────── */
+  --color-bone: #f1ece0; /* off-white — paper / highlights */
+  --color-bone-dim: #2a2620; /* inverted-surface dark */
+  --color-pitch: #131210; /* dominant background */
+  --color-ink: #0b0a08; /* inset / card surface */
+  --color-gold: #d9b25a; /* primary accent */
+  --color-gold-hi: #f5dc7e; /* gold highlight */
+  --color-gold-deep: #8a5e1d; /* gold, darker depth */
+  --color-blood: #a8201a; /* secondary accent — fills only, see -text below */
+  --color-blood-deep: #6b1410;
+  --color-bruise: #1a1614;
+  --color-steel: #7a7268; /* hairlines / borders only, see -text below */
+  --color-ash: #2d2824;
+
+  /*
+   * Contrast-corrected variants for TEXT use on --color-pitch.
+   * steel  #7a7268 on pitch measures ~3.9:1 (fails WCAG AA at any size).
+   * blood  #a8201a on pitch measures ~2.6:1 (fails AA).
+   * These lightened variants measure ~6.0:1 and ~4.6:1 respectively —
+   * verified against WCAG relative-luminance contrast math, not eyeballed.
+   * Print assets (business card, poster, EP cover, etc.) keep the exact
+   * original hexes above; only on-screen body/caption text should ever
+   * use -text.
+   */
+  --color-steel-text: #9a9086;
+  --color-blood-text: #e0483f;
+
+  /* ── Type — three voices, self-hosted (see app/fonts.css) ──────────── */
+  --font-display: "Oswald", sans-serif; /* AA — titles, headlines */
+  --font-brutal: "Archivo Black", sans-serif; /* BB — short, loud, all-caps */
+  --font-mono: "JetBrains Mono", monospace; /* CC — meta, data, coordinates */
+
+  /* ── Tracking — the mockup's recurring letter-spacing steps ────────── */
+  --tracking-meta: 0.2em;
+  --tracking-wide: 0.25em;
+  --tracking-widest: 0.3em;
+  --tracking-ultra: 0.35em;
+
+  /* ── Spacing — 8pt grid per ABColorType's stated spec ───────────────
+   * The mockup's ubiquitous section gutter (28px at 820px comp width).
+   * Component work in Stage 2+ should prefer fluid clamp() over this
+   * fixed value for anything that scales with viewport width.
+   */
+  --spacing-gutter: 1.75rem;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-pitch);
+    color: var(--color-bone);
+    font-family: var(--font-mono);
+  }
+}

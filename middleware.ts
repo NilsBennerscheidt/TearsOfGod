@@ -1,0 +1,10 @@
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+
+export default createMiddleware(routing);
+
+export const config = {
+  // Skip API routes, Next internals, Vercel internals, and any request for
+  // a file with an extension (assets, favicon, etc.).
+  matcher: ["/((?!api|trpc|_next|_vercel|.*\\..*).*)"],
+};

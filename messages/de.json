@@ -1,0 +1,28 @@
+{
+  "Nav": {
+    "home": "Start",
+    "tour": "Tour",
+    "skipToContent": "Zum Inhalt springen"
+  },
+  "Shows": {
+    "status": {
+      "available": "Verfügbar",
+      "few-left": "Wenige übrig",
+      "sold-out": "Ausverkauft"
+    },
+    "tickets": "Tickets",
+    "doors": "Einlass",
+    "nextShow": "Nächste Show",
+    "date": "Datum",
+    "day": "Tag",
+    "city": "Stadt",
+    "venue": "Venue"
+  },
+  "Legal": {
+    "impressum": "Impressum",
+    "datenschutz": "Datenschutzerklärung"
+  },
+  "Footer": {
+    "copyright": "© {year} · Tears of God GbR"
+  }
+}
