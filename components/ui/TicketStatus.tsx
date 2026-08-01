@@ -23,8 +23,16 @@ export function TicketStatus({ status, label, href }: TicketStatusProps) {
     return <span className={badgeClasses}>{label}</span>;
   }
 
+  // The interactive variant gets a 44px minimum height (Apple HIG; well
+  // clear of WCAG 2.2 SC 2.5.8's 24px floor) — this is the primary action
+  // on the tour page, so it has to be comfortably tappable.
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={cn(badgeClasses, "hover:opacity-90")}>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(badgeClasses, "inline-flex min-h-11 items-center px-3 hover:opacity-90")}
+    >
       {label} →
     </a>
   );

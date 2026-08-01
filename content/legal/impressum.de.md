@@ -12,7 +12,7 @@ Bochumer Str. 7
 
 ## Kontakt
 
-E-Mail: [jonas@tearsofgod.band](mailto:jonas@tearsofgod.band)
+E-Mail: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
 

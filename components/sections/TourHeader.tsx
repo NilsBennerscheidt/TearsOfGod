@@ -27,7 +27,7 @@ export async function TourHeader({ shows, locale }: TourHeaderProps) {
   const last = shows[shows.length - 1];
 
   return (
-    <div className="border-b border-gold px-6 py-8 md:px-10 md:py-10">
+    <div className="gutter-x border-b border-gold py-8 md:py-10">
       <p className="text-meta text-blood-text font-mono tracking-widest uppercase">{t("eyebrow")}</p>
       <h1 className="text-tour-h1 font-display mt-1 leading-none text-gold uppercase">{t("title")}</h1>
       {shows.length > 0 && first && last && (

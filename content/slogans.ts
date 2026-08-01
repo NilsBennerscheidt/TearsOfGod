@@ -7,6 +7,6 @@
  * the same way a band name or album title wouldn't be translated.
  */
 export const slogans = {
-  marquee: ["NO FALSE IDOLS", "WIR FÜNF", "SWEAT THROUGH YOUR FLOOR"],
-  tourCreed: "ALL AGES · NO NAZIS · NO EXCUSES",
+  marquee: ["NO FALSE IDOLS", "WIR FÜNF", "SWEAT THROUGH YOUR FLOOR", "I AM GOD"],
+  tourCreed: "ALL AGES · ALL PEOPLE · NO EXCUSES",
 } as const;

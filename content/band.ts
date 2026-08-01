@@ -15,22 +15,30 @@ export const band = {
     legalName: "Tears of God GbR",
     streetAddress: "Bochumer Str. 7",
   },
-  contactEmail: "jonas@tearsofgod.band",
+  contactEmail: "booking@tearsofgod.net",
 } as const;
 
+/**
+ * Instrument roles are a closed set of stable keys, not display strings —
+ * they resolve through `Band.roles.*` in the message catalogues because
+ * they genuinely translate (Drums → Schlagzeug). Adding a member with a
+ * role not listed here is a compile error rather than a missing
+ * translation discovered in production.
+ */
+export type MemberRole = "vocals" | "leadGuitar" | "rhythmGuitar" | "bass" | "drums";
+
 export interface Member {
-  /** Full name — only documented for Jonas (business card / letterhead). Others are first-name-only in every source artboard; inventing surnames or instruments for them isn't this codebase's call to make. */
+  /** Given name. */
   name: string;
-  /** Uppercase display form, as used throughout the brand system. */
+  /** Stage/display form, rendered uppercase by the UI. */
   displayName: string;
-  /** Message key under the Band.* namespace for this member's role — only set where the role is real, documented data. Only Jonas's is (business card: "VOCALS · BOOKING"). */
-  roleKey?: "jonasRole";
+  role: MemberRole;
 }
 
 export const members: Member[] = [
-  { name: "Jonas Krämer", displayName: "JONAS", roleKey: "jonasRole" },
-  { name: "Max", displayName: "MAX" },
-  { name: "Lena", displayName: "LENA" },
-  { name: "Tim", displayName: "TIM" },
-  { name: "Paul", displayName: "PAUL" },
+  { name: "Mirko", displayName: "Murk", role: "vocals" },
+  { name: "Danijal", displayName: "DANJI", role: "leadGuitar" },
+  { name: "Nils", displayName: "NILS", role: "bass" },
+  { name: "Lars", displayName: "LARS", role: "drums" },
+  { name: "Gerrit", displayName: "GARY", role: "rhythmGuitar" },
 ];

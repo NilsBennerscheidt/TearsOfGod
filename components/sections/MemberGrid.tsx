@@ -6,17 +6,18 @@ export async function MemberGrid() {
   const t = await getTranslations("Band");
 
   return (
-    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+    <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
       {members.map((member) => (
-        <div key={member.displayName}>
+        <li key={member.displayName}>
           <div className="border border-gold-deep">
-            <PhotoPlaceholder label={member.displayName} aspect="3 / 4" />
+            {/* Uppercased here rather than in the data, so the source keeps each member's name as they actually write it. */}
+            <PhotoPlaceholder label={member.displayName.toUpperCase()} aspect="3 / 4" />
           </div>
-          {member.roleKey && (
-            <p className="text-meta mt-1 text-center font-mono text-gold-deep uppercase">{t(member.roleKey)}</p>
-          )}
-        </div>
+          <p className="text-meta mt-1 text-center font-mono text-gold-deep uppercase">
+            {t(`roles.${member.role}`)}
+          </p>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

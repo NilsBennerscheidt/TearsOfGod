@@ -30,7 +30,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <>
       <Hero release={currentRelease} />
       <Marquee items={slogans.marquee} />
-      <div className="grid gap-8 px-6 py-10 md:grid-cols-[1.3fr_1fr] md:gap-10 md:px-10 md:py-14">
+      <div className="gutter-x grid gap-8 py-10 md:grid-cols-[1.3fr_1fr] md:gap-10 md:py-14">
         <div>
           <BandBlurb />
           <MemberGrid />

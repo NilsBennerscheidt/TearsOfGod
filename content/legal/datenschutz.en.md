@@ -10,7 +10,7 @@ Tears of God GbR
 Bochumer Str. 7
 44575 Castrop-Rauxel
 Germany
-Email: [jonas@tearsofgod.band](mailto:jonas@tearsofgod.band)
+Email: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## 2. Hosting
 

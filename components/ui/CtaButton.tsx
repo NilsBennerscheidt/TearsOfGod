@@ -12,7 +12,9 @@ interface CtaButtonProps {
 
 /** A real <a>, never a styled <div> — see the mockup's original buttons, which weren't focusable or activatable by keyboard. */
 export function CtaButton({ href, variant = "solid", disabledLabel, className, children }: CtaButtonProps) {
-  const base = "font-display inline-flex items-center gap-2 px-4 py-2.5 text-xs tracking-wide uppercase";
+  // min-h-11 (44px) — these are the hero's primary actions and the most
+  // likely thing tapped on a phone.
+  const base = "font-display inline-flex min-h-11 items-center gap-2 px-4 py-2.5 text-xs tracking-wide uppercase";
   const styles =
     variant === "solid"
       ? "bg-gold text-pitch hover:bg-gold-hi"

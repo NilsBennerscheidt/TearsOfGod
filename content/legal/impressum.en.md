@@ -13,7 +13,7 @@ Germany
 
 ## Contact
 
-Email: [jonas@tearsofgod.band](mailto:jonas@tearsofgod.band)
+Email: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## Responsible for content pursuant to § 18 para. 2 MStV
 

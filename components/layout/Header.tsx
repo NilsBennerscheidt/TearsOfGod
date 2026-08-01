@@ -10,7 +10,7 @@ import { SiteNav } from "./SiteNav";
  */
 export function Header({ locale }: { locale: AppLocale }) {
   return (
-    <header className="flex items-center justify-between gap-4 border-b border-gold px-6 py-4 md:px-8">
+    <header className="gutter-x flex items-center justify-between gap-4 border-b border-gold py-4">
       {/* No aria-label here — the link's accessible name is inherited from Wordmark's own role="img" aria-label, which is correct and sufficient. */}
       <Link href="/">
         <Wordmark color="var(--color-gold)" width={110} />

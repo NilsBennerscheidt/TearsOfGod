@@ -9,7 +9,7 @@ Verantwortlich für die Datenverarbeitung auf dieser Website ist:
 Tears of God GbR
 Bochumer Str. 7
 44575 Castrop-Rauxel
-E-Mail: [jonas@tearsofgod.band](mailto:jonas@tearsofgod.band)
+E-Mail: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## 2. Hosting
 

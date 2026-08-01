@@ -25,7 +25,8 @@
     "datenschutz": "Datenschutzerklärung"
   },
   "Footer": {
-    "copyright": "© {year} · Tears of God GbR"
+    "copyright": "© {year} · Tears of God GbR",
+    "social": "Soziale Netzwerke"
   },
   "Landing": {
     "releaseEyebrow": "NEUE EP · JETZT ERHÄLTLICH",
@@ -39,7 +40,13 @@
     "noUpcomingShows": "Aktuell keine Termine angekündigt."
   },
   "Band": {
-    "jonasRole": "Gesang · Booking"
+    "roles": {
+      "vocals": "Gesang",
+      "leadGuitar": "Leadgitarre",
+      "rhythmGuitar": "Rhythmusgitarre",
+      "bass": "Bass",
+      "drums": "Schlagzeug"
+    }
   },
   "Tour": {
     "eyebrow": "TERMINE · 2026",
