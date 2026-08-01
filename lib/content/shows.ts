@@ -1,12 +1,11 @@
 import path from "node:path";
+import { cache } from "react";
 import { showFrontmatterSchema } from "@/lib/schemas/show";
 import type { Show } from "@/types/content";
 import { formatZodError } from "@/lib/content/format-zod-error";
 import { listMarkdownIds, readMarkdownFile, renderMarkdown } from "./markdown";
 
 const SHOWS_DIR = path.join(process.cwd(), "content", "shows");
-
-let cache: Promise<Show[]> | null = null;
 
 async function loadShows(): Promise<Show[]> {
   const ids = await listMarkdownIds(SHOWS_DIR);
