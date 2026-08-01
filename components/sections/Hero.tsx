@@ -19,7 +19,10 @@ export async function Hero({ release }: HeroProps) {
   const t = await getTranslations("Landing");
 
   return (
-    <div className="relative flex h-[80vh] min-h-130 flex-col justify-end overflow-hidden">
+    // dvh, not vh: `vh` resolves against the viewport with mobile browser
+    // chrome hidden, so with the URL bar showing the hero overflows the
+    // screen and pushes the CTAs below the fold until chrome retracts.
+    <div className="relative flex h-[80dvh] min-h-130 flex-col justify-end overflow-hidden">
       <PhotoPlaceholder label="LIVE · MOTION BLUR · B&W" style={{ position: "absolute", inset: 0 }} />
       <div
         aria-hidden="true"
@@ -29,7 +32,8 @@ export async function Hero({ release }: HeroProps) {
       <Halftone size={3} color="var(--color-gold)" opacity={0.06} />
 
       <h1 className="absolute inset-x-0 top-[16%] flex justify-center">
-        <Wordmark color="var(--color-gold)" width={620} className="h-auto w-[76vw] max-w-225" />
+        {/* No `width` prop: an inline width would override the responsive class. */}
+        <Wordmark color="var(--color-gold)" className="w-[76vw] max-w-225" />
       </h1>
 
       <div className="relative flex flex-col items-start justify-between gap-8 p-6 md:flex-row md:items-end md:p-10">

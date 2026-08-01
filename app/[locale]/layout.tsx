@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -15,6 +15,18 @@ export function generateStaticParams() {
 
 export const metadata: Metadata = {
   title: "Tears of God",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Let the dark design run edge-to-edge on notched devices; the
+  // `gutter-x` / `safe-b` utilities keep content clear of the notch,
+  // rounded corners, and home indicator.
+  viewportFit: "cover",
+  // Without this, mobile browser chrome stays default light and frames
+  // an otherwise fully dark site.
+  themeColor: "#131210",
 };
 
 export default async function LocaleLayout({

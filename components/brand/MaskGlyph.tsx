@@ -1,3 +1,5 @@
+import { cn } from "@/lib/cn";
+
 interface MaskGlyphProps {
   color?: string;
   shiny?: boolean;
@@ -5,23 +7,36 @@ interface MaskGlyphProps {
 }
 
 /**
- * PLACEHOLDER — same situation as Wordmark: the source mockup's horned
- * mask sigil only ever existed as a raster PNG (mask.png), used there as
- * a CSS mask-image so it could be tinted per instance. No vector original
- * exists. This is a minimal abstract stand-in (a ring with two horn
- * strokes) rather than an attempt to fake the real illustration — swap
- * the <circle>/<path> below for the real traced artwork and every
- * consumer (MaskEmblem, LogoMonogram, TearHalo) updates automatically,
- * since they all render this one shape rather than each carrying their
- * own copy.
+ * The horned mask sigil, applied as a CSS mask so it tints to any brand
+ * color — consumed by MaskEmblem, LogoMonogram, and TearHalo, so the
+ * artwork lives in exactly one place.
+ *
+ * KNOWN GAP: this is the only brand mark still sourced from raster. The
+ * supplied wordmark is true vector, but the standalone mask exists only
+ * as a PNG, and it cannot be lifted out of the wordmark SVG — there, the
+ * mask and the central letterform stem are a single merged path
+ * (verified by per-path bounding boxes), so no clean subset of paths
+ * isolates it. public/brand/mask.png is that PNG cropped to its ink
+ * bounds and squared, which is fine at emblem/favicon sizes but will
+ * soften if ever rendered very large. Swap in a vector here when one
+ * exists; nothing outside this file changes.
  */
 export function MaskGlyph({ color = "currentColor", shiny = false, className }: MaskGlyphProps) {
-  const stroke = shiny ? "url(#togGoldFoil)" : color;
   return (
-    <svg viewBox="0 0 100 100" className={className} style={{ width: "100%", height: "100%" }}>
-      <circle cx="50" cy="58" r="26" fill="none" stroke={stroke} strokeWidth="4" />
-      <path d="M38,36 C30,24 26,14 22,8" fill="none" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-      <path d="M62,36 C70,24 74,14 78,8" fill="none" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
-    </svg>
+    <div
+      aria-hidden="true"
+      className={cn("h-full w-full", shiny && "tog-gold-foil", className)}
+      style={{
+        WebkitMaskImage: "url(/brand/mask.png)",
+        maskImage: "url(/brand/mask.png)",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        background: shiny ? undefined : color,
+      }}
+    />
   );
 }

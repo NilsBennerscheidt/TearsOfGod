@@ -110,6 +110,27 @@
 
 @layer components {
   /*
+   * Safe-area–aware gutters. Paired with `viewportFit: "cover"`, these
+   * keep content clear of notches, rounded corners, and the home
+   * indicator while still letting backgrounds run edge to edge. max()
+   * means the normal gutter always wins on devices with no insets, so
+   * these are drop-in replacements for the px-6 / md:px-10 pattern.
+   */
+  .gutter-x {
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
+  }
+  @media (width >= 48rem) {
+    .gutter-x {
+      padding-left: max(2.5rem, env(safe-area-inset-left));
+      padding-right: max(2.5rem, env(safe-area-inset-right));
+    }
+  }
+  .safe-b {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  /*
    * Gold-foil shimmer — GoldText, GoldBar, and any `shiny` brand mark.
    * The animated gradient itself lives once as an SVG <linearGradient
    * id="togGoldFoil"> in the root layout; <Rune gold> etc. reference it

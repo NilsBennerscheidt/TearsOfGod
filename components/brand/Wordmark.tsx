@@ -1,54 +1,61 @@
+import { cn } from "@/lib/cn";
+
+/**
+ * Intrinsic aspect of the real artwork. The supplied export had ~11-19%
+ * empty padding baked into its viewBox; public/brand/wordmark.svg is
+ * re-cropped to the actual ink bounds so a given width maps to visible
+ * logo rather than to invisible margin.
+ */
+const W = 992.6;
+const H = 570.9;
+
 interface WordmarkProps {
-  /** Any valid CSS color, or "currentColor" (the default) to inherit from a parent. Ignored when shiny is true. */
+  /** Any CSS color, or "currentColor" (default) to inherit. Ignored when `shiny`. */
   color?: string;
-  /** Fills with the animated gold-foil gradient instead of a flat color, matching MaskEmblem/LogoMonogram's shiny prop. */
+  /** Fill with the animated gold-foil gradient instead of a flat color. */
   shiny?: boolean;
+  /** Explicit px width. Omit to size via `className` (e.g. `w-[76vw]`) — an inline width would otherwise beat any class. */
   width?: number;
   className?: string;
-  /** Accessible name. The wordmark reads "Tears of God" even though the glyphs below are a text placeholder, not the real logotype. */
   title?: string;
 }
 
 /**
- * PLACEHOLDER — no vector original exists yet (only a 237KB raster PNG was
- * shipped in the source mockup, used there as a CSS mask so it could be
- * tinted). This renders the wordmark as set type in the brand's own
- * "BB · HEADLINE" voice (Archivo Black) instead, at the real logotype's
- * 806:540 aspect ratio, so every call site already has the right shape
- * and API. Swap the <text> node below for real traced <path> data and
- * nothing outside this file needs to change.
+ * The real band logotype, applied as a CSS mask so it stays tintable to
+ * any brand color from a single shape asset — the same technique the
+ * source brand system used, and the reason the file is referenced rather
+ * than inlined: at ~79KB (32KB gzipped) inlining it would land in the
+ * HTML of every page, uncached, once per instance. As a mask it is
+ * fetched once and shared by the header, hero, and footer.
+ *
+ * The mask's eye holes are true geometry, so whatever sits behind shows
+ * through correctly on any background.
  */
 export function Wordmark({
   color = "currentColor",
   shiny = false,
-  width = 240,
+  width,
   className,
   title = "Tears of God",
 }: WordmarkProps) {
   return (
-    <svg
-      viewBox="0 0 806 540"
-      width={width}
-      height={(width * 540) / 806}
+    <div
       role="img"
       aria-label={title}
-      className={className}
-    >
-      <text
-        x="50%"
-        y="50%"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill={shiny ? "url(#togGoldFoil)" : color}
-        fontFamily="'Archivo Black', sans-serif"
-        fontSize="110"
-        letterSpacing="-0.02em"
-      >
-        TEARS
-        <tspan x="50%" dy="1em">
-          OF GOD
-        </tspan>
-      </text>
-    </svg>
+      className={cn("w-60", shiny && "tog-gold-foil", className)}
+      style={{
+        width,
+        aspectRatio: `${W} / ${H}`,
+        WebkitMaskImage: "url(/brand/wordmark.svg)",
+        maskImage: "url(/brand/wordmark.svg)",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        background: shiny ? undefined : color,
+      }}
+    />
   );
 }
