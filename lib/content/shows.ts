@@ -31,11 +31,16 @@ async function loadShows(): Promise<Show[]> {
   return shows.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
 }
 
-/** All shows, past and future, sorted by date ascending. Result is cached per server process. */
-export async function getShows(): Promise<Show[]> {
-  cache ??= loadShows();
-  return cache;
-}
+/**
+ * All shows, past and future, sorted by date ascending.
+ *
+ * Wrapped in React's `cache()` so repeated calls within one request/render
+ * dedupe to a single filesystem read, without persisting across requests —
+ * a module-level cache would survive for the life of the server process,
+ * so a new or edited show.md would need a restart to show up. That's
+ * wrong for content meant to be editable.
+ */
+export const getShows = cache(async (): Promise<Show[]> => loadShows());
 
 export async function getUpcomingShows(now: Date = new Date()): Promise<Show[]> {
   const shows = await getShows();

@@ -1,4 +1,5 @@
 import path from "node:path";
+import { cache } from "react";
 import type { AppLocale } from "@/i18n/routing";
 import { postFrontmatterSchema } from "@/lib/schemas/post";
 import type { Post } from "@/types/content";
@@ -6,8 +7,6 @@ import { formatZodError } from "./format-zod-error";
 import { listMarkdownIds, readMarkdownFile, renderMarkdown } from "./markdown";
 
 const POSTS_ROOT = path.join(process.cwd(), "content", "posts");
-
-const cache = new Map<AppLocale, Promise<Post[]>>();
 
 async function loadPosts(locale: AppLocale): Promise<Post[]> {
   const dir = path.join(POSTS_ROOT, locale);
@@ -34,11 +33,13 @@ async function loadPosts(locale: AppLocale): Promise<Post[]> {
   return posts.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
 }
 
-/** Posts for one locale. A post only appears here if that locale's file exists — no cross-locale fallback. */
-export async function getPosts(locale: AppLocale): Promise<Post[]> {
-  if (!cache.has(locale)) cache.set(locale, loadPosts(locale));
-  return cache.get(locale) as Promise<Post[]>;
-}
+/**
+ * Posts for one locale. A post only appears here if that locale's file
+ * exists — no cross-locale fallback. Wrapped in React's `cache()` — see
+ * the comment on getShows() for why a module-level cache would be wrong
+ * here.
+ */
+export const getPosts = cache(async (locale: AppLocale): Promise<Post[]> => loadPosts(locale));
 
 export async function getPostBySlug(locale: AppLocale, slug: string): Promise<Post | null> {
   const posts = await getPosts(locale);
