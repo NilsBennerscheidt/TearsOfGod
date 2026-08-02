@@ -6,7 +6,8 @@ import type { Post } from "@/types/content";
 import { formatZodError } from "./format-zod-error";
 import { listMarkdownIds, readMarkdownFile, renderMarkdown } from "./markdown";
 
-const POSTS_ROOT = path.join(process.cwd(), "content", "posts");
+/** Exported for the local admin tool (app/api/admin/posts/**), which writes files here directly. */
+export const POSTS_ROOT = path.join(process.cwd(), "content", "posts");
 
 async function loadPosts(locale: AppLocale): Promise<Post[]> {
   const dir = path.join(POSTS_ROOT, locale);
@@ -44,4 +45,24 @@ export const getPosts = cache(async (locale: AppLocale): Promise<Post[]> => load
 export async function getPostBySlug(locale: AppLocale, slug: string): Promise<Post | null> {
   const posts = await getPosts(locale);
   return posts.find((post) => post.slug === slug) ?? null;
+}
+
+/**
+ * The chronological neighbours of one post — `older` was published before
+ * it, `newer` after. An index lookup, not a second file read: getPosts()
+ * is already cache()d and already sorted newest-first, so this is free
+ * once the detail page has loaded that array for the current post.
+ */
+export async function getPostNeighbours(
+  locale: AppLocale,
+  slug: string,
+): Promise<{ older: Post | null; newer: Post | null }> {
+  const posts = await getPosts(locale);
+  const index = posts.findIndex((post) => post.slug === slug);
+  if (index === -1) return { older: null, newer: null };
+
+  return {
+    older: posts[index + 1] ?? null,
+    newer: posts[index - 1] ?? null,
+  };
 }

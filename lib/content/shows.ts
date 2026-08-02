@@ -5,7 +5,8 @@ import type { Show } from "@/types/content";
 import { formatZodError } from "@/lib/content/format-zod-error";
 import { listMarkdownIds, readMarkdownFile, renderMarkdown } from "./markdown";
 
-const SHOWS_DIR = path.join(process.cwd(), "content", "shows");
+/** Exported for the local admin tool (app/api/admin/shows/**), which writes files here directly. */
+export const SHOWS_DIR = path.join(process.cwd(), "content", "shows");
 
 async function loadShows(): Promise<Show[]> {
   const ids = await listMarkdownIds(SHOWS_DIR);

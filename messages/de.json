@@ -81,14 +81,24 @@
     "videosHeading": "Videos",
     "socialsHeading": "Folgt uns",
     "emptyPhotos": "Demnächst mehr Fotos.",
-    "emptyVideos": "Demnächst mehr Videos."
+    "emptyVideos": "Demnächst mehr Videos.",
+    "lightboxClose": "Schließen",
+    "lightboxPrev": "Vorheriges Foto",
+    "lightboxNext": "Nächstes Foto",
+    "lightboxCounter": "{current} / {total}"
   },
   "News": {
     "eyebrow": "04 · NEWS",
     "title": "News",
     "noPosts": "Aktuell keine News.",
     "readMore": "Weiterlesen →",
-    "back": "← Zurück zu News"
+    "back": "← Zurück zu News",
+    "share": "Teilen",
+    "shareCopied": "Kopiert!",
+    "prevPost": "← Älter",
+    "nextPost": "Neuer →",
+    "galleryHeading": "Galerie",
+    "listenOn": "Anhören →"
   },
   "Press": {
     "heading": "Presse-Kit",

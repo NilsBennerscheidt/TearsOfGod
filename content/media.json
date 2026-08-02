@@ -1,0 +1,75 @@
+{
+  "photos": [
+    {
+      "id": "bandfotos-0002",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_0002.jpg",
+      "alt": "Tears of God — full band studio portrait",
+      "width": 8192,
+      "height": 5464
+    },
+    {
+      "id": "bandfotos-0003",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_0003.jpg",
+      "alt": "Tears of God — full band studio portrait with instruments",
+      "width": 8192,
+      "height": 5464
+    },
+    {
+      "id": "auftritt-0041",
+      "src": "/media/photos/2025-03-21_-_Tears_of_God_Band_Auftritt_0041.jpg",
+      "alt": "Tears of God vocalist performing live on stage",
+      "width": 5462,
+      "height": 8189
+    },
+    {
+      "id": "auftritt-0044",
+      "src": "/media/photos/2025-03-21_-_Tears_of_God_Band_Auftritt_0044.jpg",
+      "alt": "Tears of God bassist performing live on stage",
+      "width": 5462,
+      "height": 8189
+    },
+    {
+      "id": "auftritt-0056",
+      "src": "/media/photos/2025-03-21_-_Tears_of_God_Band_Auftritt_0056.jpg",
+      "alt": "Tears of God guitarist performing live on stage",
+      "width": 3648,
+      "height": 5469
+    },
+    {
+      "id": "bandfotos-murk",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_Murk.jpg",
+      "alt": "Murk — studio portrait",
+      "width": 5464,
+      "height": 8192
+    },
+    {
+      "id": "bandfotos-danji",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_Danji.jpg",
+      "alt": "Danji — studio portrait",
+      "width": 5464,
+      "height": 8192
+    },
+    {
+      "id": "bandfotos-nils",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_Nols.jpg",
+      "alt": "Nils — studio portrait",
+      "width": 5464,
+      "height": 8192
+    },
+    {
+      "id": "bandfotos-lars",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_Lars.jpg",
+      "alt": "Lars — studio portrait",
+      "width": 5464,
+      "height": 8192
+    },
+    {
+      "id": "bandfotos-gary",
+      "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_Gary.jpg",
+      "alt": "Gary — studio portrait",
+      "width": 5464,
+      "height": 8192
+    }
+  ],
+  "videos": []
+}

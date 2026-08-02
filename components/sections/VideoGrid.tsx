@@ -1,4 +1,4 @@
-import type { MediaVideo } from "@/content/media";
+import type { MediaVideo } from "@/types/content";
 
 interface VideoGridProps {
   videos: MediaVideo[];

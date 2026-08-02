@@ -1,3 +1,4 @@
+import type { MediaPhoto as MediaPhotoBase, MediaVideo as MediaVideoBase } from "@/lib/schemas/media";
 import type { PostFrontmatter } from "@/lib/schemas/post";
 import type { ShowFrontmatter } from "@/lib/schemas/show";
 
@@ -13,3 +14,6 @@ export interface Post extends PostFrontmatter {
   locale: string;
   bodyHtml: string;
 }
+
+export type MediaPhoto = MediaPhotoBase;
+export type MediaVideo = MediaVideoBase;

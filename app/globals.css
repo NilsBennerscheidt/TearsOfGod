@@ -352,6 +352,28 @@
   }
 
   /*
+   * Full-cycle brand loader — spin, then three decaying bounces, then a
+   * held rest before looping. Distinct from `.tog-halo-*-fast` (a
+   * constant spin): this is for a wait that can run long enough that
+   * unbroken rotation stops reading as "in progress" and fades into
+   * wallpaper. The rest phase (58–100%) is what makes the next spin read
+   * as a new cycle rather than a stutter. Used by LoadingSpinner's
+   * `variant="cycle"` — TearHalo's own ambient ring spin keeps running
+   * underneath at its normal (non-`fast`) speed.
+   */
+  .tog-loader-cycle {
+    animation: tog-loader-cycle 3.2s cubic-bezier(0.3, 0.7, 0.2, 1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* Same reasoning as .tog-halo-*-fast: a progress indicator can't just
+       go static under reduced motion, or "still working" silently reads
+       as "done". Swap to the shared non-rotating pulse instead. */
+    .tog-loader-cycle {
+      animation: tog-spinner-pulse 1.6s ease-in-out infinite;
+    }
+  }
+
+  /*
    * Targeted styling for rendered markdown bodies — the legal pages
    * (Impressum / Datenschutz) and news posts share this. Named for the
    * content type it styles, not the first two pages that used it. Not a
@@ -511,5 +533,42 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/*
+ * Spin (0–22%) → three decaying hops (22–58%) → held rest (58–100%),
+ * then loops. translateY only, no scale — a scale-squash landing would
+ * need the transform-origin pinned to the bottom edge, which would in
+ * turn throw off the 0–22% rotation (it needs to stay centered, or the
+ * mark visibly orbits instead of spinning in place). One origin, used
+ * consistently across the whole cycle, is worth more than a fancier
+ * landing.
+ */
+@keyframes tog-loader-cycle {
+  0% {
+    transform: rotate(0deg) translateY(0);
+  }
+  22% {
+    transform: rotate(360deg) translateY(0);
+  }
+  30% {
+    transform: translateY(-18%);
+  }
+  38% {
+    transform: translateY(0);
+  }
+  44% {
+    transform: translateY(-9%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  54% {
+    transform: translateY(-4%);
+  }
+  58%,
+  100% {
+    transform: translateY(0);
   }
 }

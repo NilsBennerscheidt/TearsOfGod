@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/sections/PageHeader";
 import { PhotoGrid } from "@/components/sections/PhotoGrid";
 import { SocialGrid } from "@/components/sections/SocialGrid";
 import { VideoGrid } from "@/components/sections/VideoGrid";
-import { photos, videos } from "@/content/media";
+import { getMedia } from "@/lib/content/media";
 
 export async function generateMetadata({
   params,
@@ -26,7 +26,7 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
   // it untouched makes the whole route render on-demand instead of
   // statically, even though nothing else here is actually dynamic.
   await params;
-  const t = await getTranslations("Media");
+  const [t, { photos, videos }] = await Promise.all([getTranslations("Media"), getMedia()]);
 
   return (
     <>
