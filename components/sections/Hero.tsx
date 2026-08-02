@@ -24,7 +24,7 @@ export async function Hero({ release }: HeroProps) {
     // chrome hidden, so with the URL bar showing the hero overflows the
     // screen and pushes the CTAs below the fold until chrome retracts.
     <div className="relative flex h-[80dvh] min-h-130 flex-col justify-end overflow-hidden">
-      <PhotoPlaceholder label="LIVE · MOTION BLUR · B&W" style={{ position: "absolute", inset: 0 }} />
+      <PhotoPlaceholder label="" style={{ position: "absolute", inset: 0 }} />
       <div
         aria-hidden="true"
         className="absolute inset-0"

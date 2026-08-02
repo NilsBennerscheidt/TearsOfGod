@@ -56,15 +56,29 @@ export function TearHalo({
   // one value to two incompatible rendering paths.
   const strokeColor = shiny ? "url(#togGoldFoil)" : color;
 
+  // Rounded to 3 decimals — Math.sin/cos can differ by a ULP between
+  // Node's V8 (SSR) and the browser's, which otherwise serializes into a
+  // hydration mismatch on these attributes (full precision is wasted at
+  // this viewBox scale anyway).
+  const round = (n: number) => Math.round(n * 1000) / 1000;
+
   const rays = Array.from({ length: 32 }, (_, i) => {
-    const a = (i / 32) * Math.PI * 2;
+    // +0.5 step: keeps every tick off the exact horizontal/vertical —
+    // a perfectly axis-aligned hairline can straddle a device-pixel
+    // row/column boundary and anti-alias away to near-invisible (visible
+    // in Safari at rest, i.e. rotate(0), which is also where
+    // prefers-reduced-motion permanently parks this group — see the
+    // strokeWidth note below for the animated case). Thickening the
+    // stroke wasn't sufficient there; not being exactly on-axis in the
+    // first place is what actually fixes it.
+    const a = ((i + 0.5) / 32) * Math.PI * 2;
     const r1 = 72;
     const r2 = 78;
     return {
-      x1: 80 + Math.cos(a) * r1,
-      y1: 80 + Math.sin(a) * r1,
-      x2: 80 + Math.cos(a) * r2,
-      y2: 80 + Math.sin(a) * r2,
+      x1: round(80 + Math.cos(a) * r1),
+      y1: round(80 + Math.sin(a) * r1),
+      x2: round(80 + Math.cos(a) * r2),
+      y2: round(80 + Math.sin(a) * r2),
     };
   });
 
@@ -101,7 +115,17 @@ export function TearHalo({
               x2={r.x2}
               y2={r.y2}
               stroke={strokeColor}
-              strokeWidth={strokeW * 0.8}
+              // 1.6x, not the ring's 0.8x: a ray whose current rotation
+              // angle lands it exactly horizontal or vertical can straddle
+              // a device-pixel row/column boundary and anti-alias down to
+              // near-invisible — 4 of the 32 ticks visibly vanished at
+              // 0/90/180/270° before this (worst case: prefers-reduced-motion
+              // parks rotation at exactly 0deg, making it permanent, not a
+              // passing flicker). Thickening every tick, not just the ones
+              // currently axis-aligned, is what survives the ring's own
+              // rotation instead of just moving the problem to whichever
+              // tick reaches that angle next.
+              strokeWidth={strokeW * 1.6}
             />
           ))}
         </g>

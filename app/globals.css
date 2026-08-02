@@ -149,15 +149,13 @@
   .tog-gold-foil {
     background-image: linear-gradient(
       118deg,
-      #6e4815 0%,
-      #a87a26 14%,
-      #d9b25a 28%,
-      #f5dc7e 42%,
+      #a87a26 0%,
+      #d9b25a 20%,
+      #f5dc7e 40%,
       #fff4c0 50%,
-      #f5dc7e 58%,
-      #d9b25a 72%,
-      #a87a26 86%,
-      #6e4815 100%
+      #f5dc7e 60%,
+      #d9b25a 80%,
+      #a87a26 100%
     );
     background-size: 220% 100%;
     background-position: 0% 50%;
@@ -167,15 +165,13 @@
   .tog-gold-text {
     background-image: linear-gradient(
       118deg,
-      #6e4815 0%,
-      #a87a26 14%,
-      #d9b25a 28%,
-      #f5dc7e 42%,
+      #a87a26 0%,
+      #d9b25a 20%,
+      #f5dc7e 40%,
       #fff4c0 50%,
-      #f5dc7e 58%,
-      #d9b25a 72%,
-      #a87a26 86%,
-      #6e4815 100%
+      #f5dc7e 60%,
+      #d9b25a 80%,
+      #a87a26 100%
     );
     background-size: 220% 100%;
     -webkit-background-clip: text;
@@ -263,7 +259,7 @@
     );
     background-size: 300% 100%;
     background-position: 150% 0;
-    animation: tog-gold-sweep 3.2s ease-in-out infinite;
+    animation: tog-gold-sweep 15s ease-in-out infinite;
     pointer-events: none;
   }
 
