@@ -445,12 +445,17 @@
 }
 
 /*
- * Asymmetric on purpose: a fast flare up (0% → 8%) and a slower settle
- * back to baseline (8% → 28%), then a hold at baseline until the cycle
- * repeats. A symmetric ease-in-out sine (flare and settle at the same
- * rate) reads as the surface breathing; this snap-then-fade reads as a
- * glint of light passing over it, which is what "shimmer" actually looks
- * like on foil/metal.
+ * Asymmetric on purpose: a fast flare up (0% → 0.7%) and a slower settle
+ * back to baseline (0.7% → 2.6%), then a long hold at baseline until the
+ * cycle repeats. A symmetric ease-in-out sine (flare and settle at the
+ * same rate) reads as the surface breathing; this snap-then-fade reads as
+ * a glint of light passing over it, which is what "shimmer" actually
+ * looks like on foil/metal.
+ *
+ * The 35s cycle (paired with a 0.7%/2.6% keyframe split, so the flare
+ * itself still only takes ~0.9s in real time) makes it glint once on
+ * load and then roughly every 25-50s after — an occasional catch of
+ * light, not a steady pulse.
  */
 @keyframes tog-gold-glow-shimmer {
   0%,
