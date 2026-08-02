@@ -209,7 +209,7 @@
    */
   .tog-gold-glow {
     filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
-    animation: tog-gold-glow-shimmer 3.2s ease-in-out infinite;
+    animation: tog-gold-glow-shimmer 35s ease-in-out infinite;
   }
 
   /*
@@ -457,10 +457,10 @@
   100% {
     filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
   }
-  8% {
+  0.7% {
     filter: drop-shadow(0 0 3px rgba(255, 244, 192, 0.6)) drop-shadow(0 0 12px rgba(245, 220, 126, 0.45));
   }
-  28% {
+  2.6% {
     filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
   }
 }
