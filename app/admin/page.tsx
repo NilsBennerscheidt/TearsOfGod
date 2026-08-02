@@ -26,7 +26,7 @@ export default async function AdminHomePage() {
     }))
     .filter((entry) => entry.missing.length > 0);
 
-  const now = Date.now();
+  const now = new Date().getTime();
   const stalePastShows = shows.filter(
     (show) => Date.parse(show.date) < now && show.status !== "sold-out",
   );
