@@ -13,10 +13,13 @@ import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
 import { RegCross, RegMarks } from "@/components/brand/RegMarks";
 import { RuneDot } from "@/components/brand/RuneDot";
 import { RunicBar, RunicLine, RunicVertical } from "@/components/brand/Rune";
+import { SpinnableTearHalo } from "@/components/brand/SpinnableTearHalo";
 import { Stamp } from "@/components/brand/Stamp";
 import { Tape } from "@/components/brand/Tape";
 import { TearHalo } from "@/components/brand/TearHalo";
 import { Wordmark } from "@/components/brand/Wordmark";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { LoadingWrapper } from "@/components/ui/LoadingWrapper";
 
 /**
  * Regression surface for the whole brand-primitive port (Stage 2). Not
@@ -60,6 +63,23 @@ export default function KitchenSinkPage() {
       <Section title="TearHalo">
         <Swatch label="default"><TearHalo size={120} /></Swatch>
         <Swatch label="gold, thick stroke"><TearHalo size={120} color="var(--color-gold)" strokeW={2} /></Swatch>
+        <Swatch label="fast (loading speed)"><TearHalo size={120} shiny fast /></Swatch>
+        <Swatch label="spinnable (click/tap it)"><SpinnableTearHalo size={120} /></Swatch>
+      </Section>
+
+      <Section title="LoadingSpinner / LoadingWrapper">
+        <Swatch label="default"><LoadingSpinner /></Swatch>
+        <Swatch label="large"><LoadingSpinner size={72} /></Swatch>
+        <Swatch label="LoadingWrapper (loading=true)" wide>
+          <LoadingWrapper loading>
+            <p>never shown</p>
+          </LoadingWrapper>
+        </Swatch>
+        <Swatch label="LoadingWrapper (loading=false)" wide>
+          <LoadingWrapper loading={false}>
+            <p className="font-mono text-sm">content, loaded</p>
+          </LoadingWrapper>
+        </Swatch>
       </Section>
 
       <Section title="FiveMark">

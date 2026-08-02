@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { GoldText } from "@/components/brand/GoldText";
 import { TicketStatus } from "@/components/ui/TicketStatus";
 import type { Show } from "@/types/content";
 
@@ -84,7 +85,9 @@ function ShowRow({ show, locale, statusLabel }: { show: Show; locale: string; st
         {show.city}
       </td>
       <td role="cell" className="py-4 pr-3 max-sm:block max-sm:py-0">
-        <p className="text-venue font-display leading-tight text-gold">{show.venue}</p>
+        <GoldText as="p" glow className="text-venue font-display leading-tight">
+          {show.venue}
+        </GoldText>
         {show.name && <p className="text-meta mt-0.5 text-steel-text">{show.name}</p>}
       </td>
       <td role="cell" className="py-4 text-right max-sm:block max-sm:pt-3 max-sm:text-left">

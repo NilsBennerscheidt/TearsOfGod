@@ -1,3 +1,4 @@
+import { cn } from "@/lib/cn";
 import { MaskGlyph } from "./MaskGlyph";
 
 interface TearHaloProps {
@@ -5,10 +6,26 @@ interface TearHaloProps {
   size?: number;
   color?: string;
   /**
+   * Gold-foil gradient instead of a flat `color`, on both the ring/rays
+   * (SVG stroke, via the togGoldFoil <linearGradient> from GoldFoilDefs)
+   * and the mask glyph (CSS mask, via MaskGlyph's own `shiny`/tog-gold-foil
+   * treatment — see the note below on why these can't share one value).
+   */
+  shiny?: boolean;
+  /**
    * Ring stroke in viewBox units, so it scales with `size` and the mark
    * keeps its proportions from favicon to full-bleed hero.
    */
   strokeW?: number;
+  /**
+   * Swaps the ambient 48s/32s ring loop for a ~1.4s/1s one — too slow to
+   * read as "loading" at a glance otherwise. Used by LoadingSpinner; leave
+   * false for decorative placements. Under prefers-reduced-motion this
+   * still animates (a pulse, not a spin) rather than stopping outright —
+   * unlike the ambient rings, this loop is the only signal that work is
+   * still happening, so it can't just go static.
+   */
+  fast?: boolean;
   /** Accessible name. Omit when decorative — see MaskEmblem. */
   title?: string;
   className?: string;
@@ -23,10 +40,22 @@ interface TearHaloProps {
 export function TearHalo({
   size,
   color = "var(--color-bone)",
+  shiny = false,
   strokeW = 1.2,
+  fast = false,
   title,
   className,
 }: TearHaloProps) {
+  // Ring/rays are real SVG paint, where "url(#togGoldFoil)" is valid as a
+  // stroke value. MaskGlyph is a CSS `mask-image`, tinted via a plain
+  // `background` color — the same url() there would set an unresolvable
+  // background-image and render nothing, which is exactly what broke when
+  // `color` was passed straight through to both. So `shiny` picks the
+  // gradient stroke here and MaskGlyph's own `shiny` prop (its
+  // .tog-gold-foil CSS background) for the glyph, instead of forwarding
+  // one value to two incompatible rendering paths.
+  const strokeColor = shiny ? "url(#togGoldFoil)" : color;
+
   const rays = Array.from({ length: 32 }, (_, i) => {
     const a = (i / 32) * Math.PI * 2;
     const r1 = 72;
@@ -50,27 +79,35 @@ export function TearHalo({
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         aria-hidden="true"
       >
-        <circle cx="80" cy="80" r="72" fill="none" stroke={color} strokeWidth={strokeW} />
+        <circle cx="80" cy="80" r="72" fill="none" stroke={strokeColor} strokeWidth={strokeW} />
         <circle
-          className="tog-halo-ring"
+          className={cn("tog-halo-ring", fast && "tog-halo-ring-fast")}
           cx="80"
           cy="80"
           r="64"
           fill="none"
-          stroke={color}
+          stroke={strokeColor}
           strokeWidth={strokeW * 0.5}
           strokeDasharray="1.5 2.5"
           opacity="0.6"
         />
         {/* One group, one animation — 32 individually animated lines would be 32 times the work for identical motion. */}
-        <g className="tog-halo-rays">
+        <g className={cn("tog-halo-rays", fast && "tog-halo-rays-fast")}>
           {rays.map((r, i) => (
-            <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2} stroke={color} strokeWidth={strokeW * 0.8} />
+            <line
+              key={i}
+              x1={r.x1}
+              y1={r.y1}
+              x2={r.x2}
+              y2={r.y2}
+              stroke={strokeColor}
+              strokeWidth={strokeW * 0.8}
+            />
           ))}
         </g>
       </svg>
       <div style={{ position: "absolute", inset: "18%" }}>
-        <MaskGlyph color={color} />
+        <MaskGlyph color={color} shiny={shiny} />
       </div>
     </div>
   );

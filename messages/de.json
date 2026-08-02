@@ -2,6 +2,9 @@
   "Nav": {
     "home": "Start",
     "tour": "Live",
+    "media": "Media",
+    "news": "News",
+    "band": "Wir",
     "skipToContent": "Zum Inhalt springen",
     "menu": "Menü",
     "close": "Schließen"
@@ -46,6 +49,23 @@
       "rhythmGuitar": "Rhythmusgitarre",
       "bass": "Bass",
       "drums": "Schlagzeug"
+    },
+    "members": {
+      "murk": {
+        "bio": "Schreit, seit er sprechen kann. Schreibt die Texte auf dem Werkstattboden."
+      },
+      "danji": {
+        "bio": "Erste Gitarre, erste Reihe. Übt lauter, als die Nachbarn erlauben."
+      },
+      "nils": {
+        "bio": "Bass und Kabelsalat. Hält den Laden zusammen, wenn sonst niemand hinschaut."
+      },
+      "lars": {
+        "bio": "Schlagzeug ohne Bremse. Zählt nur bis vier, dafür sehr laut."
+      },
+      "gary": {
+        "bio": "Rhythmusgitarre, volles Risiko. Der Grund, warum die Refrains stehen."
+      }
     }
   },
   "Tour": {
@@ -53,5 +73,44 @@
     "title": "Shows",
     "dateCount": "{count, plural, one {# TERMIN} other {# TERMINE}}",
     "noUpcomingShows": "Aktuell keine Termine angekündigt."
+  },
+  "Media": {
+    "eyebrow": "03 · MEDIA",
+    "title": "Media",
+    "photosHeading": "Fotos",
+    "videosHeading": "Videos",
+    "socialsHeading": "Folgt uns",
+    "emptyPhotos": "Demnächst mehr Fotos.",
+    "emptyVideos": "Demnächst mehr Videos."
+  },
+  "News": {
+    "eyebrow": "04 · NEWS",
+    "title": "News",
+    "noPosts": "Aktuell keine News.",
+    "readMore": "Weiterlesen →",
+    "back": "← Zurück zu News"
+  },
+  "Press": {
+    "heading": "Presse-Kit",
+    "description": "Logos, Pressefotos, Bandbio und Tech-Rider in einer ZIP-Datei.",
+    "contentsHeading": "Inhalt",
+    "contents": {
+      "logos": "Logos (SVG/PNG)",
+      "photos": "Pressefotos",
+      "bio": "Bandbio",
+      "techRider": "Tech-Rider"
+    },
+    "download": "Presse-Kit herunterladen (ZIP)",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "contact": "Presseanfragen"
+  },
+  "We": {
+    "eyebrow": "05 · WIR",
+    "title": "Wir",
+    "storyHeadline": "Fünf aus Castrop-Rauxel.",
+    "storyBody": "Kein Bandcasting, keine Marketingidee. Fünf Leute, die sich aus der Nachbarschaft kennen, seit {foundedYear} zusammen im Proberaum stehen und keine Lust auf falsche Götter haben.",
+    "factsFounded": "Gegründet",
+    "factsBase": "Zuhause",
+    "membersHeading": "Die Besetzung"
   }
 }

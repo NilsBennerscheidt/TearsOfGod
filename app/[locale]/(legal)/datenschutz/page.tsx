@@ -22,7 +22,7 @@ export default async function DatenschutzPage({ params }: { params: Promise<{ lo
     <article>
       <h1 className="font-display mb-2 text-3xl text-bone uppercase">{page.title}</h1>
       {/* Safe: bodyHtml is rendered from this repo's own markdown files, not user input. */}
-      <div className="legal-content" dangerouslySetInnerHTML={{ __html: page.bodyHtml }} />
+      <div className="tog-prose" dangerouslySetInnerHTML={{ __html: page.bodyHtml }} />
     </article>
   );
 }

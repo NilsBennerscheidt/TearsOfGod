@@ -1,29 +1,22 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
-import { type NavItem, MobileNavToggle } from "./MobileNavToggle";
-
-const ROUTES = ["/", "/tour"] as const;
+import { Link } from "@/i18n/navigation";
+import { useNavItems } from "./nav-items";
 
 /**
- * Client Component: needs usePathname() for active-route state and owns
- * the mobile disclosure. Route list is intentionally just these two —
- * Music/Band/Contact are cut from v1, so the nav must not link to them.
+ * Desktop route list. Client Component: needs usePathname() (via
+ * useNavItems) for active-route state. The mobile equivalent is
+ * MobileNavToggle — a sibling in Header, not a child of this nav; see
+ * Header.tsx for why the two are split rather than nested.
  */
 export function SiteNav() {
   const t = useTranslations("Nav");
-  const pathname = usePathname();
-
-  const items: NavItem[] = ROUTES.map((href) => ({
-    href,
-    label: t(href === "/" ? "home" : "tour"),
-    active: pathname === href,
-  }));
+  const items = useNavItems();
 
   return (
-    <nav aria-label={t("menu")}>
-      <ul className="hidden gap-6 font-mono text-xs tracking-wide uppercase md:flex">
+    <nav aria-label={t("menu")} className="hidden md:block">
+      <ul className="flex gap-6 font-mono text-xs tracking-wide uppercase">
         {items.map((item) => (
           <li key={item.href}>
             <Link
@@ -40,7 +33,6 @@ export function SiteNav() {
           </li>
         ))}
       </ul>
-      <MobileNavToggle items={items} menuLabel={t("menu")} closeLabel={t("close")} />
     </nav>
   );
 }

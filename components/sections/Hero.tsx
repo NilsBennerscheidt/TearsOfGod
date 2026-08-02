@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Halftone } from "@/components/brand/Halftone";
 import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
+import { SpinnableTearHalo } from "@/components/brand/SpinnableTearHalo";
 import { TearHalo } from "@/components/brand/TearHalo";
 import { CtaButton } from "@/components/ui/CtaButton";
 import type { Release } from "@/content/releases";
@@ -38,11 +39,12 @@ export async function Hero({ release }: HeroProps) {
          * so 64% of the box) lands near the 44vw the bare mask occupied
          * — the ring reads as added negative space, not added bulk.
          */}
+        {/* shiny: ring/rays + the mask glyph both render with the gold-foil gradient instead of flat color (no `color` prop — it's unused once shiny is set). tog-gold-glow layers a shimmering aura on top of that. */}
         <TearHalo
-          color="var(--color-gold)"
+          shiny
           strokeW={1.4}
           title="Tears of God"
-          className="aspect-square w-[56vw] max-w-160"
+          className="tog-gold-glow aspect-square w-[56vw] max-w-160"
         />
       </h1>
 
@@ -65,7 +67,7 @@ export async function Hero({ release }: HeroProps) {
             </CtaButton>
           </div>
         </div>
-        <TearHalo size={90} color="var(--color-gold)" strokeW={1.4} className="hidden sm:block" />
+        <SpinnableTearHalo size={90} strokeW={1.4} className="hidden sm:block" />
       </div>
     </div>
   );

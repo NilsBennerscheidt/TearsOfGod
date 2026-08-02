@@ -2,6 +2,9 @@
   "Nav": {
     "home": "Home",
     "tour": "Live",
+    "media": "Media",
+    "news": "News",
+    "band": "We",
     "skipToContent": "Skip to content",
     "menu": "Menu",
     "close": "Close"
@@ -46,6 +49,23 @@
       "rhythmGuitar": "Rhythm Guitar",
       "bass": "Bass",
       "drums": "Drums"
+    },
+    "members": {
+      "murk": {
+        "bio": "Screaming since he could talk. Writes the lyrics on the workshop floor."
+      },
+      "danji": {
+        "bio": "Lead guitar, front row. Practices louder than the neighbors allow."
+      },
+      "nils": {
+        "bio": "Bass and cable spaghetti. Holds the whole thing together when nobody's looking."
+      },
+      "lars": {
+        "bio": "Drums with no brakes. Counts to four, loudly."
+      },
+      "gary": {
+        "bio": "Rhythm guitar, full risk. The reason the choruses land."
+      }
     }
   },
   "Tour": {
@@ -53,5 +73,44 @@
     "title": "Shows",
     "dateCount": "{count, plural, one {# DATE} other {# DATES}}",
     "noUpcomingShows": "No shows announced right now."
+  },
+  "Media": {
+    "eyebrow": "03 · MEDIA",
+    "title": "Media",
+    "photosHeading": "Photos",
+    "videosHeading": "Videos",
+    "socialsHeading": "Follow us",
+    "emptyPhotos": "More photos coming soon.",
+    "emptyVideos": "More videos coming soon."
+  },
+  "News": {
+    "eyebrow": "04 · NEWS",
+    "title": "News",
+    "noPosts": "No news right now.",
+    "readMore": "Read more →",
+    "back": "← Back to News"
+  },
+  "Press": {
+    "heading": "Press Kit",
+    "description": "Logos, press photos, band bio and tech rider in one ZIP file.",
+    "contentsHeading": "Contents",
+    "contents": {
+      "logos": "Logos (SVG/PNG)",
+      "photos": "Press photos",
+      "bio": "Band bio",
+      "techRider": "Tech rider"
+    },
+    "download": "Download press kit (ZIP)",
+    "lastUpdated": "Last updated",
+    "contact": "Press inquiries"
+  },
+  "We": {
+    "eyebrow": "05 · WE",
+    "title": "We",
+    "storyHeadline": "Five from Castrop-Rauxel.",
+    "storyBody": "No band casting, no marketing idea. Five people who know each other from the neighborhood, standing in the same rehearsal room since {foundedYear}, with no patience for false idols.",
+    "factsFounded": "Founded",
+    "factsBase": "Based in",
+    "membersHeading": "The Lineup"
   }
 }

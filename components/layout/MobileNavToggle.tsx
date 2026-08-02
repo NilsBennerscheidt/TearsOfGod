@@ -1,30 +1,34 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
-
-export interface NavItem {
-  href: "/" | "/tour";
-  label: string;
-  active: boolean;
-}
-
-interface MobileNavToggleProps {
-  items: NavItem[];
-  menuLabel: string;
-  closeLabel: string;
-}
+import { useNavItems } from "./nav-items";
 
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
- * Hamburger disclosure for small viewports. Hand-rolled focus trap (no
- * library allowed by the project's dependency list) — see the effect
- * below for the open/close lifecycle: focus moves into the panel, Tab
- * cycles within it, Esc closes, closing restores focus to the toggle
- * button, and navigating away closes it automatically.
+ * Hamburger disclosure for small viewports. Self-sufficient (owns its own
+ * translations + route list via useNavItems) so it can sit as a plain
+ * sibling of SiteNav in Header rather than nested inside it — that's what
+ * lets it render first in DOM/flex order and land hard-left in the mobile
+ * header instead of stranded as the middle child of a justify-between row.
+ *
+ * The panel is `absolute top-full` *inside* Header (which is `relative`),
+ * so it always drops directly below the header bar with no measurement —
+ * previously `fixed inset-x-0 top-0` covered the header itself and gave
+ * no way to tell the panel was open other than the button's label
+ * flipping to "Close". A dedicated close button in the panel now owns
+ * that job explicitly.
+ *
+ * Hand-rolled focus trap (no library allowed by the project's dependency
+ * list) — see the effect below for the open/close lifecycle: focus moves
+ * into the panel, Tab cycles within it, Esc closes, closing restores
+ * focus to the toggle button, and navigating away closes it automatically.
  */
-export function MobileNavToggle({ items, menuLabel, closeLabel }: MobileNavToggleProps) {
+export function MobileNavToggle() {
+  const t = useTranslations("Nav");
+  const items = useNavItems();
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
@@ -87,20 +91,33 @@ export function MobileNavToggle({ items, menuLabel, closeLabel }: MobileNavToggl
         onClick={() => setIsOpen((v) => !v)}
         className="border-gold text-bone border px-3 py-2 font-mono text-xs tracking-wide uppercase"
       >
-        {isOpen ? closeLabel : menuLabel}
+        {t("menu")}
       </button>
 
       {isOpen && (
         <>
-          <div aria-hidden="true" className="fixed inset-0 z-40 bg-pitch/80" onClick={() => setIsOpen(false)} />
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-full z-40 h-screen bg-pitch/80"
+            onClick={() => setIsOpen(false)}
+          />
           <div
             id={panelId}
             ref={panelRef}
             role="dialog"
             aria-modal="true"
-            aria-label={menuLabel}
-            className="fixed inset-x-0 top-0 z-50 flex flex-col gap-4 border-b border-gold bg-pitch p-6"
+            aria-label={t("menu")}
+            className="absolute inset-x-0 top-full z-50 flex flex-col gap-6 border-b border-gold bg-pitch p-6"
           >
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="border-gold text-bone border px-3 py-2 font-mono text-xs tracking-wide uppercase"
+              >
+                {t("close")}
+              </button>
+            </div>
             <ul className="flex flex-col gap-4">
               {items.map((item) => (
                 <li key={item.href}>

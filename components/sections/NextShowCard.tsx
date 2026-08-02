@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { GoldText } from "@/components/brand/GoldText";
 import { RegCross } from "@/components/brand/RegMarks";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { TicketStatus } from "@/components/ui/TicketStatus";
@@ -32,14 +33,16 @@ export async function NextShowCard({ locale }: NextShowCardProps) {
   const year = new Intl.DateTimeFormat(locale, { year: "2-digit" }).format(date);
 
   return (
-    <div className="relative border border-gold bg-ink p-4">
+    <div className="tog-gold-glow-box relative border border-gold bg-ink p-4">
       <SectionEyebrow>{t("Landing.nextShowEyebrow")}</SectionEyebrow>
       <p className="text-next-show-date font-brutal mt-2 leading-none tracking-[-0.03em] text-bone">
         {day}.
         <br />
         {month}.{year}
       </p>
-      <p className="text-venue font-display mt-2 text-gold">{show.venue}</p>
+      <GoldText as="p" glow className="text-venue font-display mt-2">
+        {show.venue}
+      </GoldText>
       <p className="text-meta mt-1 tracking-wide text-steel-text uppercase">{show.city}</p>
       <div className="mt-4">
         <TicketStatus status={show.status} label={t(`Shows.status.${show.status}`)} href={show.ticketUrl} />

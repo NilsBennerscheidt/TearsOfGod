@@ -73,6 +73,14 @@
    * overflowed a clipped container). A working seamless loop needs the
    * track duplicated in markup (see Marquee.tsx) and reduced-motion
    * handled via Tailwind's motion-reduce: variant at the call site.
+   *
+   * The track is two identical halves, each forced to min-w-full so
+   * neither half is ever narrower than the viewport — otherwise, on any
+   * viewport wider than the (short) doubled slogan text, the loop shows
+   * a visible gap once the first half scrolls past. Each half travels
+   * its own -100%, so the animation is a plain relay rather than a
+   * fixed-distance -50% translate keyed to unknown-at-build-time content
+   * width.
    */
   --animate-marquee: tog-marquee 22s linear infinite;
 }
@@ -82,7 +90,7 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 
@@ -186,6 +194,91 @@
   }
 
   /*
+   * Gold glow — a tight bright core plus a wide soft aura, both in
+   * --color-gold. `filter: drop-shadow()` rather than `box-shadow`: it
+   * follows the true alpha shape of its content (an SVG mark, glyph
+   * outlines, arbitrary text) instead of a rectangle, so it works on
+   * <svg> marks and headline text alike.
+   *
+   * Animated by default — a quick bright glint that flares and settles,
+   * like light catching foil, rather than a static aura. An earlier,
+   * static-by-default version read as flat; a slow symmetric "breathing"
+   * pulse (tried next) still didn't read as shimmer, just brightness
+   * cycling. The asymmetric flare/settle curve below is what actually
+   * looks like a shimmer rather than a glow that dims and brightens.
+   */
+  .tog-gold-glow {
+    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
+    animation: tog-gold-glow-shimmer 3.2s ease-in-out infinite;
+  }
+
+  /*
+   * box-shadow sibling of .tog-gold-glow — for bordered/filled boxes
+   * (card borders, header rule, button hover) where a `filter` would
+   * blur the box's own content along with the glow.
+   */
+  .tog-gold-glow-box {
+    box-shadow:
+      0 0 0 1px rgba(217, 178, 90, 0.4),
+      0 0 8px rgba(217, 178, 90, 0.18);
+  }
+
+  /*
+   * Hover-only glow for the solid CTA button. A plain `:hover` selector,
+   * not Tailwind's `hover:` variant prefix — the custom classes above are
+   * hand-written selectors in @layer components, not Tailwind @utility
+   * definitions, so Tailwind's engine has no variant permutations for
+   * them and `hover:tog-gold-glow-box` in a className would silently do
+   * nothing.
+   */
+  .tog-gold-cta:hover {
+    box-shadow:
+      0 0 0 1px rgba(217, 178, 90, 0.5),
+      0 0 10px rgba(217, 178, 90, 0.25);
+  }
+
+  /*
+   * Sheen — for FLAT gold fills (bg-gold), not gradients. A ::after
+   * overlay sweeps a translucent highlight across the surface on a
+   * repeating loop, so the fill stays a true flat color at rest and
+   * only catches light periodically, rather than being replaced
+   * outright by the .tog-gold-foil gradient (which would change the
+   * surface's resting color everywhere it's used, e.g. the marquee bar,
+   * solid CTAs).
+   */
+  .tog-gold-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .tog-gold-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      rgba(255, 244, 192, 0.55) 48%,
+      rgba(255, 244, 192, 0.55) 52%,
+      transparent 70%
+    );
+    background-size: 300% 100%;
+    background-position: 150% 0;
+    animation: tog-gold-sweep 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tog-gold-glow {
+      animation: none;
+    }
+    .tog-gold-sheen::after {
+      animation: none;
+      background-position: 150% 0;
+      opacity: 0;
+    }
+  }
+
+  /*
    * TearHalo's two rings, turning against each other — the ray ticks one
    * way, the dashed ring the other. Counter-rotation reads as a working
    * mechanism rather than a loading spinner, which one shared direction
@@ -217,22 +310,61 @@
   .tog-halo-ring {
     animation: tog-halo-spin-rev 32s linear infinite;
   }
+  /* Loading-indicator speed — see the `fast` prop on TearHalo. */
+  .tog-halo-rays-fast {
+    animation: tog-halo-spin 1.4s linear infinite;
+  }
+  .tog-halo-ring-fast {
+    animation: tog-halo-spin-rev 1s linear infinite;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .tog-halo-rays,
     .tog-halo-ring {
       animation: none;
     }
+    /*
+     * Fast rings are a progress indicator, not decoration — stopping them
+     * outright would silently misreport "still working" as "done", so
+     * reduced motion swaps the spin for a non-rotating pulse instead of
+     * removing the animation.
+     */
+    .tog-halo-rays-fast,
+    .tog-halo-ring-fast {
+      animation: tog-spinner-pulse 1.6s ease-in-out infinite;
+    }
   }
 
   /*
-   * Minimal targeted styling for the rendered markdown body of the legal
-   * pages (Impressum / Datenschutz) — just the handful of elements those
-   * two documents actually use. Not a general prose system; no typography
-   * plugin in the dependency list, and nothing else on the site injects
-   * raw markdown HTML like this.
+   * One-shot full turn for the small hero mask on tap/click — layered on
+   * top of TearHalo's own ambient ring spin (it's the *whole* mark,
+   * mask included, that turns here, not just the rings) so a touch reads
+   * as a deliberate response rather than more ambient motion.
    */
-  .legal-content h2 {
+  .tog-mask-spin-btn {
+    display: inline-block;
+    line-height: 0;
+    cursor: pointer;
+  }
+  .tog-mask-spin {
+    animation: tog-mask-spin-once 0.7s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tog-mask-spin {
+      animation: none;
+    }
+  }
+
+  /*
+   * Targeted styling for rendered markdown bodies — the legal pages
+   * (Impressum / Datenschutz) and news posts share this. Named for the
+   * content type it styles, not the first two pages that used it. Not a
+   * general prose system; no typography plugin in the dependency list,
+   * and nothing else on the site injects raw markdown HTML like this.
+   * `h3`/list/quote/image rules exist for post bodies — the legal docs
+   * don't use them, but harmlessly inherit the same rules.
+   */
+  .tog-prose h2 {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
     font-family: var(--font-display);
@@ -240,29 +372,66 @@
     color: var(--color-gold);
     text-transform: uppercase;
   }
-  .legal-content h2:first-child {
+  .tog-prose h2:first-child {
     margin-top: 0;
   }
-  .legal-content p {
+  .tog-prose h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-gold-hi);
+    text-transform: uppercase;
+  }
+  .tog-prose p {
     margin-bottom: 1rem;
     font-size: var(--text-body);
     line-height: 1.7;
     color: var(--color-bone);
   }
-  .legal-content a {
+  .tog-prose a {
     color: var(--color-gold);
     text-underline-offset: 2px;
   }
-  .legal-content strong {
+  .tog-prose strong {
     color: var(--color-gold-hi);
   }
-  .legal-content hr {
+  .tog-prose hr {
     margin: 2rem 0;
     border: none;
     border-top: 1px solid var(--color-ash);
   }
-  .legal-content em {
+  .tog-prose em {
     color: var(--color-steel-text);
+  }
+  .tog-prose ul,
+  .tog-prose ol {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+    color: var(--color-bone);
+  }
+  .tog-prose ul {
+    list-style: disc;
+  }
+  .tog-prose ol {
+    list-style: decimal;
+  }
+  .tog-prose li {
+    margin-bottom: 0.4rem;
+    font-size: var(--text-body);
+    line-height: 1.7;
+  }
+  .tog-prose blockquote {
+    margin: 0 0 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-gold);
+    color: var(--color-steel-text);
+    font-style: italic;
+  }
+  .tog-prose img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
   }
 }
 
@@ -272,6 +441,38 @@
   }
   100% {
     background-position: 200% 50%;
+  }
+}
+
+/*
+ * Asymmetric on purpose: a fast flare up (0% → 8%) and a slower settle
+ * back to baseline (8% → 28%), then a hold at baseline until the cycle
+ * repeats. A symmetric ease-in-out sine (flare and settle at the same
+ * rate) reads as the surface breathing; this snap-then-fade reads as a
+ * glint of light passing over it, which is what "shimmer" actually looks
+ * like on foil/metal.
+ */
+@keyframes tog-gold-glow-shimmer {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
+  }
+  8% {
+    filter: drop-shadow(0 0 3px rgba(255, 244, 192, 0.6)) drop-shadow(0 0 12px rgba(245, 220, 126, 0.45));
+  }
+  28% {
+    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
+  }
+}
+
+@keyframes tog-gold-sweep {
+  0%,
+  15% {
+    background-position: 150% 0;
+  }
+  55%,
+  100% {
+    background-position: -50% 0;
   }
 }
 
@@ -290,5 +491,24 @@
   }
   to {
     transform: rotate(-360deg);
+  }
+}
+
+@keyframes tog-spinner-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes tog-mask-spin-once {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

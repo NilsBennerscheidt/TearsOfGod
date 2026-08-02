@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/sections/PageHeader";
 import type { Show } from "@/types/content";
 
 interface TourHeaderProps {
@@ -27,14 +28,12 @@ export async function TourHeader({ shows, locale }: TourHeaderProps) {
   const last = shows[shows.length - 1];
 
   return (
-    <div className="gutter-x border-b border-gold py-8 md:py-10">
-      <p className="text-meta text-blood-text font-mono tracking-widest uppercase">{t("eyebrow")}</p>
-      <h1 className="text-tour-h1 font-display mt-1 leading-none text-gold uppercase">{t("title")}</h1>
+    <PageHeader eyebrow={t("eyebrow")} title={t("title")}>
       {shows.length > 0 && first && last && (
         <p className="text-meta text-steel-text mt-3 font-mono tracking-wide uppercase">
           {t("dateCount", { count: shows.length })} · {formatRange(first.date, last.date, locale)}
         </p>
       )}
-    </div>
+    </PageHeader>
   );
 }

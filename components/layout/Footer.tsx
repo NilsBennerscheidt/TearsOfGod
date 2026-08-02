@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { LogoMonogram } from "@/components/brand/LogoMonogram";
 import { MetaStrip } from "@/components/brand/MetaStrip";
 import { band } from "@/content/band";
+import { pressKit } from "@/content/press";
 import { slogans } from "@/content/slogans";
 import { Link } from "@/i18n/navigation";
 import { SocialLinks } from "./SocialLinks";
@@ -40,7 +41,19 @@ export async function Footer({ variant = "landing" }: FooterProps) {
       <div className="mt-6 border-t border-ash pt-2">
         <SocialLinks label={t("Footer.social")} />
       </div>
-      <div className="text-meta text-steel-text flex gap-4 font-mono tracking-wide uppercase">
+      <div className="text-meta text-steel-text flex flex-wrap gap-4 font-mono tracking-wide uppercase">
+        <Link href="/media" className="inline-flex min-h-11 items-center hover:text-bone">
+          {t("Nav.media")}
+        </Link>
+        <Link href="/news" className="inline-flex min-h-11 items-center hover:text-bone">
+          {t("Nav.news")}
+        </Link>
+        <Link href="/band" className="inline-flex min-h-11 items-center hover:text-bone">
+          {t("Nav.band")}
+        </Link>
+        <a href={pressKit.href} download className="inline-flex min-h-11 items-center hover:text-bone">
+          {t("Press.heading")}
+        </a>
         <Link href="/impressum" className="inline-flex min-h-11 items-center hover:text-bone">
           {t("Legal.impressum")}
         </Link>
