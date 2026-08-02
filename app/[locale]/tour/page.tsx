@@ -25,7 +25,7 @@ export default async function TourPage({ params }: { params: Promise<{ locale: s
     <>
       <TourHeader shows={shows} locale={locale} />
       <ShowTable shows={shows} locale={locale} />
-      <Footer variant="tour" />
+      <Footer variant="live" />
       {shows.map((show) => (
         <script
           key={show.slug}

@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { SocialLinks } from "./SocialLinks";
 
 interface FooterProps {
-  variant?: "landing" | "tour";
+  variant?: "landing" | "live";
 }
 
 /**

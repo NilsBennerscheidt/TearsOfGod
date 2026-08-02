@@ -186,6 +186,46 @@
   }
 
   /*
+   * TearHalo's two rings, turning against each other — the ray ticks one
+   * way, the dashed ring the other. Counter-rotation reads as a working
+   * mechanism rather than a loading spinner, which one shared direction
+   * would. The solid ring is deliberately left static: a plain circle
+   * looks identical at every angle, so animating it costs frames and
+   * shows nothing.
+   *
+   * Both must spin about the mark's center, not their own corner. The
+   * origin is pinned with fill-box rather than view-box: view-box is the
+   * newer value and WebKit shipped it years after fill-box, and where it
+   * is not understood the whole declaration is dropped, leaving the
+   * origin at the element's top-left — which reads as the rings orbiting
+   * the corner rather than turning in place.
+   *
+   * fill-box + center is safe here because both bounding boxes are
+   * already centered on 80,80: the dashed circle by definition, and the
+   * ticks because 32 evenly spaced rays (any multiple of 4) put one on
+   * each axis, so the box spans 2..158 in x and y alike. Keep the ray
+   * count a multiple of 4 or this stops being true.
+   */
+  .tog-halo-rays,
+  .tog-halo-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .tog-halo-rays {
+    animation: tog-halo-spin 48s linear infinite;
+  }
+  .tog-halo-ring {
+    animation: tog-halo-spin-rev 32s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tog-halo-rays,
+    .tog-halo-ring {
+      animation: none;
+    }
+  }
+
+  /*
    * Minimal targeted styling for the rendered markdown body of the legal
    * pages (Impressum / Datenschutz) — just the handful of elements those
    * two documents actually use. Not a general prose system; no typography
@@ -232,5 +272,23 @@
   }
   100% {
     background-position: 200% 50%;
+  }
+}
+
+@keyframes tog-halo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tog-halo-spin-rev {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
   }
 }

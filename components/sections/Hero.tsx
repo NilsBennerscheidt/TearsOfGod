@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { Halftone } from "@/components/brand/Halftone";
 import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
 import { TearHalo } from "@/components/brand/TearHalo";
-import { Wordmark } from "@/components/brand/Wordmark";
 import { CtaButton } from "@/components/ui/CtaButton";
 import type { Release } from "@/content/releases";
 import { youtubeUrl } from "@/content/social";
@@ -33,8 +32,18 @@ export async function Hero({ release }: HeroProps) {
       <Halftone size={3} color="var(--color-gold)" opacity={0.06} />
 
       <h1 className="absolute inset-x-0 top-[16%] flex justify-center">
-        {/* No `width` prop: an inline width would override the responsive class. */}
-        <Wordmark color="var(--color-gold)" className="w-[76vw] max-w-225" />
+        {/*
+         * No `size` prop: an inline size would override the responsive
+         * class. The halo box is 56vw so the mask inside it (inset 18%,
+         * so 64% of the box) lands near the 44vw the bare mask occupied
+         * — the ring reads as added negative space, not added bulk.
+         */}
+        <TearHalo
+          color="var(--color-gold)"
+          strokeW={1.4}
+          title="Tears of God"
+          className="aspect-square w-[56vw] max-w-160"
+        />
       </h1>
 
       <div className="gutter-x safe-b relative flex flex-col items-start justify-between gap-8 pt-6 md:flex-row md:items-end md:pt-10">
