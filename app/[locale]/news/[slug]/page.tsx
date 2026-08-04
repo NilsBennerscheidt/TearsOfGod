@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/layout/Footer";
+import { PageHeader } from "@/components/sections/PageHeader";
 import { PhotoGrid } from "@/components/sections/PhotoGrid";
 import { PostEmbed } from "@/components/sections/PostEmbed";
 import { TagList } from "@/components/sections/TagList";
@@ -75,11 +76,18 @@ export default async function NewsPostPage({
 
   return (
     <>
+      <PageHeader eyebrow={t("eyebrow")} title={post.title}>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <Link
+            href="/news"
+            className="text-meta font-mono tracking-wide text-gold uppercase hover:text-gold-hi"
+          >
+            {t("back")}
+          </Link>
+          <p className="text-meta font-mono tracking-wide text-steel-text uppercase">{date}</p>
+        </div>
+      </PageHeader>
       <div className="gutter-x mx-auto max-w-2xl pt-12 md:pt-16">
-        <Link href="/news" className="text-meta font-mono tracking-wide text-gold uppercase">
-          {t("back")}
-        </Link>
-
         {post.cover && (
           <figure className="mt-6">
             <Image
@@ -97,9 +105,9 @@ export default async function NewsPostPage({
           </figure>
         )}
 
-        <p className="text-meta mt-6 font-mono tracking-wide text-steel-text uppercase">{date}</p>
-        <h1 className="font-display mt-2 mb-2 text-3xl text-gold uppercase">{post.title}</h1>
-        <TagList tags={post.tags} />
+        <div className="mt-6">
+          <TagList tags={post.tags} />
+        </div>
 
         {/* Safe: bodyHtml is rendered from this repo's own markdown files, not user input. */}
         <div className="tog-prose mt-4" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
