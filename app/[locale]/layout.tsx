@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { Grain } from "@/components/brand/Grain";
 import { GoldFoilDefs } from "@/components/brand/GoldFoilDefs";
 import { Header } from "@/components/layout/Header";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { band } from "@/content/band";
 import { parseLocale, routing } from "@/i18n/routing";
 import "../globals.css";
@@ -113,7 +114,9 @@ export default async function LocaleLayout({
             {t("skipToContent")}
           </a>
           <Header locale={locale} />
-          <main id="main-content">{children}</main>
+          <main id="main-content">
+            <PageTransition>{children}</PageTransition>
+          </main>
         </NextIntlClientProvider>
       </body>
     </html>

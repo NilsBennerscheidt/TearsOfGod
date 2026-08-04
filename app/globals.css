@@ -352,14 +352,41 @@
   }
 
   /*
-   * Full-cycle brand loader — spin, then three decaying bounces, then a
-   * held rest before looping. Distinct from `.tog-halo-*-fast` (a
-   * constant spin): this is for a wait that can run long enough that
-   * unbroken rotation stops reading as "in progress" and fades into
-   * wallpaper. The rest phase (58–100%) is what makes the next spin read
-   * as a new cycle rather than a stutter. Used by LoadingSpinner's
-   * `variant="cycle"` — TearHalo's own ambient ring spin keeps running
-   * underneath at its normal (non-`fast`) speed.
+   * Ember glow for the mask's eye holes — see MaskEyesGlow, which toggles
+   * the `-glowing` modifier on a random 60–300s timer. A plain opacity/
+   * filter transition rather than a keyframe animation: the hold duration
+   * is owned by that timer (GLOW_DURATION_MS), not by CSS. No reduced-
+   * motion override needed — MaskEyesGlow's timer never starts under
+   * prefers-reduced-motion, so `-glowing` is simply never applied.
+   */
+  .tog-mask-eye {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-blood-text) 0%, var(--color-blood) 55%, transparent 78%);
+    opacity: 0;
+    filter: blur(0.5px);
+    transition:
+      opacity 0.6s ease,
+      filter 0.6s ease;
+  }
+  .tog-mask-eye-glowing {
+    opacity: 1;
+    filter: blur(0.5px) drop-shadow(0 0 6px var(--color-blood-text));
+  }
+
+  /*
+   * Full-cycle brand loader — a spin, then a held rest before looping.
+   * Distinct from `.tog-halo-*-fast` (a constant spin): this is for a
+   * wait that can run long enough that unbroken rotation stops reading
+   * as "in progress" and fades into wallpaper. The rest phase (22–100%)
+   * is what makes the next spin read as a new cycle rather than a
+   * stutter — and what makes the mask spin *occasionally* rather than
+   * bounce continuously. Used by LoadingSpinner's `variant="cycle"` —
+   * TearHalo's own ambient ring spin keeps running underneath at its
+   * normal (non-`fast`) speed.
    */
   .tog-loader-cycle {
     animation: tog-loader-cycle 3.2s cubic-bezier(0.3, 0.7, 0.2, 1) infinite;
@@ -370,6 +397,23 @@
        as "done". Swap to the shared non-rotating pulse instead. */
     .tog-loader-cycle {
       animation: tog-spinner-pulse 1.6s ease-in-out infinite;
+    }
+  }
+
+  /*
+   * Route-change enter animation — see PageTransition, which remounts
+   * this element (`key={pathname}`) on every navigation so the animation
+   * replays. Fade + a slight rise reads as "new page" without being a
+   * full slide/wipe. No matching exit animation: Next swaps the outgoing
+   * page's DOM immediately on navigation, so there's nothing to animate
+   * out — only the incoming page is ever mounted long enough to animate.
+   */
+  .tog-page-enter {
+    animation: tog-page-enter 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tog-page-enter {
+      animation: none;
     }
   }
 
@@ -536,39 +580,29 @@
   }
 }
 
+@keyframes tog-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /*
- * Spin (0–22%) → three decaying hops (22–58%) → held rest (58–100%),
- * then loops. translateY only, no scale — a scale-squash landing would
- * need the transform-origin pinned to the bottom edge, which would in
- * turn throw off the 0–22% rotation (it needs to stay centered, or the
- * mark visibly orbits instead of spinning in place). One origin, used
- * consistently across the whole cycle, is worth more than a fancier
- * landing.
+ * Spin (0–22%) → held rest (22–100%), then loops — a plain rotation, no
+ * translateY hops. Used to bounce here (see git history); dropped in
+ * favor of the mask just spinning occasionally, since the hop reads as
+ * "stuck and twitching" rather than "still working" over a long wait.
  */
 @keyframes tog-loader-cycle {
   0% {
-    transform: rotate(0deg) translateY(0);
+    transform: rotate(0deg);
   }
-  22% {
-    transform: rotate(360deg) translateY(0);
-  }
-  30% {
-    transform: translateY(-18%);
-  }
-  38% {
-    transform: translateY(0);
-  }
-  44% {
-    transform: translateY(-9%);
-  }
-  50% {
-    transform: translateY(0);
-  }
-  54% {
-    transform: translateY(-4%);
-  }
-  58%,
+  22%,
   100% {
-    transform: translateY(0);
+    transform: rotate(360deg);
   }
 }

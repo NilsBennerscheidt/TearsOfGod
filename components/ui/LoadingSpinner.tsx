@@ -8,8 +8,8 @@ interface LoadingSpinnerProps {
   /**
    * `"fast"` (default): the brand mark's own ring/rays sped up via
    * TearHalo's `fast` prop — a tight, constant spin for short waits.
-   * `"cycle"`: spin → decaying bounce → held rest → repeat (see
-   * `.tog-loader-cycle` in globals.css) — reads as "still working"
+   * `"cycle"`: spin → held rest → repeat (see `.tog-loader-cycle` in
+   * globals.css) — reads as "still working"
    * across a longer wait without turning into ambient wallpaper, which a
    * bare constant spin does past a few seconds. The ambient ring/rays
    * keep spinning underneath at their normal (non-`fast`) speed rather

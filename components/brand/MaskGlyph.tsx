@@ -1,8 +1,16 @@
 import { cn } from "@/lib/cn";
+import { MaskEyesGlow } from "./MaskEyesGlow";
 
 interface MaskGlyphProps {
   color?: string;
   shiny?: boolean;
+  /**
+   * Adds two ember-glow dots over the mask's eye holes that light up
+   * briefly at a random interval (60–300s), then fade back out — an
+   * ambient easter egg, off by default. See MaskEyesGlow for the timer
+   * and .tog-mask-eye/-glowing in globals.css for the glow itself.
+   */
+  eyes?: boolean;
   className?: string;
 }
 
@@ -20,23 +28,32 @@ interface MaskGlyphProps {
  * bounds and squared, which is fine at emblem/favicon sizes but will
  * soften if ever rendered very large. Swap in a vector here when one
  * exists; nothing outside this file changes.
+ *
+ * The masked shape and the (optional) eye glow are two sibling layers,
+ * not one — a `mask-image` clips its own descendants too, and the eye
+ * holes are exactly the *transparent* part of that mask, so a glow dot
+ * placed inside the masked element would itself be masked away. `eyes`
+ * therefore renders MaskEyesGlow as an unmasked sibling, positioned over
+ * the same box via the shared `relative` wrapper.
  */
-export function MaskGlyph({ color = "currentColor", shiny = false, className }: MaskGlyphProps) {
+export function MaskGlyph({ color = "currentColor", shiny = false, eyes = false, className }: MaskGlyphProps) {
   return (
-    <div
-      aria-hidden="true"
-      className={cn("h-full w-full", shiny && "tog-gold-foil", className)}
-      style={{
-        WebkitMaskImage: "url(/brand/mask.png)",
-        maskImage: "url(/brand/mask.png)",
-        WebkitMaskSize: "contain",
-        maskSize: "contain",
-        WebkitMaskRepeat: "no-repeat",
-        maskRepeat: "no-repeat",
-        WebkitMaskPosition: "center",
-        maskPosition: "center",
-        background: shiny ? undefined : color,
-      }}
-    />
+    <div aria-hidden="true" className={cn("relative h-full w-full", className)}>
+      <div
+        className={cn("absolute inset-0", shiny && "tog-gold-foil")}
+        style={{
+          WebkitMaskImage: "url(/brand/mask.png)",
+          maskImage: "url(/brand/mask.png)",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+          background: shiny ? undefined : color,
+        }}
+      />
+      {eyes && <MaskEyesGlow />}
+    </div>
   );
 }

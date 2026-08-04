@@ -26,6 +26,8 @@ interface TearHaloProps {
    * still happening, so it can't just go static.
    */
   fast?: boolean;
+  /** Forwarded to MaskGlyph — see its `eyes` prop. */
+  eyes?: boolean;
   /** Accessible name. Omit when decorative — see MaskEmblem. */
   title?: string;
   className?: string;
@@ -43,6 +45,7 @@ export function TearHalo({
   shiny = false,
   strokeW = 1.2,
   fast = false,
+  eyes = false,
   title,
   className,
 }: TearHaloProps) {
@@ -131,7 +134,7 @@ export function TearHalo({
         </g>
       </svg>
       <div style={{ position: "absolute", inset: "18%" }}>
-        <MaskGlyph color={color} shiny={shiny} />
+        <MaskGlyph color={color} shiny={shiny} eyes={eyes} />
       </div>
     </div>
   );

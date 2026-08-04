@@ -33,7 +33,7 @@ export function Header({ locale }: { locale: AppLocale }) {
   return (
     <header className="gutter-x tog-gold-glow-box relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-gold py-4 md:flex md:justify-between">
       <div className="col-start-1 flex items-center gap-3 justify-self-start md:hidden">
-        <SpinnableTearHalo size={34} strokeW={2.4} />
+        <SpinnableTearHalo size={34} strokeW={2.4} eyes />
         <LocaleSwitcher currentLocale={locale} />
       </div>
       {/* No aria-label here — the link's accessible name is inherited from Wordmark's own role="img" aria-label, which is correct and sufficient. `shiny` fills it with the animated gold-foil gradient (already built, previously unused by any real page) instead of a flat color, so the mark itself sweeps — tog-gold-glow adds the shimmering aura on top. */}

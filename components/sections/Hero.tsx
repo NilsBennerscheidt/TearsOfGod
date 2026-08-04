@@ -43,6 +43,7 @@ export async function Hero({ release }: HeroProps) {
         <TearHalo
           shiny
           strokeW={1.4}
+          eyes
           title="Tears of God"
           className="tog-gold-glow aspect-square w-[56vw] max-w-160"
         />

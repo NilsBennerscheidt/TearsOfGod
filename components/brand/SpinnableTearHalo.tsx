@@ -7,6 +7,8 @@ import { TearHalo } from "./TearHalo";
 interface SpinnableTearHaloProps {
   size?: number;
   strokeW?: number;
+  /** Forwarded to TearHalo/MaskGlyph — see MaskGlyph's `eyes` prop. */
+  eyes?: boolean;
   title?: string;
   className?: string;
 }
@@ -30,7 +32,13 @@ interface SpinnableTearHaloProps {
  * the only way to reach any functionality) while assistive tech is never
  * told a focusable, actionable control exists here at all.
  */
-export function SpinnableTearHalo({ size = 90, strokeW = 1.4, title, className }: SpinnableTearHaloProps) {
+export function SpinnableTearHalo({
+  size = 90,
+  strokeW = 1.4,
+  eyes = false,
+  title,
+  className,
+}: SpinnableTearHaloProps) {
   const [spinning, setSpinning] = useState(false);
   const spin = () => setSpinning(true);
   const onAnimationEnd = () => setSpinning(false);
@@ -39,14 +47,14 @@ export function SpinnableTearHalo({ size = 90, strokeW = 1.4, title, className }
   if (!title) {
     return (
       <div aria-hidden="true" onClick={spin} onAnimationEnd={onAnimationEnd} className={classes}>
-        <TearHalo size={size} shiny strokeW={strokeW} className="tog-gold-glow" />
+        <TearHalo size={size} shiny strokeW={strokeW} eyes={eyes} className="tog-gold-glow" />
       </div>
     );
   }
 
   return (
     <button type="button" onClick={spin} onAnimationEnd={onAnimationEnd} className={classes}>
-      <TearHalo size={size} shiny strokeW={strokeW} title={title} className="tog-gold-glow" />
+      <TearHalo size={size} shiny strokeW={strokeW} eyes={eyes} title={title} className="tog-gold-glow" />
     </button>
   );
 }
