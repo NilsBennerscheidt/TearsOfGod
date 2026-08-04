@@ -22,6 +22,7 @@ export async function MemberCards() {
                 alt={member.displayName}
                 width={480}
                 height={640}
+                sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"
                 className="aspect-3/4 w-full object-cover"
               />
             ) : (

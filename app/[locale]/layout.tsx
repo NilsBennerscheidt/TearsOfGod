@@ -6,16 +6,54 @@ import type { ReactNode } from "react";
 import { Grain } from "@/components/brand/Grain";
 import { GoldFoilDefs } from "@/components/brand/GoldFoilDefs";
 import { Header } from "@/components/layout/Header";
-import { routing } from "@/i18n/routing";
+import { band } from "@/content/band";
+import { parseLocale, routing } from "@/i18n/routing";
 import "../globals.css";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
-  title: "Tears of God",
-};
+const SITE_URL = "https://tearsofgod.net";
+
+/**
+ * generateMetadata (not a static `metadata` export): `alternates.canonical`
+ * and `alternates.languages` are per-locale — routing.localePrefix is
+ * "always" (i18n/routing.ts), so /de and /en are two distinct, both-
+ * indexable URLs and search engines need the hreflang pair declared to
+ * treat them as translations of each other rather than duplicate content.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale: parseLocale(locale), namespace: "Landing" });
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: band.name, template: `%s — ${band.name}` },
+    description: t("bandBody"),
+    alternates: {
+      canonical: `/${locale}`,
+      languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])),
+    },
+    openGraph: {
+      type: "website",
+      locale,
+      siteName: band.name,
+      title: band.name,
+      description: t("bandBody"),
+      images: band.groupPhoto ? [{ url: band.groupPhoto }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: band.name,
+      description: t("bandBody"),
+    },
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -49,10 +87,22 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   const t = await getTranslations("Nav");
 
+  // Only Nav/News/Media are ever read by a Client Component
+  // (SiteNav/MobileNavToggle/nav-items.ts, ShareButton, PhotoLightbox —
+  // see the grep-verified list in each). The rest of the catalogue is
+  // read exclusively by Server Components via getTranslations(), which
+  // doesn't go through this provider at all — shipping it to the client
+  // anyway would just be dead weight in every page's initial payload.
+  const clientMessages = {
+    Nav: messages.Nav,
+    News: messages.News,
+    Media: messages.Media,
+  };
+
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={clientMessages}>
           <GoldFoilDefs />
           {/* One fixed, whole-viewport texture layer — not per-section like the mockup's per-artboard <Grain>. Low z-index and pointer-events:none so it never sits above or blocks real content. */}
           <Grain className="fixed z-0" />

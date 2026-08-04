@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { createPortal } from "react-dom";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useFocusTrap } from "@/lib/focus-trap";
 import type { MediaPhoto } from "@/types/content";
@@ -28,6 +29,14 @@ const SWIPE_THRESHOLD = 50;
  * the source files are up to 8192px/several MB; serving them unoptimized
  * here would make the lightbox slower to open than the grid it opened
  * from.
+ *
+ * Portaled to `document.body` rather than rendered in place: PhotoGrid
+ * (its only caller) renders inside `#main-content`, and useFocusTrap
+ * marks `#main-content` `inert` while this is open so a screen reader's
+ * virtual cursor can't wander into the grid behind it — that would inert
+ * this dialog too if it stayed nested inside. `fixed inset-0` doesn't
+ * depend on any ancestor's positioning, so the portal changes nothing
+ * visually.
  */
 export function PhotoLightbox({ photos, index, onClose, onNavigate }: PhotoLightboxProps) {
   const t = useTranslations("Media");
@@ -71,7 +80,7 @@ export function PhotoLightbox({ photos, index, onClose, onNavigate }: PhotoLight
     onNavigate(delta > 0 ? (index - 1 + photos.length) % photos.length : (index + 1) % photos.length);
   }
 
-  return (
+  return createPortal(
     <div
       ref={containerRef}
       role="dialog"
@@ -138,6 +147,7 @@ export function PhotoLightbox({ photos, index, onClose, onNavigate }: PhotoLight
       {photo.credit && (
         <p className="text-meta text-steel-text px-4 pb-4 text-center uppercase">{photo.credit}</p>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 }

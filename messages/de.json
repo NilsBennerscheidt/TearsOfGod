@@ -7,7 +7,9 @@
     "band": "Wir",
     "skipToContent": "Zum Inhalt springen",
     "menu": "Menü",
-    "close": "Schließen"
+    "close": "Schließen",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundBody": "Diese Seite gibt es nicht (mehr) — der Link könnte veraltet sein."
   },
   "Shows": {
     "status": {
@@ -95,6 +97,7 @@
     "back": "← Zurück zu News",
     "share": "Teilen",
     "shareCopied": "Kopiert!",
+    "shareUnavailable": "Link zum Kopieren:",
     "prevPost": "← Älter",
     "nextPost": "Neuer →",
     "galleryHeading": "Galerie",

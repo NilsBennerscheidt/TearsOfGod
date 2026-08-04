@@ -5,7 +5,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { routing } from "@/i18n/routing";
 import { adminGuard } from "@/lib/admin/guards";
-import { resolveContentPath } from "@/lib/admin/paths";
+import { resolveContentPath, SAFE_SLUG_PATTERN } from "@/lib/admin/paths";
+import { INVALID_JSON, readJson } from "@/lib/admin/read-json";
 import { formatZodError } from "@/lib/content/format-zod-error";
 import { getPosts, POSTS_ROOT } from "@/lib/content/posts";
 import { postFrontmatterSchema } from "@/lib/schemas/post";
@@ -43,8 +44,12 @@ export async function GET() {
   return NextResponse.json({ items });
 }
 
+// slug isn't a frontmatter field (see postFrontmatterSchema's doc comment)
+// — the filename *is* the slug, so creation takes it as a sibling field
+// alongside `frontmatter`, same shape the shows route already uses.
 const createSchema = z.object({
   locale: z.enum(routing.locales),
+  slug: z.string().regex(SAFE_SLUG_PATTERN, "slug must be lowercase kebab-case"),
   frontmatter: postFrontmatterSchema,
   body: z.string(),
 });
@@ -53,17 +58,22 @@ export async function POST(request: NextRequest) {
   const guard = await adminGuard();
   if (guard) return guard;
 
-  const parsed = createSchema.safeParse(await request.json());
+  const raw = await readJson(request);
+  if (raw === INVALID_JSON) {
+    return NextResponse.json({ error: "Request body is not valid JSON." }, { status: 400 });
+  }
+
+  const parsed = createSchema.safeParse(raw);
   if (!parsed.success) {
     return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
   }
 
-  const { locale, frontmatter, body } = parsed.data;
+  const { locale, slug, frontmatter, body } = parsed.data;
   const dir = path.join(POSTS_ROOT, locale);
 
   let filePath: string;
   try {
-    filePath = resolveContentPath(dir, frontmatter.slug, ".md");
+    filePath = resolveContentPath(dir, slug, ".md");
   } catch {
     return NextResponse.json({ error: "Invalid slug." }, { status: 400 });
   }
@@ -79,5 +89,5 @@ export async function POST(request: NextRequest) {
   await mkdir(dir, { recursive: true });
   await writeFile(filePath, matter.stringify(body, frontmatter), "utf8");
 
-  return NextResponse.json({ locale, slug: frontmatter.slug }, { status: 201 });
+  return NextResponse.json({ locale, slug }, { status: 201 });
 }

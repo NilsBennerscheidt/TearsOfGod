@@ -8,9 +8,12 @@ import { PostEmbed } from "@/components/sections/PostEmbed";
 import { TagList } from "@/components/sections/TagList";
 import { ShareButton } from "@/components/ui/ShareButton";
 import { Link } from "@/i18n/navigation";
-import type { AppLocale } from "@/i18n/routing";
-import { routing } from "@/i18n/routing";
+import { parseLocale, routing } from "@/i18n/routing";
 import { getPostBySlug, getPostNeighbours, getPosts } from "@/lib/content/posts";
+
+// Renders Footer, whose copyright year is `new Date().getFullYear()` —
+// see the fuller comment on app/[locale]/tour/page.tsx's revalidate.
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const paramsByLocale = await Promise.all(
@@ -29,9 +32,26 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const post = await getPostBySlug(locale as AppLocale, slug);
+  const post = await getPostBySlug(parseLocale(locale), slug);
   if (!post) return {};
-  return { title: post.title, description: post.excerpt };
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: { canonical: `/${locale}/news/${slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: post.date,
+      images: post.cover ? [{ url: post.cover.src, width: post.cover.width, height: post.cover.height }] : [],
+    },
+    twitter: {
+      card: post.cover ? "summary_large_image" : "summary",
+      title: post.title,
+      description: post.excerpt,
+    },
+  };
 }
 
 export default async function NewsPostPage({
@@ -40,10 +60,11 @@ export default async function NewsPostPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const appLocale = parseLocale(locale);
   const [t, post, { older, newer }] = await Promise.all([
     getTranslations("News"),
-    getPostBySlug(locale as AppLocale, slug),
-    getPostNeighbours(locale as AppLocale, slug),
+    getPostBySlug(appLocale, slug),
+    getPostNeighbours(appLocale, slug),
   ]);
 
   if (!post) notFound();

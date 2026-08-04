@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { fetchJson } from "@/lib/admin/fetch-json";
 import type { MediaPhoto, MediaVideo } from "@/types/content";
 
 interface MediaFile {
   photos: MediaPhoto[];
   videos: MediaVideo[];
+}
+
+function invalidReasons(media: MediaFile): string[] {
+  const reasons: string[] = [];
+  media.photos.forEach((photo, i) => {
+    if (!photo.alt.trim()) reasons.push(`Photo #${i + 1} (${photo.src}) is missing alt text.`);
+  });
+  media.videos.forEach((video, i) => {
+    if (!video.title.trim()) reasons.push(`Video #${i + 1} (${video.src}) is missing a title.`);
+    if (!video.poster.startsWith("/media/videos/")) {
+      reasons.push(`Video #${i + 1} (${video.src}) needs a poster path under /media/videos/.`);
+    }
+  });
+  return reasons;
 }
 
 /**
@@ -18,96 +33,156 @@ interface MediaFile {
  * succeeds but a save the user never confirms doesn't silently lose the
  * file (it's just an unreferenced file in public/, visible to
  * `git status`, not a crash).
+ *
+ * `mediaFileSchema` requires non-empty alt/title and a valid poster path
+ * (lib/schemas/media.ts) — the server rejects a save that doesn't meet
+ * those, so `invalidReasons` mirrors the same checks client-side and
+ * disables Save with a specific reason instead of the user finding out
+ * from an opaque "Error: photos.4.alt: Too small" after the fact.
  */
 export default function MediaAdminPage() {
   const [media, setMedia] = useState<MediaFile | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/admin/media")
-      .then((res) => res.json())
-      .then(setMedia);
+    fetchJson<MediaFile>("/api/admin/media")
+      .then(setMedia)
+      .catch((err: Error) => setLoadError(err.message));
   }, []);
+
+  const reasons = useMemo(() => (media ? invalidReasons(media) : []), [media]);
 
   async function handleSave() {
     if (!media) return;
     setSaving(true);
     setStatus(null);
-    const res = await fetch("/api/admin/media", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(media),
-    });
-    const json = await res.json();
-    setSaving(false);
-    setStatus(res.ok ? "Saved." : `Error: ${json.error}`);
+    try {
+      await fetchJson("/api/admin/media", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(media),
+      });
+      setStatus("Saved.");
+    } catch (err) {
+      setStatus(`Error: ${err instanceof Error ? err.message : "Something went wrong."}`);
+    } finally {
+      setSaving(false);
+    }
   }
 
+  if (loadError) return <p className="text-blood-text">Couldn&apos;t load media: {loadError}</p>;
   if (!media) return <p>Loading…</p>;
 
   return (
     <div className="flex flex-col gap-10">
-      <PhotosSection photos={media.photos} onChange={(photos) => setMedia({ ...media, photos })} />
-      <VideosSection videos={media.videos} onChange={(videos) => setMedia({ ...media, videos })} />
+      <PhotosSection
+        photos={media.photos}
+        onChange={(updater) => setMedia((m) => (m ? { ...m, photos: updater(m.photos) } : m))}
+      />
+      <VideosSection
+        videos={media.videos}
+        onChange={(updater) => setMedia((m) => (m ? { ...m, videos: updater(m.videos) } : m))}
+      />
 
-      <div className="flex items-center gap-4 border-t border-ash pt-4">
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={saving}
-          className="border-gold text-gold hover:text-gold-hi border px-4 py-2 font-mono text-xs uppercase disabled:opacity-50"
-        >
-          {saving ? "Saving…" : "Save changes"}
-        </button>
-        {status && <span className="text-meta text-steel-text">{status}</span>}
+      <div className="flex flex-col gap-2 border-t border-ash pt-4">
+        {reasons.length > 0 && (
+          <ul className="text-meta text-blood-text list-disc pl-5">
+            {reasons.map((reason) => (
+              <li key={reason}>{reason}</li>
+            ))}
+          </ul>
+        )}
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving || reasons.length > 0}
+            className="border-gold text-gold hover:text-gold-hi border px-4 py-2 font-mono text-xs uppercase disabled:opacity-50"
+          >
+            {saving ? "Saving…" : "Save changes"}
+          </button>
+          {status && <span className="text-meta text-steel-text">{status}</span>}
+        </div>
       </div>
     </div>
   );
 }
 
-function PhotosSection({ photos, onChange }: { photos: MediaPhoto[]; onChange: (photos: MediaPhoto[]) => void }) {
+/** Filename-derived id, made unique with a short random suffix — two uploads that sanitize to the same base name (e.g. "Live 01.jpg" and "live-01.JPG") must not collide as React keys or overwrite each other's metadata in the saved array. */
+function uniqueId(src: string): string {
+  const base = src.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "upload";
+  const suffix =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
+  return `${base}-${suffix}`;
+}
+
+function PhotosSection({
+  photos,
+  onChange,
+}: {
+  photos: MediaPhoto[];
+  onChange: (updater: (photos: MediaPhoto[]) => MediaPhoto[]) => void;
+}) {
   const inputId = useId();
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleUpload(files: FileList | null) {
     if (!files || files.length === 0) return;
     setUploading(true);
+    setUploadError(null);
 
-    const next = [...photos];
+    // Each successful upload is appended via a functional update, not by
+    // accumulating against the `photos` prop captured when this handler
+    // started — a multi-file upload awaits one request per file, and an
+    // edit made elsewhere (alt text, reorder) while it's in flight would
+    // otherwise be silently discarded when the stale array is written back.
+    const errors: string[] = [];
     for (const file of Array.from(files)) {
       const formData = new FormData();
       formData.set("file", file);
       formData.set("kind", "photos");
-      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
-      if (res.ok) {
-        const { src, width, height } = await res.json();
-        next.push({ id: src.split("/").pop().replace(/\.[^.]+$/, ""), src, alt: "", width, height });
+      try {
+        const { src, width, height } = await fetchJson<{ src: string; width: number; height: number }>(
+          "/api/admin/upload",
+          { method: "POST", body: formData },
+        );
+        const photo: MediaPhoto = { id: uniqueId(src), src, alt: "", width, height };
+        onChange((prev) => [...prev, photo]);
+      } catch (err) {
+        errors.push(`${file.name}: ${err instanceof Error ? err.message : "upload failed"}`);
       }
     }
-    onChange(next);
+
     setUploading(false);
+    if (errors.length > 0) setUploadError(errors.join(" · "));
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   function update(index: number, patch: Partial<MediaPhoto>) {
-    onChange(photos.map((photo, i) => (i === index ? { ...photo, ...patch } : photo)));
+    onChange((prev) => prev.map((photo, i) => (i === index ? { ...photo, ...patch } : photo)));
   }
 
   function remove(index: number) {
     if (!confirm("Remove this photo from the media library? The file itself stays in public/.")) return;
-    onChange(photos.filter((_, i) => i !== index));
+    onChange((prev) => prev.filter((_, i) => i !== index));
   }
 
   function move(index: number, delta: number) {
-    const target = index + delta;
-    if (target < 0 || target >= photos.length) return;
-    const next = [...photos];
-    const [item] = next.splice(index, 1);
-    if (!item) return;
-    next.splice(target, 0, item);
-    onChange(next);
+    onChange((prev) => {
+      const target = index + delta;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      const [item] = next.splice(index, 1);
+      if (!item) return prev;
+      next.splice(target, 0, item);
+      return next;
+    });
   }
 
   return (
@@ -127,6 +202,8 @@ function PhotosSection({ photos, onChange }: { photos: MediaPhoto[]; onChange: (
           />
         </label>
       </div>
+
+      {uploadError && <p className="text-meta text-blood-text mb-3">{uploadError}</p>}
 
       <ul className="flex flex-col gap-3">
         {photos.map((photo, index) => (
@@ -170,38 +247,49 @@ function PhotosSection({ photos, onChange }: { photos: MediaPhoto[]; onChange: (
   );
 }
 
-function VideosSection({ videos, onChange }: { videos: MediaVideo[]; onChange: (videos: MediaVideo[]) => void }) {
+function VideosSection({
+  videos,
+  onChange,
+}: {
+  videos: MediaVideo[];
+  onChange: (updater: (videos: MediaVideo[]) => MediaVideo[]) => void;
+}) {
   const inputId = useId();
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleUpload(files: FileList | null) {
     if (!files || files.length === 0) return;
     setUploading(true);
+    setUploadError(null);
 
-    const next = [...videos];
+    const errors: string[] = [];
     for (const file of Array.from(files)) {
       const formData = new FormData();
       formData.set("file", file);
       formData.set("kind", "videos");
-      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
-      if (res.ok) {
-        const { src } = await res.json();
-        next.push({ id: src.split("/").pop().replace(/\.[^.]+$/, ""), title: "", src, poster: "", width: 1280, height: 720 });
+      try {
+        const { src } = await fetchJson<{ src: string }>("/api/admin/upload", { method: "POST", body: formData });
+        const video: MediaVideo = { id: uniqueId(src), title: "", src, poster: "", width: 1280, height: 720 };
+        onChange((prev) => [...prev, video]);
+      } catch (err) {
+        errors.push(`${file.name}: ${err instanceof Error ? err.message : "upload failed"}`);
       }
     }
-    onChange(next);
+
     setUploading(false);
+    if (errors.length > 0) setUploadError(errors.join(" · "));
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   function update(index: number, patch: Partial<MediaVideo>) {
-    onChange(videos.map((video, i) => (i === index ? { ...video, ...patch } : video)));
+    onChange((prev) => prev.map((video, i) => (i === index ? { ...video, ...patch } : video)));
   }
 
   function remove(index: number) {
     if (!confirm("Remove this video from the media library? The file itself stays in public/.")) return;
-    onChange(videos.filter((_, i) => i !== index));
+    onChange((prev) => prev.filter((_, i) => i !== index));
   }
 
   return (
@@ -221,6 +309,8 @@ function VideosSection({ videos, onChange }: { videos: MediaVideo[]; onChange: (
           />
         </label>
       </div>
+
+      {uploadError && <p className="text-meta text-blood-text mb-3">{uploadError}</p>}
 
       <ul className="flex flex-col gap-3">
         {videos.map((video, index) => (

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { routing } from "@/i18n/routing";
 import { adminGuard } from "@/lib/admin/guards";
 import { resolveContentPath, UnsafePathError } from "@/lib/admin/paths";
+import { INVALID_JSON, readJson } from "@/lib/admin/read-json";
 import { formatZodError } from "@/lib/content/format-zod-error";
 import { POSTS_ROOT } from "@/lib/content/posts";
 import { postFrontmatterSchema } from "@/lib/schemas/post";
@@ -66,20 +67,21 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const parsed = updateSchema.safeParse(await request.json());
+  const raw = await readJson(request);
+  if (raw === INVALID_JSON) {
+    return NextResponse.json({ error: "Request body is not valid JSON." }, { status: 400 });
+  }
+
+  const parsed = updateSchema.safeParse(raw);
   if (!parsed.success) {
     return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
   }
 
-  // Renaming would mean moving a file, not editing one — kept out of
-  // scope for this pass. Delete + recreate under the new slug instead.
-  if (parsed.data.frontmatter.slug !== slug) {
-    return NextResponse.json(
-      { error: "Changing the slug isn't supported here — delete this post and create a new one instead." },
-      { status: 400 },
-    );
-  }
-
+  // slug isn't a frontmatter field (see postFrontmatterSchema's doc
+  // comment) — it's fixed by the URL/filename, so there's nothing to
+  // compare against a submitted value here. Renaming would mean moving a
+  // file, not editing one — kept out of scope for this pass; delete +
+  // recreate under the new slug instead.
   await writeFile(filePath, matter.stringify(parsed.data.body, parsed.data.frontmatter), "utf8");
   return NextResponse.json({ locale, slug });
 }

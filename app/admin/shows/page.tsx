@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchJson } from "@/lib/admin/fetch-json";
 import type { Show } from "@/types/content";
 import type { ShowStatus } from "@/lib/schemas/show";
 
@@ -10,18 +11,22 @@ type View = { kind: "list" } | { kind: "new" } | { kind: "edit"; slug: string };
 
 export default function ShowsAdminPage() {
   const [shows, setShows] = useState<Show[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [view, setView] = useState<View>({ kind: "list" });
 
+  // No synchronous setState here — see the identical comment in
+  // app/admin/news/page.tsx's `load` (react-hooks/set-state-in-effect).
   function load() {
-    fetch("/api/admin/shows")
-      .then((res) => res.json())
-      .then((json) => setShows(json.items));
+    fetchJson<{ items: Show[] }>("/api/admin/shows")
+      .then((json) => setShows(json.items))
+      .catch((err: Error) => setLoadError(err.message));
   }
 
   useEffect(load, []);
 
   function reload() {
     setShows(null);
+    setLoadError(null);
     load();
   }
 
@@ -53,7 +58,9 @@ export default function ShowsAdminPage() {
         </button>
       </div>
 
-      {!shows ? (
+      {loadError ? (
+        <p className="text-blood-text text-sm">Couldn&apos;t load shows: {loadError}</p>
+      ) : !shows ? (
         <p>Loading…</p>
       ) : (
         <ul className="flex flex-col gap-3">
@@ -106,20 +113,21 @@ function ShowForm({ mode, initialSlug, onDone, onCancel }: ShowFormProps) {
 
   useEffect(() => {
     if (mode !== "edit" || !initialSlug) return;
-    fetch(`/api/admin/shows/${initialSlug}`)
-      .then((res) => res.json())
+    fetchJson<{ frontmatter: Record<string, unknown>; body: string }>(`/api/admin/shows/${initialSlug}`)
       .then(({ frontmatter, body: markdownBody }) => {
-        setDate(frontmatter.date);
-        setCity(frontmatter.city);
-        setVenue(frontmatter.venue);
-        setName(frontmatter.name ?? "");
-        setStatus(frontmatter.status);
-        setTicketUrl(frontmatter.ticketUrl ?? "");
-        setAdvance(frontmatter.price ? String(frontmatter.price.advance) : "");
-        setDoor(frontmatter.price ? String(frontmatter.price.door) : "");
+        setDate(String(frontmatter.date ?? ""));
+        setCity(String(frontmatter.city ?? ""));
+        setVenue(String(frontmatter.venue ?? ""));
+        setName(String(frontmatter.name ?? ""));
+        setStatus((frontmatter.status as ShowStatus) ?? "available");
+        setTicketUrl(String(frontmatter.ticketUrl ?? ""));
+        const price = frontmatter.price as { advance: number; door: number } | undefined;
+        setAdvance(price ? String(price.advance) : "");
+        setDoor(price ? String(price.door) : "");
         setBody(markdownBody.trim());
         setLoaded(true);
-      });
+      })
+      .catch((err: Error) => setError(`Couldn't load this show: ${err.message}`));
   }, [mode, initialSlug]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -137,38 +145,43 @@ function ShowForm({ mode, initialSlug, onDone, onCancel }: ShowFormProps) {
     };
 
     setBusy(true);
-    const res =
-      mode === "create"
-        ? await fetch("/api/admin/shows", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ slug, frontmatter, body }),
-          })
-        : await fetch(`/api/admin/shows/${initialSlug}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ frontmatter, body }),
-          });
-
-    setBusy(false);
-    const json = await res.json();
-    if (!res.ok) {
-      setError(json.error ?? "Something went wrong.");
-      return;
+    try {
+      if (mode === "create") {
+        await fetchJson("/api/admin/shows", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug, frontmatter, body }),
+        });
+      } else {
+        await fetchJson(`/api/admin/shows/${initialSlug}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ frontmatter, body }),
+        });
+      }
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setBusy(false);
     }
-    onDone();
   }
 
   async function handleDelete() {
     if (!initialSlug) return;
     if (!confirm(`Delete ${initialSlug}? This can't be undone from here.`)) return;
     setBusy(true);
-    await fetch(`/api/admin/shows/${initialSlug}`, { method: "DELETE" });
-    setBusy(false);
-    onDone();
+    try {
+      await fetchJson(`/api/admin/shows/${initialSlug}`, { method: "DELETE" });
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Delete failed.");
+    } finally {
+      setBusy(false);
+    }
   }
 
-  if (!loaded) return <p>Loading…</p>;
+  if (!loaded) return <p>{error ? <span className="text-blood-text">{error}</span> : "Loading…"}</p>;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">

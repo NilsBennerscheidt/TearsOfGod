@@ -7,6 +7,11 @@ import { MemberCards } from "@/components/sections/MemberCards";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { band } from "@/content/band";
 
+// Renders Footer, whose copyright year is `new Date().getFullYear()` —
+// without this a static build freezes that year at build time. See the
+// fuller comment on app/[locale]/tour/page.tsx's revalidate.
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {
@@ -31,7 +36,15 @@ export default async function BandPage({ params }: { params: Promise<{ locale: s
       <div className="gutter-x flex flex-col gap-10 py-10 md:py-14">
         <div className="border border-ash">
           {band.groupPhoto ? (
-            <Image src={band.groupPhoto} alt={band.name} width={1600} height={900} className="w-full object-cover" />
+            <Image
+              src={band.groupPhoto}
+              alt={band.name}
+              width={1600}
+              height={900}
+              sizes="(min-width: 768px) 80vw, 100vw"
+              priority
+              className="w-full object-cover"
+            />
           ) : (
             <PhotoPlaceholder label="GROUP · CASTROP-RAUXEL" aspect="16 / 9" />
           )}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import type { AppLocale } from "@/i18n/routing";
+import { parseLocale } from "@/i18n/routing";
 import { getLegalPage } from "@/lib/content/legal";
 
 export async function generateMetadata({
@@ -10,15 +10,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   setRequestLocale(locale);
-  // Root layout already validated `locale` against routing.locales before
-  // this can render — narrowing again here would be redundant.
-  const page = await getLegalPage("impressum", locale as AppLocale);
+  const page = await getLegalPage("impressum", parseLocale(locale));
   return { title: page.title };
 }
 
 export default async function ImpressumPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const page = await getLegalPage("impressum", locale as AppLocale);
+  const page = await getLegalPage("impressum", parseLocale(locale));
 
   return (
     <article>

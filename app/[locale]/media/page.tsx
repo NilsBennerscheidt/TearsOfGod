@@ -7,6 +7,10 @@ import { SocialGrid } from "@/components/sections/SocialGrid";
 import { VideoGrid } from "@/components/sections/VideoGrid";
 import { getMedia } from "@/lib/content/media";
 
+// Renders Footer, whose copyright year is `new Date().getFullYear()` —
+// see the fuller comment on app/[locale]/tour/page.tsx's revalidate.
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {

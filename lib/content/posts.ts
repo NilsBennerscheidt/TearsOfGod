@@ -25,7 +25,9 @@ async function loadPosts(locale: AppLocale): Promise<Post[]> {
       }
 
       const bodyHtml = await renderMarkdown(content);
-      return { ...parsed.data, locale, bodyHtml } satisfies Post;
+      // slug comes from the filename, not frontmatter — see the doc
+      // comment on postFrontmatterSchema for why.
+      return { ...parsed.data, slug: id, locale, bodyHtml } satisfies Post;
     }),
   );
 

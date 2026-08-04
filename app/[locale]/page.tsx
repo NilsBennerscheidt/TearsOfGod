@@ -9,6 +9,10 @@ import { NextShowCard } from "@/components/sections/NextShowCard";
 import { currentRelease } from "@/content/releases";
 import { slogans } from "@/content/slogans";
 
+// NextShowCard reads getNextShow(), which filters against `new Date()` —
+// see the identical comment on app/[locale]/tour/page.tsx's revalidate.
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {

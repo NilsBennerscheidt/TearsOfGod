@@ -6,6 +6,14 @@ import { TourHeader } from "@/components/sections/TourHeader";
 import { getUpcomingShows } from "@/lib/content/shows";
 import { musicEventJsonLd } from "@/lib/seo/musicEvent";
 
+// getUpcomingShows() filters against `new Date()` at render time — without
+// this, a statically-prerendered page freezes that filter at build time,
+// so a show that's already happened never leaves the page (and the "next
+// show" it feeds on the landing page never advances) until the next
+// deploy. An hour is frequent enough that a page never advertises a past
+// show for long, without turning this into an on-demand route.
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {

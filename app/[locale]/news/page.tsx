@@ -5,7 +5,11 @@ import { PageHeader } from "@/components/sections/PageHeader";
 import { PostCard } from "@/components/sections/PostCard";
 import { PressKit } from "@/components/sections/PressKit";
 import { getPosts } from "@/lib/content/posts";
-import type { AppLocale } from "@/i18n/routing";
+import { parseLocale } from "@/i18n/routing";
+
+// Renders Footer, whose copyright year is `new Date().getFullYear()` —
+// see the fuller comment on app/[locale]/tour/page.tsx's revalidate.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -20,7 +24,7 @@ export async function generateMetadata({
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, posts] = await Promise.all([getTranslations("News"), getPosts(locale as AppLocale)]);
+  const [t, posts] = await Promise.all([getTranslations("News"), getPosts(parseLocale(locale))]);
 
   return (
     <>

@@ -7,7 +7,9 @@
     "band": "We",
     "skipToContent": "Skip to content",
     "menu": "Menu",
-    "close": "Close"
+    "close": "Close",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This page doesn't exist (anymore) — the link may be out of date."
   },
   "Shows": {
     "status": {
@@ -95,6 +97,7 @@
     "back": "← Back to News",
     "share": "Share",
     "shareCopied": "Copied!",
+    "shareUnavailable": "Link to copy:",
     "prevPost": "← Older",
     "nextPost": "Newer →",
     "galleryHeading": "Gallery",

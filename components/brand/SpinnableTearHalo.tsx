@@ -16,24 +16,36 @@ interface SpinnableTearHaloProps {
  * response to a touch rather than pure decoration. Layers on top of
  * TearHalo's own ambient ring spin (see .tog-halo-rays/.tog-halo-ring in
  * globals.css); this animates the whole mark, mask included, via
- * .tog-mask-spin on the wrapping button.
+ * .tog-mask-spin on the wrapping element.
  *
- * A real <button>, not a click handler on a <div>: it needs to be
- * reachable and activatable by keyboard, and a button gets that (focus,
- * Enter/Space) for free.
+ * A real <button>, but only when `title` gives it a genuine accessible
+ * name and destination-free action worth exposing to assistive tech —
+ * every current call site (Header, Hero) omits `title`, i.e. this is a
+ * second, purely decorative copy of the mark that already appears
+ * elsewhere on the page with its own accessible name. Making *that* a
+ * `<button>` would mean an interactive control with no name and no
+ * effect other than a visual flourish, reachable by keyboard and screen
+ * reader alike for no reason — worse than a plain `<div onClick>`, which
+ * a mouse/touch user can still activate (this is a bonus interaction, not
+ * the only way to reach any functionality) while assistive tech is never
+ * told a focusable, actionable control exists here at all.
  */
 export function SpinnableTearHalo({ size = 90, strokeW = 1.4, title, className }: SpinnableTearHaloProps) {
   const [spinning, setSpinning] = useState(false);
+  const spin = () => setSpinning(true);
+  const onAnimationEnd = () => setSpinning(false);
+  const classes = cn("tog-mask-spin-btn border-0 bg-transparent p-0", spinning && "tog-mask-spin", className);
+
+  if (!title) {
+    return (
+      <div aria-hidden="true" onClick={spin} onAnimationEnd={onAnimationEnd} className={classes}>
+        <TearHalo size={size} shiny strokeW={strokeW} className="tog-gold-glow" />
+      </div>
+    );
+  }
 
   return (
-    <button
-      type="button"
-      onClick={() => setSpinning(true)}
-      onAnimationEnd={() => setSpinning(false)}
-      aria-hidden={title ? undefined : true}
-      tabIndex={title ? undefined : -1}
-      className={cn("tog-mask-spin-btn border-0 bg-transparent p-0", spinning && "tog-mask-spin", className)}
-    >
+    <button type="button" onClick={spin} onAnimationEnd={onAnimationEnd} className={classes}>
       <TearHalo size={size} shiny strokeW={strokeW} title={title} className="tog-gold-glow" />
     </button>
   );

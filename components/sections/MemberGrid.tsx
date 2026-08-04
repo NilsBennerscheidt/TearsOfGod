@@ -9,7 +9,7 @@ export async function MemberGrid() {
   return (
     <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
       {members.map((member) => (
-        <li key={member.displayName}>
+        <li key={member.key}>
           <div className="border border-gold-deep">
             {member.photo ? (
               <Image
@@ -17,6 +17,7 @@ export async function MemberGrid() {
                 alt={member.displayName}
                 width={480}
                 height={640}
+                sizes="(min-width: 640px) 20vw, 50vw"
                 className="aspect-3/4 w-full object-cover"
               />
             ) : (

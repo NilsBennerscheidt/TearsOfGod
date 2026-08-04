@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { routing } from "@/i18n/routing";
+import { fetchJson } from "@/lib/admin/fetch-json";
 import type { Post } from "@/types/content";
 
 interface ListItem {
@@ -23,17 +24,19 @@ type View = { kind: "list" } | { kind: "new" } | { kind: "edit"; locale: string;
  */
 export default function NewsAdminPage() {
   const [items, setItems] = useState<ListItem[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [view, setView] = useState<View>({ kind: "list" });
 
+  // No synchronous setState here — `items`/`loadError` already start at
+  // their reset values, and the effect-purity lint (react-hooks/set-state-
+  // in-effect) flags any setState called directly in an effect body, only
+  // exempting the async .then()/.catch() callbacks below.
   function load() {
-    fetch("/api/admin/posts")
-      .then((res) => res.json())
-      .then((json) => setItems(json.items));
+    fetchJson<{ items: ListItem[] }>("/api/admin/posts")
+      .then((json) => setItems(json.items))
+      .catch((err: Error) => setLoadError(err.message));
   }
 
-  // Mount effect: `items` already starts at null, so there's nothing to
-  // reset synchronously here — only the async .then() eventually calls
-  // setState, which is the pattern the effect-purity lint expects.
   useEffect(load, []);
 
   // Used by the "save"/"cancel" callbacks below (event handlers, not an
@@ -41,6 +44,7 @@ export default function NewsAdminPage() {
   // before re-fetching is fine.
   function reload() {
     setItems(null);
+    setLoadError(null);
     load();
   }
 
@@ -73,7 +77,9 @@ export default function NewsAdminPage() {
         </button>
       </div>
 
-      {!items ? (
+      {loadError ? (
+        <p className="text-blood-text text-sm">Couldn&apos;t load posts: {loadError}</p>
+      ) : !items ? (
         <p>Loading…</p>
       ) : (
         <ul className="flex flex-col gap-3">
@@ -136,29 +142,35 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
 
   useEffect(() => {
     if (mode !== "edit" || !initialLocale || !initialSlug) return;
-    fetch(`/api/admin/posts/${initialLocale}/${initialSlug}`)
-      .then((res) => res.json())
+    fetchJson<{ frontmatter: Record<string, unknown>; body: string }>(
+      `/api/admin/posts/${initialLocale}/${initialSlug}`,
+    )
       .then(({ frontmatter, body: markdownBody }) => {
-        setTitle(frontmatter.title);
-        setDate(frontmatter.date);
-        setExcerpt(frontmatter.excerpt);
-        setTags((frontmatter.tags ?? []).join(", "));
+        setTitle(String(frontmatter.title ?? ""));
+        setDate(String(frontmatter.date ?? ""));
+        setExcerpt(String(frontmatter.excerpt ?? ""));
+        setTags((Array.isArray(frontmatter.tags) ? frontmatter.tags : []).join(", "));
         setCoverJson(frontmatter.cover ? JSON.stringify(frontmatter.cover, null, 2) : "");
-        setGalleryJson(frontmatter.gallery?.length ? JSON.stringify(frontmatter.gallery, null, 2) : "");
+        const gallery = Array.isArray(frontmatter.gallery) ? frontmatter.gallery : [];
+        setGalleryJson(gallery.length ? JSON.stringify(gallery, null, 2) : "");
         setEmbedJson(frontmatter.embed ? JSON.stringify(frontmatter.embed, null, 2) : "");
         setBody(markdownBody.trim());
         setLoaded(true);
-      });
+      })
+      .catch((err: Error) => setError(`Couldn't load this post: ${err.message}`));
   }, [mode, initialLocale, initialSlug]);
 
   async function handlePreview() {
-    const res = await fetch("/api/admin/preview", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ markdown: body }),
-    });
-    const json = await res.json();
-    setPreview(res.ok ? json.html : `<p>${json.error}</p>`);
+    try {
+      const json = await fetchJson<{ html: string }>("/api/admin/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ markdown: body }),
+      });
+      setPreview(json.html);
+    } catch (err) {
+      setPreview(`<p>${err instanceof Error ? err.message : "Preview failed."}</p>`);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -170,7 +182,6 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
       frontmatter = {
         title,
         date,
-        slug,
         excerpt,
         tags: tags
           .split(",")
@@ -186,38 +197,43 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
     }
 
     setBusy(true);
-    const res =
-      mode === "create"
-        ? await fetch("/api/admin/posts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ locale, frontmatter, body }),
-          })
-        : await fetch(`/api/admin/posts/${initialLocale}/${initialSlug}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ frontmatter, body }),
-          });
-
-    setBusy(false);
-    const json = await res.json();
-    if (!res.ok) {
-      setError(json.error ?? "Something went wrong.");
-      return;
+    try {
+      if (mode === "create") {
+        await fetchJson("/api/admin/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ locale, slug, frontmatter, body }),
+        });
+      } else {
+        await fetchJson(`/api/admin/posts/${initialLocale}/${initialSlug}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ frontmatter, body }),
+        });
+      }
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setBusy(false);
     }
-    onDone();
   }
 
   async function handleDelete() {
     if (!initialLocale || !initialSlug) return;
     if (!confirm(`Delete ${initialSlug} (${initialLocale})? This can't be undone from here.`)) return;
     setBusy(true);
-    await fetch(`/api/admin/posts/${initialLocale}/${initialSlug}`, { method: "DELETE" });
-    setBusy(false);
-    onDone();
+    try {
+      await fetchJson(`/api/admin/posts/${initialLocale}/${initialSlug}`, { method: "DELETE" });
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Delete failed.");
+    } finally {
+      setBusy(false);
+    }
   }
 
-  if (!loaded) return <p>Loading…</p>;
+  if (!loaded) return <p>{error ? <span className="text-blood-text">{error}</span> : "Loading…"}</p>;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -248,7 +264,7 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
         <input value={date} onChange={(e) => setDate(e.target.value)} required className="w-full border border-ash bg-transparent px-2 py-1" />
       </Field>
 
-      <Field label="Slug (lowercase-kebab-case)">
+      <Field label="Slug / filename (lowercase-kebab-case)">
         <input
           value={slug}
           onChange={(e) => setSlug(e.target.value)}

@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { adminGuard } from "@/lib/admin/guards";
 import { resolveContentPath, SAFE_SLUG_PATTERN } from "@/lib/admin/paths";
+import { INVALID_JSON, readJson } from "@/lib/admin/read-json";
 import { formatZodError } from "@/lib/content/format-zod-error";
 import { getShows, SHOWS_DIR } from "@/lib/content/shows";
 import { showFrontmatterSchema } from "@/lib/schemas/show";
@@ -32,7 +33,12 @@ export async function POST(request: NextRequest) {
   const guard = await adminGuard();
   if (guard) return guard;
 
-  const parsed = createSchema.safeParse(await request.json());
+  const raw = await readJson(request);
+  if (raw === INVALID_JSON) {
+    return NextResponse.json({ error: "Request body is not valid JSON." }, { status: 400 });
+  }
+
+  const parsed = createSchema.safeParse(raw);
   if (!parsed.success) {
     return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
   }

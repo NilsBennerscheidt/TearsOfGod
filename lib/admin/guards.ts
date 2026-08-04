@@ -17,11 +17,14 @@ async function isLoopbackRequest(): Promise<boolean> {
  * 1. `NODE_ENV === "production"` — same precedent as
  *    app/[locale]/dev/kitchen-sink/page.tsx: this tool does not exist in
  *    a production build/deploy.
- * 2. The request's Host header is loopback — `next dev` defaults to
- *    binding all interfaces, so without this a laptop on a café Wi-Fi
- *    with `next dev` running is an open file-writer to anyone on the
- *    same network who finds the port. NODE_ENV alone only rules out
- *    production; it says nothing about who else can reach a dev server.
+ * 2. The request's Host header is loopback — defense in depth, not the
+ *    primary control: the `Host` header is attacker-controlled (any
+ *    client can send `Host: localhost`), so this alone cannot stop a
+ *    remote request from reaching the route handler. The actual control
+ *    is `next dev -H 127.0.0.1` (package.json's `dev` script), which
+ *    refuses the connection at the socket before any of this code runs.
+ *    This check exists for the case that binding is ever changed back —
+ *    it narrows the blast radius, it doesn't replace the bind.
  *
  * Returns a 404 response if either check fails (matching notFound()'s
  * behavior in the page/layout guards — an admin route should look

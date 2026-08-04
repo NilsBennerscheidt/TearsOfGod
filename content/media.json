@@ -29,13 +29,6 @@
       "height": 8189
     },
     {
-      "id": "auftritt-0056",
-      "src": "/media/photos/2025-03-21_-_Tears_of_God_Band_Auftritt_0056.jpg",
-      "alt": "Tears of God guitarist performing live on stage",
-      "width": 3648,
-      "height": 5469
-    },
-    {
       "id": "bandfotos-murk",
       "src": "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_Murk.jpg",
       "alt": "Murk — studio portrait",
@@ -55,6 +48,13 @@
       "alt": "Nils — studio portrait",
       "width": 5464,
       "height": 8192
+    },
+    {
+      "id": "auftritt-0056",
+      "src": "/media/photos/2025-03-21_-_Tears_of_God_Band_Auftritt_0056.jpg",
+      "alt": "Tears of God guitarist performing live on stage",
+      "width": 3648,
+      "height": 5469
     },
     {
       "id": "bandfotos-lars",

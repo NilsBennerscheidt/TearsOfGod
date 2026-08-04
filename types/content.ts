@@ -10,6 +10,8 @@ export interface Show extends ShowFrontmatter {
 }
 
 export interface Post extends PostFrontmatter {
+  /** Derived from the filename, e.g. "salt-and-sweat" — not a frontmatter field, see postFrontmatterSchema's doc comment. */
+  slug: string;
   /** Which locale's file this came from — the folder segment, not frontmatter. */
   locale: string;
   bodyHtml: string;

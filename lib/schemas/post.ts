@@ -32,19 +32,22 @@ export const postEmbedSchema = z.discriminatedUnion("kind", [
  * Posts are editorial prose: title, excerpt, and body are the actual
  * content, not metadata around a fact. Translating a post is real
  * authorial work, not a lookup — so each locale gets its own file.
- * `slug` is the link between a post's translations: a German and an
- * English file sharing the same `slug` are treated as the same post in
- * different languages. A post missing a translation in one locale is
- * simply absent from that locale's listing rather than falling back to
- * the other language silently.
+ *
+ * `slug` is NOT a frontmatter field — same reasoning as shows (see
+ * showFrontmatterSchema's doc comment): the filename *is* the slug,
+ * enforced by loadPosts() in lib/content/posts.ts. It used to be a
+ * separate frontmatter field, which meant a post's identity in URLs
+ * (derived from the filename by callers like the admin API) and its
+ * identity in frontmatter (read by the site) could silently disagree —
+ * exactly the drift problem a single source of truth prevents. A German
+ * and an English file sharing the same *filename* are treated as the
+ * same post in different languages; a post missing a translation in one
+ * locale is simply absent from that locale's listing rather than falling
+ * back to the other language silently.
  */
 export const postFrontmatterSchema = z.object({
   title: z.string().min(1),
   date: isoDateTime,
-  slug: z
-    .string()
-    .min(1)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "slug must be lowercase kebab-case"),
   excerpt: z.string().min(1),
   tags: z.array(z.string()).default([]),
   /** Hero image, shown above the title on the detail page and as the listing thumbnail. Reuses the media-library photo shape rather than redeclaring it. */
