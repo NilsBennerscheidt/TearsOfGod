@@ -3,11 +3,11 @@
  * of truth for storage keys, so a typo in a game id is a type error
  * rather than a silently orphaned localStorage entry.
  *
- * Only "whack" ships today — the arcade index renders the other two as
- * non-interactive "coming soon" cards, and a card with no game behind it
- * has no score to store, so it deliberately has no id here yet.
+ * The Runner isn't here yet — the arcade index still renders it as a
+ * non-interactive "coming soon" card, and a card with no game behind it
+ * has no score to store.
  */
-export const GAME_IDS = ["whack"] as const;
+export const GAME_IDS = ["whack", "invaders"] as const;
 export type GameId = (typeof GAME_IDS)[number];
 
 /**

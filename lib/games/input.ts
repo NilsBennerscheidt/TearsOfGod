@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent, RefObject } from "react";
 
 /**
  * The abstract actions a game reacts to, independent of the device that
@@ -142,4 +142,70 @@ export function pressHandlers(onPress: () => void): PressHandlers {
       onPress();
     },
   };
+}
+
+/**
+ * Tracks which of "left"/"right" is currently held, for games that need
+ * continuous movement — Invaders' player ship, and whatever the Runner
+ * ends up needing — as opposed to useGameKeys's one-shot
+ * intent-per-keydown model, which is right for "start"/"pause" but wrong
+ * for "keep moving while the key is down".
+ *
+ * Returns a ref, not state: a simulation reads this once per tick, and
+ * re-rendering React on every keydown/keyup of a held movement key would
+ * be pure waste. `enabled` gates the listeners the same way useGameKeys's
+ * does — off outside "playing", so a paused game can't keep accumulating
+ * held-key state via events it never processes.
+ */
+export function useHeldDirection(enabled: boolean): RefObject<-1 | 0 | 1> {
+  const dirRef = useRef<-1 | 0 | 1>(0);
+  const heldRef = useRef({ left: false, right: false });
+
+  useEffect(() => {
+    if (!enabled) {
+      heldRef.current = { left: false, right: false };
+      dirRef.current = 0;
+      return;
+    }
+
+    const recompute = () => {
+      const { left, right } = heldRef.current;
+      dirRef.current = left === right ? 0 : left ? -1 : 1;
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      const intent = intentForKey(event.key);
+      if (intent === "left") heldRef.current.left = true;
+      else if (intent === "right") heldRef.current.right = true;
+      else return;
+      recompute();
+    };
+
+    const onKeyUp = (event: KeyboardEvent) => {
+      const intent = intentForKey(event.key);
+      if (intent === "left") heldRef.current.left = false;
+      else if (intent === "right") heldRef.current.right = false;
+      else return;
+      recompute();
+    };
+
+    // Alt-tab or opening devtools mid-hold ends the keydown without ever
+    // firing a matching keyup — without this, a direction can get stuck
+    // "on" until the player happens to tap the key again.
+    const onBlur = () => {
+      heldRef.current = { left: false, right: false };
+      dirRef.current = 0;
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, [enabled]);
+
+  return dirRef;
 }

@@ -138,6 +138,7 @@
     "scoreLabel": "Score",
     "bestLabel": "Best",
     "timeLabel": "Time",
+    "livesLabel": "Lives",
     "start": "Start",
     "startHint": "Space to start · Esc to pause",
     "resume": "Resume",
@@ -154,13 +155,16 @@
       "instructions": "{seconds} seconds. Hit every mask that pops up — gold scores 10, red scores 25. Swinging at an empty hole costs you 5. It gets faster.",
       "holeLabel": "Hole {index}"
     },
-    "arcade": {
-      "title": "Snake / Invaders",
-      "tagline": "Arcade classics, cast in masks."
-    },
     "runner": {
       "title": "Runner",
       "tagline": "The mask runs. You jump."
+    },
+    "invaders": {
+      "eyebrow": "ARCADE · 02",
+      "title": "Mask Invasion",
+      "tagline": "Rows of masks close in. Hold the line before they break through.",
+      "instructions": "Steer with ← → or A/D, or drag with your finger. You fire automatically. Clear a row and the next one comes in faster. Three lives.",
+      "waveClear": "Wave cleared!"
     }
   }
 }

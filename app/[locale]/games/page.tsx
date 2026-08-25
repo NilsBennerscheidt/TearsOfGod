@@ -51,7 +51,13 @@ export default async function GamesPage({ params }: { params: Promise<{ locale: 
             playLabel={t("play")}
             color="var(--color-gold)"
           />
-          <GameCard title={t("arcade.title")} tagline={t("arcade.tagline")} comingSoonLabel={t("comingSoon")} />
+          <GameCard
+            title={t("invaders.title")}
+            tagline={t("invaders.tagline")}
+            href="/games/invaders"
+            playLabel={t("play")}
+            color="var(--color-blood-text)"
+          />
           <GameCard title={t("runner.title")} tagline={t("runner.tagline")} comingSoonLabel={t("comingSoon")} />
         </div>
 

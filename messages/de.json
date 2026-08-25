@@ -138,6 +138,7 @@
     "scoreLabel": "Punkte",
     "bestLabel": "Bestwert",
     "timeLabel": "Zeit",
+    "livesLabel": "Leben",
     "start": "Start",
     "startHint": "Leertaste startet · Esc pausiert",
     "resume": "Weiter",
@@ -154,13 +155,16 @@
       "instructions": "{seconds} Sekunden. Triff jede Maske, die auftaucht — goldene zählen 10, rote 25. Danebengehauen kostet 5 Punkte. Es wird schneller.",
       "holeLabel": "Loch {index}"
     },
-    "arcade": {
-      "title": "Snake / Invaders",
-      "tagline": "Arcade-Klassiker, in Masken gegossen."
-    },
     "runner": {
       "title": "Runner",
       "tagline": "Die Maske rennt. Du springst."
+    },
+    "invaders": {
+      "eyebrow": "ARCADE · 02",
+      "title": "Maskeninvasion",
+      "tagline": "Reihen aus Masken rücken vor. Halt sie auf, bevor sie durchbrechen.",
+      "instructions": "Steuere mit ← → oder A/D, oder zieh mit dem Finger. Du schießt automatisch. Jede Reihe, die du leerräumst, macht die nächste schneller. Drei Leben.",
+      "waveClear": "Welle geschafft!"
     }
   }
 }
