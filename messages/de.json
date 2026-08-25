@@ -125,5 +125,42 @@
     "factsFounded": "Gegründet",
     "factsBase": "Zuhause",
     "membersHeading": "Die Besetzung"
+  },
+  "Games": {
+    "eyebrow": "06 · ARCADE",
+    "title": "Arcade",
+    "intro": "Kleine Spiele für die Zeit zwischen zwei Shows. Läuft alles direkt im Browser — nichts zu installieren, nichts anzumelden.",
+    "comingSoon": "Demnächst",
+    "play": "Spielen",
+    "scoresLocalNote": "Bestwerte werden ausschließlich lokal in deinem Browser gespeichert. Es gibt keine Online-Rangliste, und wir sehen deine Ergebnisse nicht.",
+    "backToArcade": "← Arcade",
+    "loading": "Spiel wird geladen",
+    "scoreLabel": "Punkte",
+    "bestLabel": "Bestwert",
+    "timeLabel": "Zeit",
+    "start": "Start",
+    "startHint": "Leertaste startet · Esc pausiert",
+    "resume": "Weiter",
+    "paused": "Pause",
+    "pausedBody": "Es geht weiter, sobald du bereit bist.",
+    "restart": "Nochmal",
+    "gameOver": "Vorbei",
+    "newBest": "Neuer Bestwert",
+    "finalScore": "Endpunktzahl",
+    "whack": {
+      "eyebrow": "ARCADE · 01",
+      "title": "Masken kloppen",
+      "tagline": "Masken tauchen auf. Drauf, bevor sie wieder weg sind.",
+      "instructions": "{seconds} Sekunden. Triff jede Maske, die auftaucht — goldene zählen 10, rote 25. Danebengehauen kostet 5 Punkte. Es wird schneller.",
+      "holeLabel": "Loch {index}"
+    },
+    "arcade": {
+      "title": "Snake / Invaders",
+      "tagline": "Arcade-Klassiker, in Masken gegossen."
+    },
+    "runner": {
+      "title": "Runner",
+      "tagline": "Die Maske rennt. Du springst."
+    }
   }
 }

@@ -88,16 +88,24 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   const t = await getTranslations("Nav");
 
-  // Only Nav/News/Media are ever read by a Client Component
-  // (SiteNav/MobileNavToggle/nav-items.ts, ShareButton, PhotoLightbox —
-  // see the grep-verified list in each). The rest of the catalogue is
-  // read exclusively by Server Components via getTranslations(), which
+  // Only Nav/News/Media/Games are ever read by a Client Component
+  // (SiteNav/MobileNavToggle/nav-items.ts, ShareButton, PhotoLightbox,
+  // and the arcade's GameShell/GameOverCard/WhackGame — see the
+  // grep-verified list in each). The rest of the catalogue is read
+  // exclusively by Server Components via getTranslations(), which
   // doesn't go through this provider at all — shipping it to the client
   // anyway would just be dead weight in every page's initial payload.
+  //
+  // Games is small (~25 strings) and paid for on every route, which is
+  // the cost of the allow-list being global. If the arcade's catalogue
+  // grows, move it behind its own NextIntlClientProvider inside
+  // app/[locale]/games/layout.tsx rather than letting it ride along on
+  // the landing page's payload.
   const clientMessages = {
     Nav: messages.Nav,
     News: messages.News,
     Media: messages.Media,
+    Games: messages.Games,
   };
 
   return (

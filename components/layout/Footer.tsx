@@ -51,6 +51,12 @@ export async function Footer({ variant = "landing" }: FooterProps) {
         <Link href="/band" className="inline-flex min-h-11 items-center hover:text-bone">
           {t("Nav.band")}
         </Link>
+        {/* The arcade deliberately stays out of the primary nav (the mobile
+            header is already a tight three-column grid) — the footer and the
+            landing-page card are its only entry points. */}
+        <Link href="/games" className="inline-flex min-h-11 items-center hover:text-bone">
+          {t("Games.title")}
+        </Link>
         <a href={pressKit.href} download className="inline-flex min-h-11 items-center hover:text-bone">
           {t("Press.heading")}
         </a>

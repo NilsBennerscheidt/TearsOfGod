@@ -4,7 +4,17 @@ import { getPosts } from "@/lib/content/posts";
 
 const SITE_URL = "https://tearsofgod.net";
 
-const STATIC_ROUTES = ["", "/tour", "/media", "/news", "/band", "/impressum", "/datenschutz"] as const;
+const STATIC_ROUTES = [
+  "",
+  "/tour",
+  "/media",
+  "/news",
+  "/band",
+  "/games",
+  "/games/whack",
+  "/impressum",
+  "/datenschutz",
+] as const;
 
 /**
  * Every real page across both locales — static routes plus one entry per

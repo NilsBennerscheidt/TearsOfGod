@@ -125,5 +125,42 @@
     "factsFounded": "Founded",
     "factsBase": "Based in",
     "membersHeading": "The Lineup"
+  },
+  "Games": {
+    "eyebrow": "06 · ARCADE",
+    "title": "Arcade",
+    "intro": "Small games for the wait between two shows. All of it runs in your browser — nothing to install, nothing to sign up for.",
+    "comingSoon": "Coming soon",
+    "play": "Play",
+    "scoresLocalNote": "High scores are stored locally in your own browser. There is no online leaderboard, and we never see your results.",
+    "backToArcade": "← Arcade",
+    "loading": "Loading game",
+    "scoreLabel": "Score",
+    "bestLabel": "Best",
+    "timeLabel": "Time",
+    "start": "Start",
+    "startHint": "Space to start · Esc to pause",
+    "resume": "Resume",
+    "paused": "Paused",
+    "pausedBody": "Pick it back up whenever you're ready.",
+    "restart": "Again",
+    "gameOver": "Game over",
+    "newBest": "New best",
+    "finalScore": "Final score",
+    "whack": {
+      "eyebrow": "ARCADE · 01",
+      "title": "Mask Smash",
+      "tagline": "Masks pop up. Hit them before they're gone.",
+      "instructions": "{seconds} seconds. Hit every mask that pops up — gold scores 10, red scores 25. Swinging at an empty hole costs you 5. It gets faster.",
+      "holeLabel": "Hole {index}"
+    },
+    "arcade": {
+      "title": "Snake / Invaders",
+      "tagline": "Arcade classics, cast in masks."
+    },
+    "runner": {
+      "title": "Runner",
+      "tagline": "The mask runs. You jump."
+    }
   }
 }
