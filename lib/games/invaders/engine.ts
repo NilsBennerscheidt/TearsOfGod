@@ -1,4 +1,5 @@
 import { pickRandom } from "@/lib/games/collections";
+import { rectsOverlap, type Rect } from "@/lib/games/geometry";
 
 /**
  * The Invaders simulation — pure logic, no canvas or React in it, on the
@@ -71,17 +72,6 @@ function enemyFireRatePerSecond(wave: number): number {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
-}
-
-interface Rect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-function overlaps(a: Rect, b: Rect): boolean {
-  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
 export type InvaderVariant = "gold" | "blood";
@@ -312,7 +302,7 @@ export class InvadersEngine {
     for (const bullet of this.playerBullets) {
       const bulletRect: Rect = { x: bullet.x, y: bullet.y, w: BULLET_W, h: BULLET_H };
       const hit = this.invaders.find((invader) =>
-        overlaps(bulletRect, { x: invader.x, y: invader.y, w: INVADER_W, h: INVADER_H }),
+        rectsOverlap(bulletRect, { x: invader.x, y: invader.y, w: INVADER_W, h: INVADER_H }),
       );
       if (!hit) {
         survivingBullets.push(bullet);
@@ -327,7 +317,7 @@ export class InvadersEngine {
     if (this.invulnSecondsLeft <= 0) {
       const playerRect: Rect = { x: this.playerX, y: PLAYER_Y, w: PLAYER_W, h: PLAYER_H };
       const hitBullet = this.enemyBullets.find((bullet) =>
-        overlaps({ x: bullet.x, y: bullet.y, w: BULLET_W, h: BULLET_H }, playerRect),
+        rectsOverlap({ x: bullet.x, y: bullet.y, w: BULLET_W, h: BULLET_H }, playerRect),
       );
       if (hitBullet) {
         this.enemyBullets = this.enemyBullets.filter((bullet) => bullet !== hitBullet);

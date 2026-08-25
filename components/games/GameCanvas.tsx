@@ -16,8 +16,15 @@ interface GameCanvasProps {
    * that matters for a 60Hz callback).
    */
   onContext: (ctx: CanvasRenderingContext2D | null) => void;
-  /** Logical-space position of a held primary pointer (mouse-down or touch) while it's over the canvas. */
-  onPointerActive?: (x: number, y: number) => void;
+  /**
+   * Logical-space position of a held primary pointer (mouse-down or
+   * touch) while it's over the canvas. `isNewPress` is true only for the
+   * pointerdown call, false for every subsequent pointermove while still
+   * held — Invaders ignores it (steering is the same continuous signal
+   * either way), Runner uses it to fire a one-shot jump on press while
+   * still tracking a held duck across the move events that follow.
+   */
+  onPointerActive?: (x: number, y: number, isNewPress: boolean) => void;
   /** The pointer was released, left the canvas, or was cancelled. */
   onPointerRelease?: () => void;
 }
@@ -116,14 +123,14 @@ export function GameCanvas({
       onPointerDown={(event) => {
         if (event.pointerType === "mouse" && event.button !== 0) return;
         const point = toLogical(event.clientX, event.clientY);
-        if (point) onPointerActiveRef.current?.(point[0], point[1]);
+        if (point) onPointerActiveRef.current?.(point[0], point[1], true);
       }}
       onPointerMove={(event) => {
         // Ignore hover-without-press — a desktop mouse just passing over
         // the canvas shouldn't steer anything.
         if (event.buttons === 0) return;
         const point = toLogical(event.clientX, event.clientY);
-        if (point) onPointerActiveRef.current?.(point[0], point[1]);
+        if (point) onPointerActiveRef.current?.(point[0], point[1], false);
       }}
       onPointerUp={() => onPointerReleaseRef.current?.()}
       onPointerCancel={() => onPointerReleaseRef.current?.()}

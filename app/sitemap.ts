@@ -13,6 +13,7 @@ const STATIC_ROUTES = [
   "/games",
   "/games/whack",
   "/games/invaders",
+  "/games/runner",
   "/impressum",
   "/datenschutz",
 ] as const;

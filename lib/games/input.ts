@@ -209,3 +209,43 @@ export function useHeldDirection(enabled: boolean): RefObject<-1 | 0 | 1> {
 
   return dirRef;
 }
+
+/**
+ * Tracks whether a single intent is currently held — the general form
+ * useHeldDirection is built from two calls of, kept as its own export
+ * for intents that aren't part of a left/right pair (Runner's duck,
+ * bound to "down").
+ */
+export function useHeldIntent(enabled: boolean, intent: GameIntent): RefObject<boolean> {
+  const heldRef = useRef(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      heldRef.current = false;
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (intentForKey(event.key) === intent) heldRef.current = true;
+    };
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (intentForKey(event.key) === intent) heldRef.current = false;
+    };
+    // Same reasoning as useHeldDirection's onBlur — a lost keyup must not
+    // leave the intent stuck "held".
+    const onBlur = () => {
+      heldRef.current = false;
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, [enabled, intent]);
+
+  return heldRef;
+}

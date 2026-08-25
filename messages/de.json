@@ -139,6 +139,7 @@
     "bestLabel": "Bestwert",
     "timeLabel": "Zeit",
     "livesLabel": "Leben",
+    "speedLabel": "Tempo",
     "start": "Start",
     "startHint": "Leertaste startet · Esc pausiert",
     "resume": "Weiter",
@@ -155,16 +156,18 @@
       "instructions": "{seconds} Sekunden. Triff jede Maske, die auftaucht — goldene zählen 10, rote 25. Danebengehauen kostet 5 Punkte. Es wird schneller.",
       "holeLabel": "Loch {index}"
     },
-    "runner": {
-      "title": "Runner",
-      "tagline": "Die Maske rennt. Du springst."
-    },
     "invaders": {
       "eyebrow": "ARCADE · 02",
       "title": "Maskeninvasion",
       "tagline": "Reihen aus Masken rücken vor. Halt sie auf, bevor sie durchbrechen.",
       "instructions": "Steuere mit ← → oder A/D, oder zieh mit dem Finger. Du schießt automatisch. Jede Reihe, die du leerräumst, macht die nächste schneller. Drei Leben.",
       "waveClear": "Welle geschafft!"
+    },
+    "runner": {
+      "eyebrow": "ARCADE · 03",
+      "title": "Maskenlauf",
+      "tagline": "Die Maske läuft von allein. Du springst und duckst dich.",
+      "instructions": "Leertaste oder ↑ zum Springen, ↓ halten zum Ducken. Am Handy: oben tippen zum Springen, unten halten zum Ducken. Es geht immer weiter — bis du etwas verpasst."
     }
   }
 }

@@ -58,7 +58,13 @@ export default async function GamesPage({ params }: { params: Promise<{ locale: 
             playLabel={t("play")}
             color="var(--color-blood-text)"
           />
-          <GameCard title={t("runner.title")} tagline={t("runner.tagline")} comingSoonLabel={t("comingSoon")} />
+          <GameCard
+            title={t("runner.title")}
+            tagline={t("runner.tagline")}
+            href="/games/runner"
+            playLabel={t("play")}
+            color="var(--color-gold)"
+          />
         </div>
 
         <p className="text-meta text-steel-text mt-8 font-mono tracking-wide">{t("scoresLocalNote")}</p>
