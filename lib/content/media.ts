@@ -21,7 +21,7 @@ async function loadMedia(): Promise<{ photos: MediaPhoto[]; videos: MediaVideo[]
 
 /**
  * Photos + videos for the /media page. Wrapped in React's `cache()` — see
- * the comment on getShows() for why a module-level cache would be wrong
+ * the comment on getAllShows() for why a module-level cache would be wrong
  * here (edits made through the local admin tool must show up without a
  * server restart).
  */

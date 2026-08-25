@@ -2,19 +2,19 @@ import Link from "next/link";
 import { routing } from "@/i18n/routing";
 import { getMedia } from "@/lib/content/media";
 import { getPosts } from "@/lib/content/posts";
-import { getShows } from "@/lib/content/shows";
+import { getAllShows } from "@/lib/content/shows";
 
 /**
  * Dashboard: counts per content type plus a warning list of things a
  * human should probably look at — computed straight from the same
- * getPosts()/getShows()/getMedia() the public site reads with, not a
+ * getPosts()/getAllShows()/getMedia() the site itself reads with, not a
  * separate admin-only data path, so "what the dashboard sees" and "what
  * the site renders" can't drift apart.
  */
 export default async function AdminHomePage() {
   const [postsByLocale, shows, media] = await Promise.all([
     Promise.all(routing.locales.map(async (locale) => ({ locale, posts: await getPosts(locale) }))),
-    getShows(),
+    getAllShows(),
     getMedia(),
   ]);
 
@@ -31,6 +31,17 @@ export default async function AdminHomePage() {
     (show) => Date.parse(show.date) < now && show.status !== "sold-out",
   );
 
+  // A show whose note exists in one language but not the other — the same
+  // class of problem as a post missing a translation, and just as easy to
+  // forget, since the site shows no note at all in the missing language
+  // rather than falling back.
+  const halfTranslatedShows = shows
+    .map((show) => ({
+      show,
+      missing: routing.locales.filter((locale) => !show.note[locale]),
+    }))
+    .filter(({ missing }) => missing.length > 0 && missing.length < routing.locales.length);
+
   return (
     <div className="flex flex-col gap-8">
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -40,7 +51,7 @@ export default async function AdminHomePage() {
         <StatCard label="Videos" value={media.videos.length} href="/admin/media" />
       </section>
 
-      {(missingTranslations.length > 0 || stalePastShows.length > 0) && (
+      {(missingTranslations.length > 0 || stalePastShows.length > 0 || halfTranslatedShows.length > 0) && (
         <section className="border border-gold p-4">
           <h2 className="font-display mb-3 text-lg text-gold uppercase">Needs attention</h2>
           <ul className="flex flex-col gap-2 text-sm">
@@ -52,8 +63,16 @@ export default async function AdminHomePage() {
                 is missing a translation for: {entry.missing.join(", ")}
               </li>
             ))}
+            {halfTranslatedShows.map(({ show, missing }) => (
+              <li key={`note-${show.slug}`}>
+                <Link href="/admin/shows" className="text-gold hover:text-gold-hi underline">
+                  {show.city} — {show.venue}
+                </Link>{" "}
+                has a note, but not in: {missing.join(", ")}
+              </li>
+            ))}
             {stalePastShows.map((show) => (
-              <li key={show.slug}>
+              <li key={`stale-${show.slug}`}>
                 <Link href="/admin/shows" className="text-gold hover:text-gold-hi underline">
                   {show.city} — {show.venue}
                 </Link>{" "}

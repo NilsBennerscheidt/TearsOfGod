@@ -22,7 +22,9 @@ export function musicEventJsonLd(show: Show) {
       address: {
         "@type": "PostalAddress",
         addressLocality: show.city,
-        addressCountry: "DE",
+        // From the show, not hardcoded "DE" — a Prague date announced as
+        // being in Germany is worse than no structured data at all.
+        addressCountry: show.country,
       },
     },
     performer: {

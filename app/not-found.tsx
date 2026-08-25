@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { SadMask } from "@/components/brand/SadMask";
+import { CtaButton } from "@/components/ui/CtaButton";
+import { spotifyUrl, youtubeUrl } from "@/content/social";
+import "./globals.css";
 
 /**
  * Root-level fallback — only reached when notFound() is thrown by
@@ -7,26 +11,51 @@ import Link from "next/link";
  * app/[locale]/not-found.tsx boundary can't be used for that specific
  * case (see the comment there). Every other 404 on the site — a stale
  * news slug, a removed show — is caught inside a valid locale and uses
- * that richer, site-styled boundary instead; an invalid locale segment
- * is rare enough (a typo'd URL, not a stale link) that a plain fallback
- * is an acceptable trade for not needing a second app/layout.tsx just to
- * give this one case a locale to render translated chrome in.
+ * that richer, site-styled boundary instead.
+ *
+ * It renders its own <html>, outside every layout, so it pulls in
+ * globals.css directly — that's what lets it share the real mask, type,
+ * and palette with the locale boundary instead of the hand-written
+ * inline styles this used to carry. Copy stays English-only and
+ * untranslated: by definition there is no valid locale to translate
+ * into here, which is also why the two locale homepages are offered
+ * rather than a single "home" link.
  */
 export default function RootNotFound() {
   return (
     <html lang="en">
-      <body style={{ background: "#131210", color: "#f1ece0", fontFamily: "system-ui, sans-serif" }}>
-        <div style={{ maxWidth: 32 + "rem", margin: "0 auto", padding: "6rem 1.5rem", textAlign: "center" }}>
-          <p style={{ letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.7 }}>404</p>
-          <h1 style={{ marginTop: "0.5rem", fontSize: "1.75rem", textTransform: "uppercase" }}>Page not found</h1>
-          <p style={{ marginTop: "0.75rem", opacity: 0.85 }}>
-            This page doesn&apos;t exist. Try the German or English site instead.
+      <body>
+        <div className="gutter-x mx-auto max-w-2xl py-24 text-center">
+          <p className="text-meta font-mono tracking-widest text-gold uppercase">
+            404
           </p>
-          <div style={{ marginTop: "1.5rem", display: "flex", justifyContent: "center", gap: "1.5rem" }}>
-            <Link href="/de" style={{ color: "#d9b25a" }}>
+          <SadMask size={132} title="The mask, crying" className="mt-8" />
+          <h1 className="font-display mt-8 text-3xl text-bone uppercase">
+            This is not the site you have been looking for
+          </h1>
+          <p className="text-body mt-3 text-bone/80">
+            This page doesn&apos;t exist — the link may be out of date.
+          </p>
+
+          <p className="text-body mt-12 text-bone">Check out our nice music</p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <CtaButton href={spotifyUrl}>Spotify →</CtaButton>
+            <CtaButton href={youtubeUrl} variant="outline">
+              YouTube →
+            </CtaButton>
+          </div>
+
+          <div className="mt-8 flex justify-center gap-6">
+            <Link
+              href="/de"
+              className="text-meta font-mono tracking-wide text-gold uppercase hover:text-gold-hi"
+            >
               DE →
             </Link>
-            <Link href="/en" style={{ color: "#d9b25a" }}>
+            <Link
+              href="/en"
+              className="text-meta font-mono tracking-wide text-gold uppercase hover:text-gold-hi"
+            >
               EN →
             </Link>
           </div>

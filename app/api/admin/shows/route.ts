@@ -1,12 +1,12 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import matter from "gray-matter";
+import { mkdir, readFile } from "node:fs/promises";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { adminGuard } from "@/lib/admin/guards";
 import { resolveContentPath, SAFE_SLUG_PATTERN } from "@/lib/admin/paths";
+import { writeShowFile } from "@/lib/admin/show-file";
 import { INVALID_JSON, readJson } from "@/lib/admin/read-json";
 import { formatZodError } from "@/lib/content/format-zod-error";
-import { getShows, SHOWS_DIR } from "@/lib/content/shows";
+import { getAllShows, SHOWS_DIR } from "@/lib/content/shows";
 import { showFrontmatterSchema } from "@/lib/schemas/show";
 
 export const runtime = "nodejs";
@@ -15,7 +15,10 @@ export async function GET() {
   const guard = await adminGuard();
   if (guard) return guard;
 
-  const shows = await getShows();
+  // Deliberately unfiltered: the admin list is the one place that must
+  // show hidden and not-yet-announced shows, since hiding one here is
+  // exactly the thing it exists to let someone undo.
+  const shows = await getAllShows();
   return NextResponse.json({ items: shows });
 }
 
@@ -26,7 +29,6 @@ export async function GET() {
 const createSchema = z.object({
   slug: z.string().regex(SAFE_SLUG_PATTERN, "slug must be lowercase kebab-case"),
   frontmatter: showFrontmatterSchema,
-  body: z.string().default(""),
 });
 
 export async function POST(request: NextRequest) {
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
   }
 
-  const { slug, frontmatter, body } = parsed.data;
+  const { slug, frontmatter } = parsed.data;
 
   let filePath: string;
   try {
@@ -61,7 +63,7 @@ export async function POST(request: NextRequest) {
   }
 
   await mkdir(SHOWS_DIR, { recursive: true });
-  await writeFile(filePath, matter.stringify(body, frontmatter), "utf8");
+  await writeShowFile(filePath, frontmatter);
 
   return NextResponse.json({ slug }, { status: 201 });
 }

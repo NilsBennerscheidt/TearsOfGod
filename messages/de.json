@@ -8,8 +8,10 @@
     "skipToContent": "Zum Inhalt springen",
     "menu": "Menü",
     "close": "Schließen",
-    "notFoundTitle": "Seite nicht gefunden",
-    "notFoundBody": "Diese Seite gibt es nicht (mehr) — der Link könnte veraltet sein."
+    "notFoundTitle": "Das ist nicht die Seite, die du suchst",
+    "notFoundBody": "Diese Seite gibt es nicht (mehr) — der Link könnte veraltet sein.",
+    "notFoundMusic": "Hör dir unsere schöne Musik an",
+    "notFoundMaskAlt": "Die Maske, weinend"
   },
   "Shows": {
     "status": {
@@ -140,6 +142,7 @@
     "timeLabel": "Zeit",
     "livesLabel": "Leben",
     "speedLabel": "Tempo",
+    "lengthLabel": "Länge",
     "start": "Start",
     "startHint": "Leertaste startet · Esc pausiert",
     "resume": "Weiter",
@@ -168,6 +171,12 @@
       "title": "Maskenlauf",
       "tagline": "Die Maske läuft von allein. Du springst und duckst dich.",
       "instructions": "Leertaste oder ↑ zum Springen, ↓ halten zum Ducken. Am Handy: oben tippen zum Springen, unten halten zum Ducken. Es geht immer weiter — bis du etwas verpasst."
+    },
+    "snake": {
+      "eyebrow": "ARCADE · 04",
+      "title": "Maskenschlange",
+      "tagline": "Die Maske führt, der Schwanz wächst. Nicht in dich selbst beißen.",
+      "instructions": "Pfeiltasten oder WASD zum Lenken, am Handy wischen. Iss die kleinen Masken — goldene zählen 10, rote 30. Wand oder eigener Schwanz beenden die Runde."
     }
   }
 }

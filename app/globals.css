@@ -204,7 +204,8 @@
    * looks like a shimmer rather than a glow that dims and brightens.
    */
   .tog-gold-glow {
-    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
+    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35))
+      drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
     animation: tog-gold-glow-shimmer 35s ease-in-out infinite;
   }
 
@@ -365,7 +366,12 @@
     height: 10px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: radial-gradient(circle, var(--color-blood-text) 0%, var(--color-blood) 55%, transparent 78%);
+    background: radial-gradient(
+      circle,
+      var(--color-blood-text) 0%,
+      var(--color-blood) 55%,
+      transparent 78%
+    );
     opacity: 0;
     filter: blur(0.5px);
     transition:
@@ -375,6 +381,30 @@
   .tog-mask-eye-glowing {
     opacity: 1;
     filter: blur(0.5px) drop-shadow(0 0 6px var(--color-blood-text));
+  }
+
+  /*
+   * The 404 mask's tears — see SadMask, which places one span per eye
+   * hole and staggers the second by half a cycle.
+   *
+   * The drop is positioned by its eye's `left`/`top`, so the -50%/-50%
+   * that centers it on the hole has to be carried through every keyframe:
+   * a `transform` in the animation replaces the element's own, and
+   * dropping the centering mid-fall would jerk the tear a few pixels
+   * sideways at 0%. The fall is `ease-in` because a tear accelerates.
+   */
+  .tog-tear {
+    animation: tog-tear-fall 4.8s ease-in infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* Purely decorative motion, so it simply stops — unlike the loading
+       indicators above, a still tear still says everything it needs to.
+       It rests just below the eye rather than at 0%, where it would sit
+       inside the hole and read as an eye rather than a tear. */
+    .tog-tear {
+      animation: none;
+      transform: translate(-50%, 60%);
+    }
   }
 
   /*
@@ -591,13 +621,16 @@
 @keyframes tog-gold-glow-shimmer {
   0%,
   100% {
-    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
+    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35))
+      drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
   }
   0.7% {
-    filter: drop-shadow(0 0 3px rgba(255, 244, 192, 0.6)) drop-shadow(0 0 12px rgba(245, 220, 126, 0.45));
+    filter: drop-shadow(0 0 3px rgba(255, 244, 192, 0.6))
+      drop-shadow(0 0 12px rgba(245, 220, 126, 0.45));
   }
   2.6% {
-    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35)) drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
+    filter: drop-shadow(0 0 1px rgba(245, 220, 126, 0.35))
+      drop-shadow(0 0 5px rgba(217, 178, 90, 0.18));
   }
 }
 
@@ -637,6 +670,24 @@
   }
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes tog-tear-fall {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  14% {
+    opacity: 0.9;
+    transform: translate(-50%, -20%) scale(1);
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 260%) scale(0.85);
   }
 }
 

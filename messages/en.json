@@ -8,8 +8,10 @@
     "skipToContent": "Skip to content",
     "menu": "Menu",
     "close": "Close",
-    "notFoundTitle": "Page not found",
-    "notFoundBody": "This page doesn't exist (anymore) — the link may be out of date."
+    "notFoundTitle": "This is not the site you have been looking for",
+    "notFoundBody": "This page doesn't exist (anymore) — the link may be out of date.",
+    "notFoundMusic": "Check out our nice music",
+    "notFoundMaskAlt": "The mask, crying"
   },
   "Shows": {
     "status": {
@@ -140,6 +142,7 @@
     "timeLabel": "Time",
     "livesLabel": "Lives",
     "speedLabel": "Speed",
+    "lengthLabel": "Length",
     "start": "Start",
     "startHint": "Space to start · Esc to pause",
     "resume": "Resume",
@@ -168,6 +171,12 @@
       "title": "Mask Run",
       "tagline": "The mask runs on its own. You jump and duck.",
       "instructions": "Space or ↑ to jump, hold ↓ to duck. On phone: tap the top to jump, hold the bottom to duck. Keeps going until you miss one."
+    },
+    "snake": {
+      "eyebrow": "ARCADE · 04",
+      "title": "Mask Snake",
+      "tagline": "The mask leads, the tail grows. Don't bite yourself.",
+      "instructions": "Arrow keys or WASD to steer, swipe on phone. Eat the little masks — gold scores 10, red scores 30. A wall or your own tail ends the run."
     }
   }
 }

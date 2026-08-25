@@ -1,3 +1,4 @@
+import type { AppLocale } from "@/i18n/routing";
 import type { MediaPhoto as MediaPhotoBase, MediaVideo as MediaVideoBase } from "@/lib/schemas/media";
 import type { PostFrontmatter } from "@/lib/schemas/post";
 import type { ShowFrontmatter } from "@/lib/schemas/show";
@@ -5,8 +6,13 @@ import type { ShowFrontmatter } from "@/lib/schemas/show";
 export interface Show extends ShowFrontmatter {
   /** Derived from the filename, e.g. "2026-06-19-werkstatt-44". */
   slug: string;
-  /** Rendered HTML; empty string when the markdown body is empty. */
-  bodyHtml: string;
+  /**
+   * The show's note, rendered to HTML once per locale — "" for a locale
+   * the note was never written in. Pre-rendered for every locale (rather
+   * than the current one) so shows stay a single locale-independent read;
+   * see loadShows() in lib/content/shows.ts.
+   */
+  noteHtml: Record<AppLocale, string>;
 }
 
 export interface Post extends PostFrontmatter {

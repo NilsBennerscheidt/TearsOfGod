@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { GoldText } from "@/components/brand/GoldText";
 import { TicketStatus } from "@/components/ui/TicketStatus";
+import { parseLocale } from "@/i18n/routing";
+import { countryName, HOME_COUNTRY } from "@/lib/countries";
 import type { Show } from "@/types/content";
 
 interface ShowTableProps {
@@ -62,6 +64,7 @@ export async function ShowTable({ shows, locale }: ShowTableProps) {
 
 function ShowRow({ show, locale, statusLabel }: { show: Show; locale: string; statusLabel: string }) {
   const date = new Date(show.date);
+  const note = show.noteHtml[parseLocale(locale)];
   const dateFmt = new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "2-digit" }).format(date);
   const dayFmt = new Intl.DateTimeFormat(locale, { weekday: "short" }).format(date).toUpperCase();
 
@@ -83,12 +86,25 @@ function ShowRow({ show, locale, statusLabel }: { show: Show; locale: string; st
         className="font-brutal py-4 pr-3 text-base tracking-[-0.02em] text-bone max-sm:block max-sm:py-0 max-sm:text-xl"
       >
         {show.city}
+        {/* Only for away dates: spelling out "Germany" on every home show
+            would be noise on a page that's mostly home shows, while
+            "Prague" alone doesn't tell a reader it's a border crossing. */}
+        {show.country !== HOME_COUNTRY && (
+          <span className="text-meta ml-2 font-mono text-steel-text">{countryName(show.country, locale)}</span>
+        )}
       </td>
       <td role="cell" className="py-4 pr-3 max-sm:block max-sm:py-0">
         <GoldText as="p" glow className="text-venue font-display leading-tight">
           {show.venue}
         </GoldText>
         {show.name && <p className="text-meta mt-0.5 text-steel-text">{show.name}</p>}
+        {note && (
+          <div
+            className="tog-prose mt-1 max-w-prose [&_p]:mb-0 [&_p]:text-sm"
+            // Safe: rendered from this repo's own markdown frontmatter, not user input.
+            dangerouslySetInnerHTML={{ __html: note }}
+          />
+        )}
       </td>
       <td role="cell" className="py-4 text-right max-sm:block max-sm:pt-3 max-sm:text-left">
         <TicketStatus status={show.status} label={statusLabel} href={show.ticketUrl} />

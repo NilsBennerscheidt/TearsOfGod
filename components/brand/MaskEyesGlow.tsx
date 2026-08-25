@@ -2,17 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
+import { MASK_EYES } from "./mask-geometry";
 
 const MIN_DELAY_MS = 60_000;
 const MAX_DELAY_MS = 300_000;
 const GLOW_DURATION_MS = 2200;
-
-// Eye-hole centers as a % of the mask's own box — measured directly off
-// public/brand/mask.png (512×512): left hole ~(190,415), right ~(325,415).
-const EYES = [
-  { left: "37.1%", top: "81.4%" },
-  { left: "63.5%", top: "81.4%" },
-];
 
 /**
  * Ambient easter egg for MaskGlyph's `eyes` prop: the mask's eye holes
@@ -33,7 +27,8 @@ export function MaskEyesGlow() {
     let scheduleTimeout: ReturnType<typeof setTimeout>;
 
     const schedule = () => {
-      const delay = MIN_DELAY_MS + Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS);
+      const delay =
+        MIN_DELAY_MS + Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS);
       scheduleTimeout = setTimeout(() => {
         setGlowing(true);
         glowTimeout = setTimeout(() => {
@@ -52,7 +47,7 @@ export function MaskEyesGlow() {
 
   return (
     <div className="pointer-events-none absolute inset-0">
-      {EYES.map((pos, i) => (
+      {MASK_EYES.map((pos, i) => (
         <span
           key={i}
           className={cn("tog-mask-eye", glowing && "tog-mask-eye-glowing")}

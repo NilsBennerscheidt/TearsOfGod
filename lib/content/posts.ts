@@ -31,7 +31,7 @@ async function loadPosts(locale: AppLocale): Promise<Post[]> {
     }),
   );
 
-  // Newest first — the blog-listing convention, opposite of getShows()'s
+  // Newest first — the blog-listing convention, opposite of getAllShows()'s
   // chronological (soonest-first) sort.
   return posts.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
 }
@@ -39,7 +39,7 @@ async function loadPosts(locale: AppLocale): Promise<Post[]> {
 /**
  * Posts for one locale. A post only appears here if that locale's file
  * exists — no cross-locale fallback. Wrapped in React's `cache()` — see
- * the comment on getShows() for why a module-level cache would be wrong
+ * the comment on getAllShows() for why a module-level cache would be wrong
  * here.
  */
 export const getPosts = cache(async (locale: AppLocale): Promise<Post[]> => loadPosts(locale));

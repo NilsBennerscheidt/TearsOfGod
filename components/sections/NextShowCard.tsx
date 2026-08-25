@@ -3,7 +3,9 @@ import { GoldText } from "@/components/brand/GoldText";
 import { RegCross } from "@/components/brand/RegMarks";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { TicketStatus } from "@/components/ui/TicketStatus";
+import { parseLocale } from "@/i18n/routing";
 import { getNextShow } from "@/lib/content/shows";
+import { countryName, HOME_COUNTRY } from "@/lib/countries";
 
 interface NextShowCardProps {
   locale: string;
@@ -11,7 +13,7 @@ interface NextShowCardProps {
 
 /**
  * Self-contained: fetches its own data via getNextShow() rather than
- * requiring the page to fetch-then-pass. getShows()/getNextShow() are
+ * requiring the page to fetch-then-pass. getAllShows()/getNextShow() are
  * wrapped in React's cache(), so this doesn't cost an extra filesystem
  * read even if something else on the page also calls getNextShow().
  */
@@ -27,6 +29,7 @@ export async function NextShowCard({ locale }: NextShowCardProps) {
     );
   }
 
+  const note = show.noteHtml[parseLocale(locale)];
   const date = new Date(show.date);
   const day = new Intl.DateTimeFormat(locale, { day: "2-digit" }).format(date);
   const month = new Intl.DateTimeFormat(locale, { month: "2-digit" }).format(date);
@@ -43,7 +46,18 @@ export async function NextShowCard({ locale }: NextShowCardProps) {
       <GoldText as="p" glow className="text-venue font-display mt-2">
         {show.venue}
       </GoldText>
-      <p className="text-meta mt-1 tracking-wide text-steel-text uppercase">{show.city}</p>
+      <p className="text-meta mt-1 tracking-wide text-steel-text uppercase">
+        {show.city}
+        {/* Away dates carry their country; see the same call in ShowTable. */}
+        {show.country !== HOME_COUNTRY && ` · ${countryName(show.country, locale)}`}
+      </p>
+      {note && (
+        <div
+          className="tog-prose mt-2 [&_p]:mb-0 [&_p]:text-sm"
+          // Safe: rendered from this repo's own markdown frontmatter, not user input.
+          dangerouslySetInnerHTML={{ __html: note }}
+        />
+      )}
       <div className="mt-4">
         <TicketStatus status={show.status} label={t(`Shows.status.${show.status}`)} href={show.ticketUrl} />
       </div>

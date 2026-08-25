@@ -16,12 +16,40 @@ export interface SocialLink {
 }
 
 export const socials: SocialLink[] = [
-  { id: "instagram", label: "Instagram", href: "https://www.instagram.com/tearsofgodofficial/" },
-  { id: "spotify", label: "Spotify", href: "https://open.spotify.com/artist/5fyxJSoXGtJJmEvF9zUj7O" },
-  { id: "youtube", label: "YouTube", href: "https://www.youtube.com/@tearsofgod_official" },
-  { id: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@tearsofgod_" },
-  { id: "whatsapp", label: "WhatsApp", href: "https://www.whatsapp.com/channel/0029Vb3BYmcHVvTSQxzJ2Z3o" },
+  {
+    id: "instagram",
+    label: "Instagram",
+    href: "https://www.instagram.com/tearsofgodofficial/",
+  },
+  {
+    id: "spotify",
+    label: "Spotify",
+    href: "https://open.spotify.com/artist/5fyxJSoXGtJJmEvF9zUj7O",
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    href: "https://www.youtube.com/@tearsofgod_official",
+  },
+  {
+    id: "tiktok",
+    label: "TikTok",
+    href: "https://www.tiktok.com/@tearsofgod_",
+  },
+  {
+    id: "whatsapp",
+    label: "WhatsApp",
+    href: "https://www.whatsapp.com/channel/0029Vb3BYmcHVvTSQxzJ2Z3o",
+  },
 ];
 
 /** Channel used for the hero's "watch" action. */
 export const youtubeUrl = "https://www.youtube.com/@tearsofgod_official";
+
+/**
+ * Artist page — everything we've released, not one track. Used where the
+ * link means "our music" in general (the 404 page); the hero's LISTEN
+ * button points at a specific release instead (content/releases.ts).
+ */
+export const spotifyUrl =
+  "https://open.spotify.com/artist/5fyxJSoXGtJJmEvF9zUj7O";
