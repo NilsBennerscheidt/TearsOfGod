@@ -177,6 +177,13 @@
       "title": "Mask Snake",
       "tagline": "The mask leads, the tail grows. Don't bite yourself.",
       "instructions": "Arrow keys or WASD to steer, swipe on phone. Eat the little masks — gold scores 10, red scores 30. A wall or your own tail ends the run."
+    },
+    "maze": {
+      "eyebrow": "ARCADE · 05",
+      "title": "Mask Maze",
+      "tagline": "Collect every dot. Dodge the ghosts — or hunt them, if you're bold.",
+      "instructions": "Arrow keys or WASD, swipe on phone. Eat every dot to clear the level. A big dot makes the ghosts briefly edible. Three lives.",
+      "levelClear": "Level cleared!"
     }
   }
 }

@@ -24,10 +24,11 @@ export async function generateMetadata({
 }
 
 /**
- * The arcade index. Whack-a-Mole is live; the other two render as
- * non-interactive placeholder cards — GameCard takes no href for those,
- * so there is no link to a route that doesn't exist yet and nothing for
- * typedRoutes to reject.
+ * The arcade index. Every card here is live; the rhythm game is the
+ * only one still missing — it's deferred pending a licensed audio clip
+ * and doesn't get a card at all yet (GameCard takes no href for a
+ * placeholder, so there's never a link to a route that doesn't exist,
+ * nothing for typedRoutes to reject).
  */
 export default async function GamesPage({ params }: { params: Promise<{ locale: string }> }) {
   // See the identical comment in app/[locale]/band/page.tsx — awaiting
@@ -71,6 +72,13 @@ export default async function GamesPage({ params }: { params: Promise<{ locale: 
             href="/games/snake"
             playLabel={t("play")}
             color="var(--color-blood-text)"
+          />
+          <GameCard
+            title={t("maze.title")}
+            tagline={t("maze.tagline")}
+            href="/games/maze"
+            playLabel={t("play")}
+            color="var(--color-gold-deep)"
           />
         </div>
 

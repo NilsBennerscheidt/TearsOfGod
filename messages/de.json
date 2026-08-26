@@ -177,6 +177,13 @@
       "title": "Maskenschlange",
       "tagline": "Die Maske führt, der Schwanz wächst. Nicht in dich selbst beißen.",
       "instructions": "Pfeiltasten oder WASD zum Lenken, am Handy wischen. Iss die kleinen Masken — goldene zählen 10, rote 30. Wand oder eigener Schwanz beenden die Runde."
+    },
+    "maze": {
+      "eyebrow": "ARCADE · 05",
+      "title": "Maskenlabyrinth",
+      "tagline": "Sammle alle Punkte ein. Meide die Geister — oder jag sie, wenn du mutig bist.",
+      "instructions": "Pfeiltasten oder WASD, am Handy wischen. Iss alle Punkte, um die Ebene zu schaffen. Ein großer Punkt macht die Geister kurz essbar. Drei Leben.",
+      "levelClear": "Ebene geschafft!"
     }
   }
 }

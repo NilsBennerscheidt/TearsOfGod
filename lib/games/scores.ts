@@ -6,7 +6,7 @@
  * The rhythm game isn't here yet — it's deferred pending a licensed
  * audio clip and isn't referenced anywhere in the arcade.
  */
-export const GAME_IDS = ["whack", "invaders", "runner", "snake"] as const;
+export const GAME_IDS = ["whack", "invaders", "runner", "snake", "maze"] as const;
 export type GameId = (typeof GAME_IDS)[number];
 
 /**
