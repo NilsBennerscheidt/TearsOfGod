@@ -31,7 +31,13 @@ export function GameOverCard({ score, best, isNewBest, onRestart }: GameOverCard
   const t = useTranslations("Games");
 
   return (
-    <Overlay>
+    // Fully opaque, unlike the shared Overlay's default 92%-opacity
+    // background (right for "paused" — the frozen board staying
+    // visible underneath is the point) — game over is a clean stop, not
+    // a return trip, and a busier frozen frame (bullets mid-flight,
+    // ghosts mid-chase) showing faintly through was reading as the
+    // overlay overlapping the game rather than replacing it.
+    <Overlay className="bg-pitch">
       <p className="font-display text-3xl text-gold uppercase">{t("gameOver")}</p>
 
       <div role="status">

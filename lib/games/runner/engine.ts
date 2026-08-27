@@ -27,6 +27,16 @@ export const PLAYER_DUCK_H = 16;
 
 const GRAVITY = 1000;
 const JUMP_VELOCITY = -360;
+/**
+ * Holding duck while airborne multiplies gravity — a fast-fall, the
+ * genre-standard way to hand the player agency over the back half of an
+ * otherwise fully deterministic jump arc. Applied uniformly whenever
+ * duck is held and airborne, not gated to "past the apex": pressed
+ * early it also cuts a jump short (a smaller, tighter hop), pressed at
+ * or after the peak it just drops you faster — one multiplier, no extra
+ * branching for which phase of the arc you're in.
+ */
+const FAST_FALL_GRAVITY_MULTIPLIER = 2.6;
 
 // Exported, not just internal constants: render.ts draws obstacles at
 // exactly these dimensions, so what the player sees and what
@@ -92,6 +102,9 @@ export class RunnerEngine {
   private airOffset = 0;
   private velocityY = 0;
   private isGrounded = true;
+  /** The raw held-duck input, tracked regardless of grounded state — airborne it drives fast-fall, grounded it drives isDucking below. */
+  private duckHeld = false;
+  /** Derived each step from duckHeld && isGrounded — the crouch hitbox only ever applies on the ground (see the class doc on PLAYER_DUCK_H), never mid-air. */
   private isDucking = false;
 
   private obstacles: Obstacle[] = [];
@@ -112,9 +125,24 @@ export class RunnerEngine {
     this.isDucking = false;
   }
 
-  /** Ducking only ever applies while grounded (see the class doc on PLAYER_DUCK_H) — set true mid-air is simply ignored until landing. */
+  /**
+   * Held state, not an instant hitbox toggle: while airborne this drives
+   * fast-fall (see advancePhysics) rather than being ignored outright —
+   * only the grounded crouch hitbox waits for landing. Recomputes
+   * isDucking immediately against the *current* isGrounded, so a caller
+   * that reads a snapshot right after this call (without an intervening
+   * step()) sees a value consistent with what they just set — step()
+   * recomputes it again after advancePhysics for the one case this call
+   * alone can't catch: landing completes mid-step with duckHeld already
+   * unchanged from the frame before.
+   */
   setDucking(ducking: boolean): void {
-    this.isDucking = ducking && this.isGrounded;
+    this.duckHeld = ducking;
+    this.recomputeDucking();
+  }
+
+  private recomputeDucking(): void {
+    this.isDucking = this.duckHeld && this.isGrounded;
   }
 
   private currentSpeed(): number {
@@ -136,6 +164,11 @@ export class RunnerEngine {
     this.groundOffset = (this.groundOffset + speed * deltaSeconds) % GROUND_TICK_SPACING;
 
     this.advancePhysics(deltaSeconds);
+    // Recomputed after advancePhysics, not before: a jump landing this
+    // very frame flips isGrounded mid-step, and duck should be able to
+    // take effect the instant the player is grounded again rather than
+    // waiting one extra frame.
+    this.recomputeDucking();
     this.advanceObstacles(deltaSeconds, speed);
 
     if (this.checkCollision()) {
@@ -152,7 +185,8 @@ export class RunnerEngine {
   private advancePhysics(deltaSeconds: number): void {
     if (this.isGrounded) return;
 
-    this.velocityY += GRAVITY * deltaSeconds;
+    const gravity = this.duckHeld ? GRAVITY * FAST_FALL_GRAVITY_MULTIPLIER : GRAVITY;
+    this.velocityY += gravity * deltaSeconds;
     this.airOffset += this.velocityY * deltaSeconds;
 
     if (this.airOffset >= 0) {

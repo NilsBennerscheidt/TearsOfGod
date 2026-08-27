@@ -1,4 +1,4 @@
-import { CELL, LOGICAL_HEIGHT, LOGICAL_WIDTH, type SnakeSnapshot } from "./engine";
+import { CELL, COLS, LOGICAL_HEIGHT, LOGICAL_WIDTH, ROWS, type SnakeSnapshot } from "./engine";
 
 export interface SnakeSprites {
   head: HTMLCanvasElement | null;
@@ -32,6 +32,7 @@ const DIRECTION_ANGLE: Record<SnakeSnapshot["direction"], number> = {
  */
 export function drawSnake(ctx: CanvasRenderingContext2D, snapshot: SnakeSnapshot, sprites: SnakeSprites): void {
   ctx.clearRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+  drawGrid(ctx, sprites.colors.ash);
 
   if (snapshot.food) {
     const sprite = snapshot.food.variant === "blood" ? sprites.foodRare : sprites.food;
@@ -73,6 +74,31 @@ export function drawSnake(ctx: CanvasRenderingContext2D, snapshot: SnakeSnapshot
       ctx.fill();
     }
   }
+}
+
+/**
+ * Faint cell-boundary lines — a visual reference for where the snake
+ * actually is on the grid, absent before (the board was a blank
+ * field except for the segments and food themselves).
+ */
+function drawGrid(ctx: CanvasRenderingContext2D, ashColor: string): void {
+  ctx.save();
+  ctx.strokeStyle = ashColor;
+  ctx.globalAlpha = 0.35;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let col = 1; col < COLS; col++) {
+    const x = col * CELL + 0.5; // +0.5 keeps a 1px line crisp rather than antialiased across two pixel rows
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, LOGICAL_HEIGHT);
+  }
+  for (let row = 1; row < ROWS; row++) {
+    const y = row * CELL + 0.5;
+    ctx.moveTo(0, y);
+    ctx.lineTo(LOGICAL_WIDTH, y);
+  }
+  ctx.stroke();
+  ctx.restore();
 }
 
 function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {

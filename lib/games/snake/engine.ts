@@ -36,6 +36,37 @@ const BLOOD_CHANCE = 0.15;
 export type Direction = "up" | "down" | "left" | "right";
 export type FoodVariant = "gold" | "blood";
 
+/** "walls" is the classic rule (edge = death); "wraparound" lets the snake pass through an edge and reappear on the opposite side instead. */
+export type WallMode = "walls" | "wraparound";
+export type SpeedPreset = "slow" | "normal" | "fast";
+
+export interface SnakeOptions {
+  wallMode: WallMode;
+  speedPreset: SpeedPreset;
+}
+
+export const DEFAULT_SNAKE_OPTIONS: SnakeOptions = { wallMode: "walls", speedPreset: "normal" };
+
+/**
+ * Multiplies both TICK_START_MS and TICK_MIN_MS uniformly, so every
+ * preset keeps the same relative growth-based ramp shape (TICK_STEP_MS
+ * is left alone) — just shifted faster or slower as a whole, rather than
+ * changing how steeply speed increases as the snake grows.
+ */
+const SPEED_MULTIPLIERS: Record<SpeedPreset, number> = { slow: 1.3, normal: 1, fast: 0.75 };
+
+/**
+ * One highscore per mode combination, not one shared best across all
+ * six — see lib/games/scores.ts's `variant` parameter. A single shared
+ * best would always be dominated by whichever combination is easiest
+ * (wraparound + slow), which makes it meaningless as something to beat
+ * in any other mode. Stable, storage-key-safe strings (no spaces/colons
+ * beyond the one separator scores.ts itself adds).
+ */
+export function modeVariantKey(options: SnakeOptions): string {
+  return `${options.wallMode}-${options.speedPreset}`;
+}
+
 const DELTAS: Record<Direction, { dx: number; dy: number }> = {
   up: { dx: 0, dy: -1 },
   down: { dx: 0, dy: 1 },
@@ -76,6 +107,8 @@ export interface SnakeSnapshot {
 }
 
 export class SnakeEngine {
+  private readonly options: SnakeOptions;
+
   private body: Segment[] = [];
   private direction: Direction = "right";
   private queuedDirection: Direction = "right";
@@ -86,20 +119,22 @@ export class SnakeEngine {
   private score = 0;
   private finished = false;
 
-  constructor() {
+  constructor(options: SnakeOptions = DEFAULT_SNAKE_OPTIONS) {
+    this.options = options;
     this.body = Array.from({ length: START_LENGTH }, (_, i) => ({
       col: START_COL - i,
       row: START_ROW,
       prevCol: START_COL - i,
       prevRow: START_ROW,
     }));
-    this.moveTimer = TICK_START_MS / 1000;
+    this.moveTimer = TICK_START_MS * SPEED_MULTIPLIERS[options.speedPreset] * 0.001;
     this.spawnFood();
   }
 
   private tickIntervalSeconds(): number {
     const growth = this.body.length - START_LENGTH;
-    return Math.max(TICK_MIN_MS, TICK_START_MS - growth * TICK_STEP_MS) / 1000;
+    const multiplier = SPEED_MULTIPLIERS[this.options.speedPreset];
+    return Math.max(TICK_MIN_MS * multiplier, TICK_START_MS * multiplier - growth * TICK_STEP_MS) / 1000;
   }
 
   /**
@@ -137,12 +172,22 @@ export class SnakeEngine {
     if (!head) return false;
 
     const { dx, dy } = DELTAS[this.direction];
-    const nextCol = head.col + dx;
-    const nextRow = head.row + dy;
+    let nextCol = head.col + dx;
+    let nextRow = head.row + dy;
 
-    if (nextCol < 0 || nextCol >= COLS || nextRow < 0 || nextRow >= ROWS) {
-      this.finished = true;
-      return true;
+    const outOfBounds = nextCol < 0 || nextCol >= COLS || nextRow < 0 || nextRow >= ROWS;
+    if (outOfBounds) {
+      if (this.options.wallMode === "walls") {
+        this.finished = true;
+        return true;
+      }
+      // Wraparound: reappear on the opposite edge. `((n % m) + m) % m`
+      // rather than a plain `%` — nextCol/nextRow are only ever exactly
+      // one cell past an edge (COLS or -1), so this normalizes that one
+      // step of overshoot in either direction without needing a general
+      // modulo-for-negatives helper.
+      nextCol = ((nextCol % COLS) + COLS) % COLS;
+      nextRow = ((nextRow % ROWS) + ROWS) % ROWS;
     }
 
     const ateFood = this.food !== null && this.food.col === nextCol && this.food.row === nextRow;
@@ -165,7 +210,17 @@ export class SnakeEngine {
 
     if (ateFood) {
       const eaten = this.food;
-      this.body.unshift({ col: nextCol, row: nextRow, prevCol: head.col, prevRow: head.row });
+      // On a wrap tick, prevCol/prevRow are set to the *new* position
+      // rather than the old one — an interpolated slide from one edge to
+      // the opposite edge would otherwise render as the head sweeping
+      // backward across almost the entire board for that tick, instead
+      // of reappearing on the far side the way wraparound should look.
+      this.body.unshift({
+        col: nextCol,
+        row: nextRow,
+        prevCol: outOfBounds ? nextCol : head.col,
+        prevRow: outOfBounds ? nextRow : head.row,
+      });
       if (eaten) this.score += FOOD_POINTS[eaten.variant];
       this.spawnFood();
       return true;
@@ -183,6 +238,11 @@ export class SnakeEngine {
     }
     head.col = nextCol;
     head.row = nextRow;
+    // Same wrap-snap treatment as the eating branch above.
+    if (outOfBounds) {
+      head.prevCol = nextCol;
+      head.prevRow = nextRow;
+    }
 
     return false;
   }

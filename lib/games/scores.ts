@@ -17,8 +17,15 @@ export type GameId = (typeof GAME_IDS)[number];
  */
 const STORAGE_PREFIX = "tog:highscore:";
 
-export function highscoreStorageKey(game: GameId): string {
-  return `${STORAGE_PREFIX}${game}`;
+/**
+ * `variant` scopes the key below the game itself — Snake's wall/speed
+ * mode combinations, so a wraparound+fast run's best doesn't collide
+ * with (or get unfairly compared against) a walls+slow one. Optional and
+ * unused by the other four games; a colon separator matches the one
+ * `tog:highscore:` already uses.
+ */
+export function highscoreStorageKey(game: GameId, variant?: string): string {
+  return `${STORAGE_PREFIX}${game}${variant ? `:${variant}` : ""}`;
 }
 
 /**
@@ -88,12 +95,12 @@ export function createHighscoreRecord(score: number): HighscoreRecord {
  * or newer schema. None of those is worth surfacing to a player who just
  * wants to whack a mole — the game simply behaves as if no best exists.
  */
-export function readHighscore(game: GameId): HighscoreRecord | null {
+export function readHighscore(game: GameId, variant?: string): HighscoreRecord | null {
   if (typeof window === "undefined") return null;
 
   let raw: string | null;
   try {
-    raw = window.localStorage.getItem(highscoreStorageKey(game));
+    raw = window.localStorage.getItem(highscoreStorageKey(game, variant));
   } catch {
     return null;
   }
@@ -112,12 +119,12 @@ export function readHighscore(game: GameId): HighscoreRecord | null {
  * score still shows for the rest of the session, it just won't survive a
  * reload.
  */
-export function writeHighscore(game: GameId, score: number): HighscoreRecord | null {
+export function writeHighscore(game: GameId, score: number, variant?: string): HighscoreRecord | null {
   if (typeof window === "undefined") return null;
 
   const record = createHighscoreRecord(score);
   try {
-    window.localStorage.setItem(highscoreStorageKey(game), JSON.stringify(record));
+    window.localStorage.setItem(highscoreStorageKey(game, variant), JSON.stringify(record));
     return record;
   } catch {
     return null;

@@ -24,6 +24,8 @@ interface GameShellProps {
   title: string;
   /** Shown on the idle overlay — how to play, scoring rules. */
   instructions: ReactNode;
+  /** Rendered on the idle overlay between the instructions and the Start button — e.g. Snake's mode picker. Absent for every other game; purely additive, no layout change without it. */
+  idleExtra?: ReactNode;
   status: GameStatus;
   score: number;
   best: number | null;
@@ -55,6 +57,7 @@ export function GameShell({
   eyebrow,
   title,
   instructions,
+  idleExtra,
   status,
   score,
   best,
@@ -128,6 +131,7 @@ export function GameShell({
           {status === "idle" && (
             <Overlay>
               <div className="text-body max-w-sm text-center text-bone/85">{instructions}</div>
+              {idleExtra}
               <OverlayButton onClick={onStart}>{t("start")}</OverlayButton>
               <OverlayHint>{t("startHint")}</OverlayHint>
             </Overlay>

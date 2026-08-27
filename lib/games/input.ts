@@ -98,6 +98,12 @@ export function useGameKeys(
       const allowedAnyway = alwaysAllowRef.current?.includes(intent) ?? false;
       if (!allowedAnyway && targetHandlesItsOwnKeys(event.target)) return;
 
+      // Every intent this hook recognizes has a native default worth
+      // suppressing once we're actually consuming it — Arrow*/Space
+      // scroll the page, and there's nothing worth keeping for the rest
+      // either. Without this, playing with the keyboard scrolls the
+      // whole page out from under the game on every press.
+      event.preventDefault();
       handlerRef.current(intent, event);
     };
 
@@ -178,6 +184,7 @@ export function useHeldDirection(enabled: boolean): RefObject<-1 | 0 | 1> {
       if (intent === "left") heldRef.current.left = true;
       else if (intent === "right") heldRef.current.right = true;
       else return;
+      if (!targetHandlesItsOwnKeys(event.target)) event.preventDefault();
       recompute();
     };
 
@@ -186,6 +193,7 @@ export function useHeldDirection(enabled: boolean): RefObject<-1 | 0 | 1> {
       if (intent === "left") heldRef.current.left = false;
       else if (intent === "right") heldRef.current.right = false;
       else return;
+      if (!targetHandlesItsOwnKeys(event.target)) event.preventDefault();
       recompute();
     };
 
@@ -226,10 +234,14 @@ export function useHeldIntent(enabled: boolean, intent: GameIntent): RefObject<b
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (intentForKey(event.key) === intent) heldRef.current = true;
+      if (intentForKey(event.key) !== intent) return;
+      if (!targetHandlesItsOwnKeys(event.target)) event.preventDefault();
+      heldRef.current = true;
     };
     const onKeyUp = (event: KeyboardEvent) => {
-      if (intentForKey(event.key) === intent) heldRef.current = false;
+      if (intentForKey(event.key) !== intent) return;
+      if (!targetHandlesItsOwnKeys(event.target)) event.preventDefault();
+      heldRef.current = false;
     };
     // Same reasoning as useHeldDirection's onBlur — a lost keyup must not
     // leave the intent stuck "held".

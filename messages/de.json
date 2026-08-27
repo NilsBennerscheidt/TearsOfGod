@@ -176,7 +176,13 @@
       "eyebrow": "ARCADE · 04",
       "title": "Maskenschlange",
       "tagline": "Die Maske führt, der Schwanz wächst. Nicht in dich selbst beißen.",
-      "instructions": "Pfeiltasten oder WASD zum Lenken, am Handy wischen. Iss die kleinen Masken — goldene zählen 10, rote 30. Wand oder eigener Schwanz beenden die Runde."
+      "instructions": "Pfeiltasten oder WASD zum Lenken, am Handy wischen. Iss die kleinen Masken — goldene zählen 10, rote 30. Wand oder eigener Schwanz beenden die Runde.",
+      "wallsLabel": "Wände",
+      "wallsOn": "An",
+      "wallsOff": "Aus",
+      "speedSlow": "Langsam",
+      "speedNormal": "Normal",
+      "speedFast": "Schnell"
     },
     "maze": {
       "eyebrow": "ARCADE · 05",
