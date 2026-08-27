@@ -1,11 +1,9 @@
-import { hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { SadMask } from "@/components/brand/SadMask";
 import { Footer } from "@/components/layout/Footer";
 import { CtaButton } from "@/components/ui/CtaButton";
 import { spotifyUrl, youtubeUrl } from "@/content/social";
 import { Link } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
 
 /**
  * Segment-level 404 for anything under /[locale]/** (a stale news slug,
@@ -22,17 +20,14 @@ import { routing } from "@/i18n/routing";
  * this is the site's cheapest place to convert a broken link into a
  * listen.
  */
-export default async function LocaleNotFound({
-  params,
-}: {
-  params?: Promise<{ locale: string }>;
-}) {
-  const requested = await params?.catch(() => undefined);
-  const locale =
-    requested && hasLocale(routing.locales, requested.locale)
-      ? requested.locale
-      : routing.defaultLocale;
-  const t = await getTranslations({ locale, namespace: "Nav" });
+export default async function LocaleNotFound() {
+  // Deliberately no `locale` param: Next renders a not-found boundary
+  // without the segment's params, so reading `params.locale` here only
+  // ever fell through to a default — which quietly served German copy
+  // under English chrome on /en. The locale comes from next-intl's
+  // request scope instead, which app/[locale]/layout.tsx has already
+  // pinned via setRequestLocale() by the time this boundary renders.
+  const t = await getTranslations("Nav");
 
   return (
     <>

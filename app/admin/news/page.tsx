@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DateTimeField } from "@/app/admin/_components/DateTimeField";
 import { routing } from "@/i18n/routing";
 import { fetchJson } from "@/lib/admin/fetch-json";
 import type { Post } from "@/types/content";
@@ -260,9 +261,7 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
         <input value={title} onChange={(e) => setTitle(e.target.value)} required className="w-full border border-ash bg-transparent px-2 py-1" />
       </Field>
 
-      <Field label="Date (ISO 8601, e.g. 2026-04-22T09:00:00+02:00)">
-        <input value={date} onChange={(e) => setDate(e.target.value)} required className="w-full border border-ash bg-transparent px-2 py-1" />
-      </Field>
+      <DateTimeField label="Publication date and time" value={date} onChange={setDate} required />
 
       <Field label="Slug / filename (lowercase-kebab-case)">
         <input

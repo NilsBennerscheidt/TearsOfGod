@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DateTimeField } from "@/app/admin/_components/DateTimeField";
 import { routing } from "@/i18n/routing";
+import { formatStored } from "@/lib/admin/datetime";
 import { fetchJson } from "@/lib/admin/fetch-json";
 import { COUNTRY_CODES, countryName, HOME_COUNTRY } from "@/lib/countries";
 import type { ShowStatus } from "@/lib/schemas/show";
@@ -15,7 +17,7 @@ type View = { kind: "list" } | { kind: "new" } | { kind: "edit"; slug: string };
 function visibility(show: Show): { label: string; tone: "hidden" | "scheduled" | "live" } {
   if (show.hidden) return { label: "Hidden", tone: "hidden" };
   if (show.hiddenUntil && Date.parse(show.hiddenUntil) > Date.now()) {
-    return { label: `Hidden until ${show.hiddenUntil}`, tone: "scheduled" };
+    return { label: `Hidden until ${formatStored(show.hiddenUntil)}`, tone: "scheduled" };
   }
   return { label: "Live", tone: "live" };
 }
@@ -87,7 +89,7 @@ export default function ShowsAdminPage() {
                     {show.country !== HOME_COUNTRY && ` (${show.country})`} — {show.venue}
                   </p>
                   <p className="text-meta text-steel-text">
-                    {show.date} · {show.status}
+                    {formatStored(show.date)} · {show.status}
                   </p>
                   <p className="mt-1 flex flex-wrap gap-2">
                     <span
@@ -268,9 +270,7 @@ function ShowForm({ mode, initialSlug, onDone, onCancel }: ShowFormProps) {
         />
       </Field>
 
-      <Field label="Date (ISO 8601, e.g. 2026-10-31T18:45:00+02:00)">
-        <input value={date} onChange={(e) => setDate(e.target.value)} required className="w-full border border-ash bg-transparent px-2 py-1" />
-      </Field>
+      <DateTimeField label="Date and start time" value={date} onChange={setDate} required />
 
       <div className="flex flex-wrap gap-4">
         <Field label="City">
@@ -327,14 +327,12 @@ function ShowForm({ mode, initialSlug, onDone, onCancel }: ShowFormProps) {
           <span className="text-sm">Hidden — never shown on the site</span>
         </label>
 
-        <Field label="Hidden until (ISO 8601, optional — announces itself at this moment)">
-          <input
-            value={hiddenUntil}
-            onChange={(e) => setHiddenUntil(e.target.value)}
-            placeholder="2026-09-01T12:00:00+02:00"
-            className="w-full border border-ash bg-transparent px-2 py-1"
-          />
-        </Field>
+        <DateTimeField
+          label="Hidden until (optional — announces itself at this moment)"
+          value={hiddenUntil}
+          onChange={setHiddenUntil}
+          emptyHint="No schedule — this show's visibility is whatever the checkbox above says."
+        />
 
         <p className="text-meta text-steel-text">
           {hidden

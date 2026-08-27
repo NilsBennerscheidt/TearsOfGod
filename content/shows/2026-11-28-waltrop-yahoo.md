@@ -1,5 +1,5 @@
 ---
-date: "2026-11-28T20:00:00+02:00"
+date: "2026-11-28T20:00:00+01:00"
 city: "Waltrop"
 venue: "Yahoo! Waltrop"
 name: "Ground Zero - Metalcore im Yahoo"

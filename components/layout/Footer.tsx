@@ -66,6 +66,8 @@ export async function Footer({ variant = "landing" }: FooterProps) {
         <Link href="/datenschutz" className="inline-flex min-h-11 items-center hover:text-bone">
           {t("Legal.datenschutz")}
         </Link>
+        {/* App version straight from package.json, inlined at build time by next.config.ts. */}
+        <span className="inline-flex min-h-11 items-center md:ml-auto">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
       </div>
     </footer>
   );
