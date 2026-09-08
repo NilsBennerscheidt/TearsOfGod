@@ -137,36 +137,34 @@ export function MazeGame() {
       onPause={() => setStatus("paused")}
       gameOver={<GameOverCard score={hud.score} best={best} isNewBest={isNewBest} onRestart={handleStart} />}
     >
-      <div className="p-3 sm:p-4">
-        <GameCanvas
-          logicalWidth={LOGICAL_WIDTH}
-          logicalHeight={LOGICAL_HEIGHT}
-          className="mx-auto max-w-md border border-ash bg-pitch"
-          onContext={(ctx) => {
-            ctxRef.current = ctx;
-          }}
-          onPointerActive={(x, y, isNewPress) => {
-            if (statusRef.current !== "playing") return;
-            if (isNewPress) {
-              swipeOriginRef.current = [x, y];
-              return;
-            }
-            const origin = swipeOriginRef.current;
-            if (!origin) return;
-            const dx = x - origin[0];
-            const dy = y - origin[1];
-            if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_THRESHOLD) return;
-
-            const direction: Direction =
-              Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up";
-            engineRef.current?.setDirection(direction);
+      <GameCanvas
+        logicalWidth={LOGICAL_WIDTH}
+        logicalHeight={LOGICAL_HEIGHT}
+        className="mx-auto h-full max-w-full border border-ash bg-pitch"
+        onContext={(ctx) => {
+          ctxRef.current = ctx;
+        }}
+        onPointerActive={(x, y, isNewPress) => {
+          if (statusRef.current !== "playing") return;
+          if (isNewPress) {
             swipeOriginRef.current = [x, y];
-          }}
-          onPointerRelease={() => {
-            swipeOriginRef.current = null;
-          }}
-        />
-      </div>
+            return;
+          }
+          const origin = swipeOriginRef.current;
+          if (!origin) return;
+          const dx = x - origin[0];
+          const dy = y - origin[1];
+          if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_THRESHOLD) return;
+
+          const direction: Direction =
+            Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up";
+          engineRef.current?.setDirection(direction);
+          swipeOriginRef.current = [x, y];
+        }}
+        onPointerRelease={() => {
+          swipeOriginRef.current = null;
+        }}
+      />
 
       {status === "playing" && hud.levelClearActive && (
         <Overlay className="bg-pitch/70">

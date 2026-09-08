@@ -1,11 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { GoldText } from "@/components/brand/GoldText";
 import { RegMarks } from "@/components/brand/RegMarks";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
+import { useFocusTrap } from "@/lib/focus-trap";
 import { useGameKeys } from "@/lib/games/input";
 import { Scoreboard } from "./Scoreboard";
 
@@ -46,6 +48,37 @@ interface GameShellProps {
  * idle/paused overlays, keyboard controls, and the back link to the
  * arcade index.
  *
+ * A full-screen, event-blocking takeover — portaled to `document.body`
+ * (same technique PhotoLightbox uses) at `fixed inset-0`, rather than a
+ * section living in the page's own scroll flow the way it did before.
+ * Three real problems came from being in-flow: the site behind a game
+ * could still be scrolled (wheel, touch-drag, pinch — arrow-key
+ * scrolling was patched separately in lib/games/input.ts, but that only
+ * ever covered the keyboard), the play surface was capped to a fixed
+ * width regardless of how much screen was actually available, and an
+ * overlay's `absolute inset-0` only ever covered the bordered play box,
+ * not the page around it. All three are structural once this is a
+ * portal: `useFocusTrap`'s body-scroll-lock plus `inertScope: "body"`
+ * blocks every input path to the rest of the page at once (not a
+ * per-key allowlist), children size against the full viewport instead
+ * of a capped column (see each game's own canvas className — `max-h-full
+ * max-w-full` replacing the old fixed `max-w-*` caps), and the overlays
+ * below now cover the entire screen because their positioned ancestor
+ * does.
+ *
+ * `handleEscape: false` on the trap: Escape already means "pause" via
+ * this component's own useGameKeys call below, and the hook's own
+ * Escape-closes behavior would otherwise fire alongside it — there's no
+ * separate "close the overlay" action to begin with here, since leaving
+ * a /games/* route is just a normal navigation (the "← Arcade" link),
+ * which unmounts this component and runs the trap's own cleanup.
+ *
+ * `inertScope: "body"`, not the default `"main"`: this container isn't
+ * nested inside `#main-content` the way PhotoLightbox's is — it's a
+ * sibling of the whole page, header included — so inerting `main` alone
+ * would leave the header still reachable by a screen reader's virtual
+ * cursor even though a full-screen game visually covers it completely.
+ *
  * Shared chrome strings are read from the `Games` namespace here rather
  * than passed down from each game — every game renders the identical
  * "Start" / "Paused" / "Resume" copy, and threading four more props
@@ -70,6 +103,13 @@ export function GameShell({
   children,
 }: GameShellProps) {
   const t = useTranslations("Games");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Always "open": this component's own mounted lifetime *is* the
+  // full-screen takeover — there's no separate open/closed state to
+  // track the way a dialog opened from a button has, only "the game
+  // page is showing" for as long as GameShell exists at all.
+  useFocusTrap(true, containerRef, undefined, { handleEscape: false, inertScope: "body" });
 
   useGameKeys(
     status !== "over",
@@ -91,25 +131,25 @@ export function GameShell({
     { alwaysAllow: ["pause"] },
   );
 
-  return (
-    <section className="gutter-x py-8 md:py-10">
-      <div className="mx-auto max-w-2xl">
-        <div className="flex items-baseline justify-between gap-4">
-          <p className="text-meta text-blood-text font-mono tracking-widest uppercase">{eyebrow}</p>
-          <Link
-            href="/games"
-            className="text-meta text-steel-text inline-flex min-h-11 items-center font-mono tracking-wide uppercase hover:text-gold"
-          >
-            {t("backToArcade")}
-          </Link>
-        </div>
+  return createPortal(
+    <div ref={containerRef} className="fixed inset-0 z-60 flex flex-col bg-pitch">
+      <div className="gutter-x safe-t flex items-baseline justify-between gap-4 pb-2">
+        <p className="text-meta text-blood-text font-mono tracking-widest uppercase">{eyebrow}</p>
+        <Link
+          href="/games"
+          className="text-meta text-steel-text inline-flex min-h-11 items-center font-mono tracking-wide uppercase hover:text-gold"
+        >
+          {t("backToArcade")}
+        </Link>
+      </div>
 
-        <GoldText as="h1" glow className="font-display mt-1 text-4xl leading-none uppercase md:text-5xl">
+      <div className="gutter-x">
+        <GoldText as="h1" glow className="font-display text-3xl leading-none uppercase md:text-4xl">
           {title}
         </GoldText>
 
         <Scoreboard
-          className="mt-6"
+          className="mt-3"
           scoreLabel={t("scoreLabel")}
           score={score}
           bestLabel={t("bestLabel")}
@@ -117,8 +157,27 @@ export function GameShell({
           extraLabel={extraLabel}
           extraValue={extraValue}
         />
+      </div>
 
-        <div className="tog-gold-glow-box relative mt-4 border border-gold bg-ink">
+      {/* The growing region: everything above is natural-height chrome,
+          this takes whatever's left. min-h-0 is load-bearing on a flex
+          child that needs to actually shrink below its content's
+          intrinsic size rather than overflow — without it, a tall play
+          surface would push the chrome above off-screen instead of
+          being capped to the remaining space. */}
+      <div className="safe-b gutter-x relative min-h-0 flex-1 py-3">
+        {/*
+          The play surface's padding lives here now, not in a wrapper div
+          each game used to render around its own canvas — that wrapper
+          had no explicit height of its own, and a non-flex-item
+          ancestor with an auto height doesn't reliably resolve a
+          percentage max-height on its child. A flex item of *this* box
+          does (a definite-cross-size flex container resolves percentage
+          heights on its direct children regardless of align-items), so
+          each game's canvas/grid is a direct child here and sizes itself
+          with max-h-full/max-w-full against it.
+        */}
+        <div className="tog-gold-glow-box relative flex h-full items-center justify-center border border-gold bg-ink p-3 sm:p-4">
           {/* RegMarks renders plain positioned divs with no pointer-events
               opt-out of its own; unwrapped, its corner marks would sit on
               top of the surface and swallow taps aimed at whatever is
@@ -148,7 +207,8 @@ export function GameShell({
           {status === "over" && gameOver}
         </div>
       </div>
-    </section>
+    </div>,
+    document.body,
   );
 }
 

@@ -135,30 +135,28 @@ export function RunnerGame() {
       onPause={() => setStatus("paused")}
       gameOver={<GameOverCard score={hud.score} best={best} isNewBest={isNewBest} onRestart={handleStart} />}
     >
-      <div className="p-3 sm:p-4">
-        <GameCanvas
-          logicalWidth={LOGICAL_WIDTH}
-          logicalHeight={LOGICAL_HEIGHT}
-          className="mx-auto max-w-md border border-ash bg-pitch"
-          onContext={(ctx) => {
-            ctxRef.current = ctx;
-          }}
-          onPointerActive={(_x, y, isNewPress) => {
-            if (statusRef.current !== "playing") return;
-            if (y < LOGICAL_HEIGHT / 2) {
-              // Upper half: a tap jumps, once, on press. Dragging up
-              // from a lower-half hold isn't treated as a second jump —
-              // only the initial press edge fires it.
-              if (isNewPress) engineRef.current?.jump();
-            } else {
-              touchDuckRef.current = true;
-            }
-          }}
-          onPointerRelease={() => {
-            touchDuckRef.current = false;
-          }}
-        />
-      </div>
+      <GameCanvas
+        logicalWidth={LOGICAL_WIDTH}
+        logicalHeight={LOGICAL_HEIGHT}
+        className="mx-auto h-full max-w-full border border-ash bg-pitch"
+        onContext={(ctx) => {
+          ctxRef.current = ctx;
+        }}
+        onPointerActive={(_x, y, isNewPress) => {
+          if (statusRef.current !== "playing") return;
+          if (y < LOGICAL_HEIGHT / 2) {
+            // Upper half: a tap jumps, once, on press. Dragging up
+            // from a lower-half hold isn't treated as a second jump —
+            // only the initial press edge fires it.
+            if (isNewPress) engineRef.current?.jump();
+          } else {
+            touchDuckRef.current = true;
+          }
+        }}
+        onPointerRelease={() => {
+          touchDuckRef.current = false;
+        }}
+      />
     </GameShell>
   );
 }

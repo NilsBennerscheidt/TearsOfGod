@@ -141,25 +141,23 @@ export function InvadersGame() {
       onPause={() => setStatus("paused")}
       gameOver={<GameOverCard score={hud.score} best={best} isNewBest={isNewBest} onRestart={handleStart} />}
     >
-      <div className="p-3 sm:p-4">
-        <GameCanvas
-          logicalWidth={LOGICAL_WIDTH}
-          logicalHeight={LOGICAL_HEIGHT}
-          className="mx-auto max-w-xs border border-ash bg-pitch"
-          onContext={(ctx) => {
-            ctxRef.current = ctx;
-          }}
-          onPointerActive={(x) => {
-            // Steering only applies once a round is actually running —
-            // a drag on the idle overlay's instructions text shouldn't
-            // move a ship that isn't in play yet.
-            if (statusRef.current === "playing") pointerTargetRef.current = x;
-          }}
-          onPointerRelease={() => {
-            pointerTargetRef.current = null;
-          }}
-        />
-      </div>
+      <GameCanvas
+        logicalWidth={LOGICAL_WIDTH}
+        logicalHeight={LOGICAL_HEIGHT}
+        className="mx-auto h-full max-w-full border border-ash bg-pitch"
+        onContext={(ctx) => {
+          ctxRef.current = ctx;
+        }}
+        onPointerActive={(x) => {
+          // Steering only applies once a round is actually running —
+          // a drag on the idle overlay's instructions text shouldn't
+          // move a ship that isn't in play yet.
+          if (statusRef.current === "playing") pointerTargetRef.current = x;
+        }}
+        onPointerRelease={() => {
+          pointerTargetRef.current = null;
+        }}
+      />
 
       {status === "playing" && hud.waveClearActive && (
         <Overlay className="bg-pitch/70">

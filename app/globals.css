@@ -137,6 +137,13 @@
   .safe-b {
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }
+  /* Top counterpart, for chrome that sits at the very top of the
+     viewport outside gutter-x's own scope — GameShell's full-screen top
+     bar, which (unlike every other page) isn't below the site's own
+     Header and its safe-area handling. */
+  .safe-t {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
 
   /*
    * Gold-foil shimmer — GoldText, GoldBar, and any `shiny` brand mark.

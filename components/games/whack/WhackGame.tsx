@@ -118,7 +118,21 @@ export function WhackGame() {
         .tog-game-surface in globals.css.
       */}
       {/* 3 columns × HOLE_COUNT (9) in the engine — the two are a pair; changing one means changing the other. */}
-      <div className="tog-game-surface grid grid-cols-3 gap-2 p-3 sm:gap-3 sm:p-4">
+      {/*
+        aspect-square on the grid itself, not just each hole — three
+        equal columns of square cells naturally forms a square overall,
+        so treating the whole board as one aspect-locked box lets it
+        size the same way the canvas games' own play surfaces do:
+        h-full is the actual size request (a flex item resolves a
+        percentage height against its flex container's definite cross
+        size regardless of align-items, which max-height alone — a pure
+        upper bound with nothing driving a preferred size — does not),
+        aspect-ratio derives width from that, and max-w-full is the
+        safety cap for when that derived width would overflow a narrow
+        viewport (which correctly shrinks height back down too, per the
+        CSS sizing spec's aspect-ratio-plus-max-constraint resolution).
+      */}
+      <div className="tog-game-surface mx-auto grid aspect-square h-full max-w-full grid-cols-3 gap-2 p-3 sm:gap-3 sm:p-4">
         {view.holes.map((hole, index) => (
           <Hole
             key={index}
