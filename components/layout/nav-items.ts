@@ -13,7 +13,7 @@ import { usePathname } from "@/i18n/navigation";
  * header. `typedRoutes: true` (next.config.ts) validates each href
  * against the App Router's real route tree at build time.
  */
-export const NAV_ROUTES = ["/", "/tour", "/media", "/news", "/band"] as const;
+export const NAV_ROUTES = ["/", "/tour", "/media", "/news", "/band", "/games"] as const;
 export type NavRoute = (typeof NAV_ROUTES)[number];
 
 const LABEL_KEYS: Record<NavRoute, string> = {
@@ -22,6 +22,7 @@ const LABEL_KEYS: Record<NavRoute, string> = {
   "/media": "media",
   "/news": "news",
   "/band": "band",
+  "/games": "arcade",
 };
 
 export interface NavItem {
