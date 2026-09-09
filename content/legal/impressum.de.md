@@ -20,14 +20,6 @@ Im Reitwinkel 11
 45661 Recklinghausen
 Germany
 
-## Umsatzsteuer-Identifikationsnummer
-
-*[Bitte ergänzen, falls vorhanden — bei Anwendung der Kleinunternehmerregelung entfällt dieser Punkt.]*
-
-## Registereintrag
-
-*[Sofern die Gesellschaft als eGbR im Gesellschaftsregister eingetragen ist, bitte Registergericht und Registernummer ergänzen. Andernfalls kann dieser Abschnitt entfallen.]*
-
 ## Streitschlichtung
 
 Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: [https://ec.europa.eu/consumers/odr/](https://ec.europa.eu/consumers/odr/). Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
@@ -39,7 +31,3 @@ Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf die
 ## Haftung für Links
 
 Unser Angebot enthält gegebenenfalls Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
-
----
-
-**Hinweis:** Diese Seite wurde als Vorlage erstellt und sollte vor Veröffentlichung von einer rechtskundigen Person geprüft und vervollständigt werden — insbesondere die vollständige Gesellschafterliste, eine ggf. vorhandene Umsatzsteuer-ID und ein ggf. vorhandener Registereintrag.

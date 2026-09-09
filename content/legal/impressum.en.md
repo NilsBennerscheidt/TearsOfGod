@@ -20,14 +20,6 @@ Im Reitwinkel 11
 45661 Recklinghausen
 Germany
 
-## VAT identification number
-
-*[To be added, if applicable — not required if the small business regulation (Kleinunternehmerregelung) applies.]*
-
-## Register entry
-
-*[If the partnership is registered as an eGbR in the Gesellschaftsregister, please add the registration court and number. Otherwise this section can be omitted.]*
-
 ## Dispute resolution
 
 The European Commission provides a platform for online dispute resolution (ODR): [https://ec.europa.eu/consumers/odr/](https://ec.europa.eu/consumers/odr/). We are not obliged and not willing to participate in dispute resolution proceedings before a consumer arbitration board.
@@ -42,4 +34,4 @@ Our site may contain links to external third-party websites over whose content w
 
 ---
 
-**Note:** This page is a template and should be reviewed and completed by a qualified legal advisor before publication — in particular the complete list of partners, a VAT ID if applicable, and a register entry if applicable. This legal notice is governed by German law regardless of the language displayed.
+This legal notice is governed by German law regardless of the language displayed.
