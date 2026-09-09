@@ -8,7 +8,6 @@ price:
   advance: 5
   door: 7
   currency: EUR
-hidden: true
 note:
   de: wui
   en: okijhugzftrd
