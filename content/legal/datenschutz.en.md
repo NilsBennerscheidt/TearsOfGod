@@ -6,9 +6,9 @@ title: "Privacy Policy"
 
 Responsible for data processing on this website:
 
-Tears of God GbR
-Bochumer Str. 7
-44575 Castrop-Rauxel
+Mirko Pellny
+Im Reitwinkel 11
+45661 Recklinghausen
 Germany
 Email: [{{contactEmail}}](mailto:{{contactEmail}})
 

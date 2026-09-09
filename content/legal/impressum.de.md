@@ -4,11 +4,10 @@ title: "Impressum"
 
 ## Angaben gemäß § 5 DDG
 
-Tears of God GbR
-Bochumer Str. 7
-44575 Castrop-Rauxel
-
-**Gesellschafter:** Jonas Krämer — *[weitere Gesellschafter bitte ergänzen]*
+Mirko Pellny
+Im Reitwinkel 11
+45661 Recklinghausen
+Germany
 
 ## Kontakt
 
@@ -16,9 +15,10 @@ E-Mail: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
 
-Jonas Krämer
-Bochumer Str. 7
-44575 Castrop-Rauxel
+Mirko Pellny
+Im Reitwinkel 11
+45661 Recklinghausen
+Germany
 
 ## Umsatzsteuer-Identifikationsnummer
 

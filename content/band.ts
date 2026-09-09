@@ -62,8 +62,6 @@ const BANDFOTOS = "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos";
 export const members: Member[] = [
   { name: "Mirko", displayName: "Murk", role: "vocals", key: "murk", photo: `${BANDFOTOS}_Murk.jpg` },
   { name: "Danijal", displayName: "DANJI", role: "leadGuitar", key: "danji", photo: `${BANDFOTOS}_Danji.jpg` },
-  // Source file is misspelled "Nols" — matches the Jan 5 shoot's other
-  // four member portraits by naming pattern, not a different photo.
   { name: "Nils", displayName: "NILS", role: "bass", key: "nils", photo: `${BANDFOTOS}_Nols.jpg` },
   { name: "Lars", displayName: "LARS", role: "drums", key: "lars", photo: `${BANDFOTOS}_Lars.jpg` }
 ];

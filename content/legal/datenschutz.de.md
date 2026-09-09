@@ -6,9 +6,10 @@ title: "Datenschutzerklärung"
 
 Verantwortlich für die Datenverarbeitung auf dieser Website ist:
 
-Tears of God GbR
-Bochumer Str. 7
-44575 Castrop-Rauxel
+Mirko Pellny
+Im Reitwinkel 11
+45661 Recklinghausen
+Germany
 E-Mail: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## 2. Hosting

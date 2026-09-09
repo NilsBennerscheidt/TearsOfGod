@@ -4,12 +4,10 @@ title: "Legal Notice"
 
 ## Information pursuant to § 5 DDG (German Digital Services Act)
 
-Tears of God GbR
-Bochumer Str. 7
-44575 Castrop-Rauxel
+Mirko Pellny
+Im Reitwinkel 11
+45661 Recklinghausen
 Germany
-
-**Partners:** Jonas Krämer — *[additional partners to be added]*
 
 ## Contact
 
@@ -17,9 +15,9 @@ Email: [{{contactEmail}}](mailto:{{contactEmail}})
 
 ## Responsible for content pursuant to § 18 para. 2 MStV
 
-Jonas Krämer
-Bochumer Str. 7
-44575 Castrop-Rauxel
+Mirko Pellny
+Im Reitwinkel 11
+45661 Recklinghausen
 Germany
 
 ## VAT identification number
