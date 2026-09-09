@@ -16,7 +16,7 @@
   },
   "Shows": {
     "status": {
-      "available": "Verfügbar",
+      "available": "Infos / Tickets",
       "few-left": "Wenige übrig",
       "sold-out": "Ausverkauft"
     },
@@ -37,13 +37,13 @@
     "social": "Soziale Netzwerke"
   },
   "Landing": {
-    "releaseEyebrow": "NEUE EP · JETZT ERHÄLTLICH",
+    "releaseEyebrow": "NEUE SINGLE · JETZT HÖREN",
     "listen": "HÖREN",
     "watch": "ANSEHEN",
     "comingSoon": "Demnächst",
     "bandEyebrow": "01 · DIE BAND",
-    "bandHeadline": "Vier aus dem Ruhrpott.",
-    "bandBody": "Unter der Woche im Gym. Freitags am Kiosk. Samstags im Keller. Wir spielen Hardcore, weil wir müssen. Wir spielen laut, weil die Wände uns verzeihen.",
+    "bandHeadline": "TEARS OF GOD.",
+    "bandBody": "Wir sind Tears of God. Purer Hardcore aus Castrop-Rauxel für dich",
     "nextShowEyebrow": "02 · NÄCHSTE SHOW",
     "noUpcomingShows": "Aktuell keine Termine angekündigt."
   },
@@ -57,19 +57,19 @@
     },
     "members": {
       "murk": {
-        "bio": "Schreit, seit er sprechen kann. Schreibt die Texte auf dem Werkstattboden."
+        "bio": ""
       },
       "danji": {
-        "bio": "Erste Gitarre, erste Reihe. Übt lauter, als die Nachbarn erlauben."
+        "bio": ""
       },
       "nils": {
-        "bio": "Bass und Kabelsalat. Hält den Laden zusammen, wenn sonst niemand hinschaut."
+        "bio": ""
       },
       "lars": {
-        "bio": "Schlagzeug ohne Bremse. Zählt nur bis vier, dafür sehr laut."
+        "bio": ""
       },
       "gary": {
-        "bio": "Rhythmusgitarre, volles Risiko. Der Grund, warum die Refrains stehen."
+        "bio": ""
       }
     }
   },
@@ -124,7 +124,7 @@
     "eyebrow": "05 · WIR",
     "title": "Wir",
     "storyHeadline": "Vier aus Castrop-Rauxel.",
-    "storyBody": "Kein Bandcasting, keine Marketingidee. Vier Leute, die sich aus der Nachbarschaft kennen, seit {foundedYear} zusammen im Proberaum stehen und keine Lust auf falsche Götter haben.",
+    "storyBody": "Wir sind Tears of God — Bringer eines unausgesprochenen Grauens, das in uns allen schlummert. Die Emotionen, die unser Hardcore aus Castrop-Rauxel entfesselt, werden dein Fundament erschüttern. Unsere Konzerte beschwören eine Kraft herauf, die dein Lebensessenz als Opfer für das Groteske fordert. Bist du erst einmal von uns verschlungen, lassen dich sein unerbittlicher Sog und sein alles verzehrender Wahnsinn nie wieder los.",
     "factsFounded": "Gegründet",
     "factsBase": "Zuhause",
     "membersHeading": "Die Besetzung"

@@ -16,7 +16,7 @@
   },
   "Shows": {
     "status": {
-      "available": "Available",
+      "available": "Info / Ticket",
       "few-left": "Few left",
       "sold-out": "Sold out"
     },
@@ -37,13 +37,13 @@
     "social": "Social media"
   },
   "Landing": {
-    "releaseEyebrow": "NEW EP · OUT NOW",
+    "releaseEyebrow": "NEW SINGLE · LISTEN NOW",
     "listen": "LISTEN",
     "watch": "WATCH",
     "comingSoon": "Coming soon",
     "bandEyebrow": "01 · THE BAND",
-    "bandHeadline": "Four from the Ruhrpott.",
-    "bandBody": "Gym on weekdays. Kiosk on Fridays. Basement on Saturdays. We play hardcore because we have to. We play loud because the walls forgive us.",
+    "bandHeadline": "Tears of God.",
+    "bandBody": "We are Tears of God. Hardcore essentials from Castrop-Rauxel to you.",
     "nextShowEyebrow": "02 · NEXT SHOW",
     "noUpcomingShows": "No shows announced right now."
   },
@@ -124,7 +124,7 @@
     "eyebrow": "05 · WE",
     "title": "We",
     "storyHeadline": "Four from Castrop-Rauxel.",
-    "storyBody": "No band casting, no marketing idea. Four people who know each other from the neighborhood, standing in the same rehearsal room since {foundedYear}, with no patience for false idols.",
+    "storyBody": "We are Tears of God — serpents of the untold horror hidden within us all. The emotions unleashed by our Hardcore/Metalcore sound from Castrop-Rauxel will shatter your beliefs. Our concerts summon a force that demands your life essence be sacrificed to the grotesque. Once you are consumed by our cult, its relentless pull and all-consuming madness will never let you go.",
     "factsFounded": "Founded",
     "factsBase": "Based in",
     "membersHeading": "The Lineup"

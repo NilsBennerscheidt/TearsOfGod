@@ -7,6 +7,6 @@
  * the same way a band name or album title wouldn't be translated.
  */
 export const slogans = {
-  marquee: ["NO FALSE IDOLS", "WIR VIER", "SWEAT THROUGH YOUR FLOOR", "I AM GOD"],
+  marquee: ["Before the fateful night of the crescent siege, a unprecented horror walked among all living. Merciless and cruel, it wrought atrocities for eons unforgettable. The flaming dawn, throne of enmity, nightmare divine.", "Before the fateful night of the crescent siege, a unprecented horror walked among all living. Merciless and cruel, it wrought atrocities for eons unforgettable. The flaming dawn, throne of enmity, nightmare divine.", "Before the fateful night of the crescent siege, a unprecented horror walked among all living. Merciless and cruel, it wrought atrocities for eons unforgettable. The flaming dawn, throne of enmity, nightmare divine."],
   tourCreed: "ALL AGES · ALL PEOPLE · NO EXCUSES",
 } as const;

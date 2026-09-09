@@ -44,7 +44,7 @@ export const socials: SocialLink[] = [
 ];
 
 /** Channel used for the hero's "watch" action. */
-export const youtubeUrl = "https://www.youtube.com/@tearsofgod_official";
+export const youtubeUrl = "https://www.youtube.com/watch?v=-9vrt9lEyLk";
 
 /**
  * Artist page — everything we've released, not one track. Used where the

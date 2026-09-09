@@ -15,7 +15,7 @@ export interface Release {
 }
 
 export const currentRelease: Release = {
-  title: "Salt and Sweat",
+  title: "I AM GOD",
   catalogNumber: "TOG · EP · 001",
   year: 2026,
   listenUrl: "https://open.spotify.com/track/0b7KspFnq1lYGBCoB5XFR7",

@@ -15,7 +15,7 @@ export const band = {
     legalName: "Tears of God",
     streetAddress: "Bochumer Str. 7",
   },
-  contactEmail: "booking@tearsofgod.net",
+  contactEmail: "info@tearsofgod.net",
   /**
    * Points into public/media/photos/ rather than public/band/ — it's the
    * same 2025-01-05 studio shoot already used on the /media gallery, and
@@ -23,7 +23,7 @@ export const band = {
    * a duplicate copy under a second path. Omit to fall back to
    * PhotoPlaceholder on the /band page.
    */
-  groupPhoto: "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos_0002.jpg" as string | undefined,
+  groupPhoto: "/media/photos/2025-01-05-tears-of-god-bandfotos-0002.png" as string | undefined,
 } as const;
 
 /**

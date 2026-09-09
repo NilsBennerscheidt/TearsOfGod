@@ -53,9 +53,9 @@ export async function Hero({ release }: HeroProps) {
         <div className="max-w-md">
           <p className="text-meta font-mono tracking-widest text-gold uppercase">{t("releaseEyebrow")}</p>
           <p className="text-hero font-brutal tracking-[-0.03em] text-bone uppercase">
-            SALT
+            Break
             <br />
-            <span className="text-blood-text">AND</span> SWEAT.
+            <span className="text-blood-text">the</span> Walls.
           </p>
           <p className="sr-only">{release.title}</p>
           <div className="mt-3 flex flex-wrap gap-3">
