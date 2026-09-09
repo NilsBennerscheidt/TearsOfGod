@@ -41,7 +41,7 @@
     "watch": "WATCH",
     "comingSoon": "Coming soon",
     "bandEyebrow": "01 · THE BAND",
-    "bandHeadline": "Five from the Ruhrpott.",
+    "bandHeadline": "Four from the Ruhrpott.",
     "bandBody": "Gym on weekdays. Kiosk on Fridays. Basement on Saturdays. We play hardcore because we have to. We play loud because the walls forgive us.",
     "nextShowEyebrow": "02 · NEXT SHOW",
     "noUpcomingShows": "No shows announced right now."
@@ -122,8 +122,8 @@
   "We": {
     "eyebrow": "05 · WE",
     "title": "We",
-    "storyHeadline": "Five from Castrop-Rauxel.",
-    "storyBody": "No band casting, no marketing idea. Five people who know each other from the neighborhood, standing in the same rehearsal room since {foundedYear}, with no patience for false idols.",
+    "storyHeadline": "Four from Castrop-Rauxel.",
+    "storyBody": "No band casting, no marketing idea. Four people who know each other from the neighborhood, standing in the same rehearsal room since {foundedYear}, with no patience for false idols.",
     "factsFounded": "Founded",
     "factsBase": "Based in",
     "membersHeading": "The Lineup"

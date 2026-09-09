@@ -65,6 +65,5 @@ export const members: Member[] = [
   // Source file is misspelled "Nols" — matches the Jan 5 shoot's other
   // four member portraits by naming pattern, not a different photo.
   { name: "Nils", displayName: "NILS", role: "bass", key: "nils", photo: `${BANDFOTOS}_Nols.jpg` },
-  { name: "Lars", displayName: "LARS", role: "drums", key: "lars", photo: `${BANDFOTOS}_Lars.jpg` },
-  { name: "Gerrit", displayName: "GARY", role: "rhythmGuitar", key: "gary", photo: `${BANDFOTOS}_Gary.jpg` },
+  { name: "Lars", displayName: "LARS", role: "drums", key: "lars", photo: `${BANDFOTOS}_Lars.jpg` }
 ];

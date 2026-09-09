@@ -41,7 +41,7 @@
     "watch": "ANSEHEN",
     "comingSoon": "Demnächst",
     "bandEyebrow": "01 · DIE BAND",
-    "bandHeadline": "Fünf aus dem Ruhrpott.",
+    "bandHeadline": "Vier aus dem Ruhrpott.",
     "bandBody": "Unter der Woche im Gym. Freitags am Kiosk. Samstags im Keller. Wir spielen Hardcore, weil wir müssen. Wir spielen laut, weil die Wände uns verzeihen.",
     "nextShowEyebrow": "02 · NÄCHSTE SHOW",
     "noUpcomingShows": "Aktuell keine Termine angekündigt."
@@ -122,8 +122,8 @@
   "We": {
     "eyebrow": "05 · WIR",
     "title": "Wir",
-    "storyHeadline": "Fünf aus Castrop-Rauxel.",
-    "storyBody": "Kein Bandcasting, keine Marketingidee. Fünf Leute, die sich aus der Nachbarschaft kennen, seit {foundedYear} zusammen im Proberaum stehen und keine Lust auf falsche Götter haben.",
+    "storyHeadline": "Vier aus Castrop-Rauxel.",
+    "storyBody": "Kein Bandcasting, keine Marketingidee. Vier Leute, die sich aus der Nachbarschaft kennen, seit {foundedYear} zusammen im Proberaum stehen und keine Lust auf falsche Götter haben.",
     "factsFounded": "Gegründet",
     "factsBase": "Zuhause",
     "membersHeading": "Die Besetzung"

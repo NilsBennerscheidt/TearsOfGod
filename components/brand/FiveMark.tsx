@@ -30,7 +30,7 @@ export function FiveMark({ color = "var(--color-bone)", size = 80, className }: 
           opacity: 0.7,
         }}
       >
-        FÜNF
+        Vier
       </span>
     </div>
   );
