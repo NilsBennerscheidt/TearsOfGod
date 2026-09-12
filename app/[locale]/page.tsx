@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { parseLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GameCard } from "@/components/games/GameCard";
 import { Footer } from "@/components/layout/Footer";
@@ -8,6 +10,7 @@ import { Marquee } from "@/components/sections/Marquee";
 import { MemberGrid } from "@/components/sections/MemberGrid";
 import { NextShowCard } from "@/components/sections/NextShowCard";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { band } from "@/content/band";
 import { currentRelease } from "@/content/releases";
 import { slogans } from "@/content/slogans";
 
@@ -23,10 +26,15 @@ export async function generateMetadata({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Landing");
-  return {
-    title: "Tears of God",
+  return pageMetadata({
+    locale: parseLocale(locale),
+    path: "",
+    // absoluteTitle: the landing title already names the band, so the
+    // layout's `%s — Tears of God` template would say it twice.
+    title: band.name,
+    absoluteTitle: true,
     description: t("bandBody"),
-  };
+  });
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

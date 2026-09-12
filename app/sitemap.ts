@@ -34,13 +34,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const locale of routing.locales) {
     for (const route of STATIC_ROUTES) {
-      entries.push({ url: `${SITE_URL}/${locale}${route}`, lastModified: new Date() });
+      entries.push({
+        url: `${SITE_URL}/${locale}${route}`,
+        // Deliberately no lastModified: it would be `new Date()`, i.e. the
+        // build time, telling a crawler every page changed on every deploy
+        // even when none did. An absent value says "unknown", which is
+        // true, rather than a claim that is reliably wrong. Posts below
+        // carry a real date, so they keep theirs.
+        alternates: {
+          languages: Object.fromEntries(
+            routing.locales.map((l) => [l, `${SITE_URL}/${l}${route}`]),
+          ),
+        },
+      });
     }
   }
 
   routing.locales.forEach((locale, i) => {
     for (const post of postsByLocale[i] ?? []) {
-      entries.push({ url: `${SITE_URL}/${locale}/news/${post.slug}`, lastModified: new Date(post.date) });
+      // A post exists only in the locales it has a file for, so its
+      // alternates are the locales that actually list this slug — not
+      // routing.locales (see the doc comment on postFrontmatterSchema).
+      const languages = Object.fromEntries(
+        routing.locales
+          .filter((l, j) => (postsByLocale[j] ?? []).some((other) => other.slug === post.slug))
+          .map((l) => [l, `${SITE_URL}/${l}/news/${post.slug}`]),
+      );
+      entries.push({
+        url: `${SITE_URL}/${locale}/news/${post.slug}`,
+        lastModified: new Date(post.date),
+        alternates: { languages },
+      });
     }
   });
 

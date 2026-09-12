@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -36,23 +37,25 @@ export async function generateMetadata({
   const post = await getPostBySlug(parseLocale(locale), slug);
   if (!post) return {};
 
-  return {
+  // Only the locales this post actually has a file for — see the note on
+  // availableLocales in pageMetadata().
+  const translated = await Promise.all(
+    routing.locales.map(async (l) => ((await getPostBySlug(l, slug)) ? l : null)),
+  );
+  const availableLocales = translated.filter((l) => l !== null);
+
+  return pageMetadata({
+    locale: parseLocale(locale),
+    path: `/news/${slug}`,
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/${locale}/news/${slug}` },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.excerpt,
-      publishedTime: post.date,
-      images: post.cover ? [{ url: post.cover.src, width: post.cover.width, height: post.cover.height }] : [],
-    },
-    twitter: {
-      card: post.cover ? "summary_large_image" : "summary",
-      title: post.title,
-      description: post.excerpt,
-    },
-  };
+    type: "article",
+    publishedTime: post.date,
+    availableLocales,
+    ...(post.cover && {
+      images: [{ url: post.cover.src, width: post.cover.width, height: post.cover.height }],
+    }),
+  });
 }
 
 export default async function NewsPostPage({

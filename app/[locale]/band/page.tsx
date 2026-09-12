@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { parseLocale } from "@/i18n/routing";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
@@ -20,8 +22,17 @@ export async function generateMetadata({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("We");
-  return { title: t("title") };
+  // Landing.bandBody is still the shared description at this point; the
+  // per-page copy lands in the next commit.
+  const site = await getTranslations("Landing");
+  return pageMetadata({
+    locale: parseLocale(locale),
+    path: "/band",
+    title: t("title"),
+    description: site("bandBody"),
+  });
 }
+
 
 export default async function BandPage({ params }: { params: Promise<{ locale: string }> }) {
   // See the identical comment in app/[locale]/media/page.tsx — awaiting

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { parseLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SnakeMount } from "@/components/games/snake/SnakeMount";
 import { Footer } from "@/components/layout/Footer";
@@ -16,10 +18,12 @@ export async function generateMetadata({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Games");
-  return {
+  return pageMetadata({
+    locale: parseLocale(locale),
+    path: "/games/snake",
     title: t("snake.title"),
     description: t("snake.tagline"),
-  };
+  });
 }
 
 /**

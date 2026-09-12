@@ -17,11 +17,17 @@ export function generateStaticParams() {
 }
 
 /**
- * generateMetadata (not a static `metadata` export): `alternates.canonical`
- * and `alternates.languages` are per-locale — routing.localePrefix is
- * "always" (i18n/routing.ts), so /de and /en are two distinct, both-
- * indexable URLs and search engines need the hreflang pair declared to
- * treat them as translations of each other rather than duplicate content.
+ * Site-wide metadata only: metadataBase, the title template, and a
+ * description that acts as a fallback for any route that somehow ships
+ * without its own.
+ *
+ * Deliberately NO `alternates` and no `openGraph` here. Both are replaced
+ * wholesale by a child rather than merged, so anything set at this level
+ * is inherited verbatim by every page that doesn't override it — which is
+ * how /en/tour, /en/band and /en/news each ended up declaring
+ * `canonical: /en` and an og:title of just "Tears of God". Pages build
+ * their own via pageMetadata() (lib/seo/metadata.ts), which derives
+ * canonical, hreflang and og:url from a single path.
  */
 export async function generateMetadata({
   params,
@@ -35,23 +41,6 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: { default: band.name, template: `%s — ${band.name}` },
     description: t("bandBody"),
-    alternates: {
-      canonical: `/${locale}`,
-      languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])),
-    },
-    openGraph: {
-      type: "website",
-      locale,
-      siteName: band.name,
-      title: band.name,
-      description: t("bandBody"),
-      images: band.groupPhoto ? [{ url: band.groupPhoto }] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: band.name,
-      description: t("bandBody"),
-    },
   };
 }
 

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { parseLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Footer } from "@/components/layout/Footer";
 import { ShowTable } from "@/components/sections/ShowTable";
@@ -22,8 +24,17 @@ export async function generateMetadata({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Tour");
-  return { title: t("title") };
+  // Landing.bandBody is still the shared description at this point; the
+  // per-page copy lands in the next commit.
+  const site = await getTranslations("Landing");
+  return pageMetadata({
+    locale: parseLocale(locale),
+    path: "/tour",
+    title: t("title"),
+    description: site("bandBody"),
+  });
 }
+
 
 export default async function TourPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

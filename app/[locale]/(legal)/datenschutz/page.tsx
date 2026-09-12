@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { setRequestLocale } from "next-intl/server";
 import { parseLocale } from "@/i18n/routing";
 import { getLegalPage } from "@/lib/content/legal";
@@ -11,7 +12,12 @@ export async function generateMetadata({
   const { locale } = await params;
   setRequestLocale(locale);
   const page = await getLegalPage("datenschutz", parseLocale(locale));
-  return { title: page.title };
+  return pageMetadata({
+    locale: parseLocale(locale),
+    path: "/datenschutz",
+    title: page.title,
+    description: page.title,
+  });
 }
 
 export default async function DatenschutzPage({ params }: { params: Promise<{ locale: string }> }) {
