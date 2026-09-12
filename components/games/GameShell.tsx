@@ -144,7 +144,16 @@ export function GameShell({
       </div>
 
       <div className="gutter-x">
-        <GoldText as="h1" glow className="font-display text-3xl leading-none uppercase md:text-4xl">
+        {/*
+          `as="p"`, not the h1 this used to be. GameShell is a client-only
+          chunk (see WhackMount) portaled to document.body, so its heading
+          never existed in the server-rendered HTML — every /games/* route
+          shipped a document with no h1 at all. The route's page.tsx now
+          carries the real h1 server-side and this stays the visible
+          title. Preflight zeroes the margin on both tags, so the two are
+          visually identical.
+        */}
+        <GoldText as="p" glow className="font-display text-3xl leading-none uppercase md:text-4xl">
           {title}
         </GoldText>
 
