@@ -250,6 +250,19 @@
    * surface's resting color everywhere it's used, e.g. the marquee bar,
    * solid CTAs).
    */
+  /*
+   * One ticker repeat. The slogan itself lives in --marquee-text on the
+   * Marquee container (components/sections/Marquee.tsx) and is painted
+   * here as generated content, so the track can repeat it as many times
+   * as it takes to fill the width without putting that many copies of the
+   * paragraph into the HTML. Decorative by construction: generated
+   * content isn't selectable, isn't in the DOM, and the track above it is
+   * aria-hidden anyway.
+   */
+  .tog-marquee-item::before {
+    content: var(--marquee-text, "");
+  }
+
   .tog-gold-sheen {
     position: relative;
     overflow: hidden;
