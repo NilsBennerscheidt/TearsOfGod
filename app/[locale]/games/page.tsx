@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbJsonLd } from "@/lib/seo/breadcrumbs";
 import { parseLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GameCard } from "@/components/games/GameCard";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/sections/PageHeader";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 // Renders Footer, whose copyright year is `new Date().getFullYear()` —
 // without this a static build freezes that year at build time. See the
@@ -35,11 +37,8 @@ export async function generateMetadata({
  * nothing for typedRoutes to reject).
  */
 export default async function GamesPage({ params }: { params: Promise<{ locale: string }> }) {
-  // See the identical comment in app/[locale]/band/page.tsx — awaiting
-  // params (even though its value is unused) is what makes Next prerender
-  // this page statically against the layout's generateStaticParams.
-  await params;
-  const t = await getTranslations("Games");
+  const { locale } = await params;
+  const [t, nav] = await Promise.all([getTranslations("Games"), getTranslations("Nav")]);
 
   return (
     <>
@@ -90,6 +89,11 @@ export default async function GamesPage({ params }: { params: Promise<{ locale: 
       </section>
 
       <Footer variant="live" />
+      <JsonLd
+        data={breadcrumbJsonLd(parseLocale(locale), nav("home"), [
+          { name: t("title"), path: "/games" },
+        ])}
+      />
     </>
   );
 }

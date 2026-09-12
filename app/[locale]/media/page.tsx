@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbJsonLd } from "@/lib/seo/breadcrumbs";
 import { parseLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/sections/PageHeader";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PhotoGrid } from "@/components/sections/PhotoGrid";
 import { SocialGrid } from "@/components/sections/SocialGrid";
 import { VideoGrid } from "@/components/sections/VideoGrid";
@@ -31,14 +33,12 @@ export async function generateMetadata({
 
 
 export default async function MediaPage({ params }: { params: Promise<{ locale: string }> }) {
-  // Locale isn't otherwise needed here — everything on this page is
-  // locale-independent besides its own translated strings. Still awaited:
-  // Next only prerenders a page against the parent layout's
-  // generateStaticParams when the page itself resolves `params`: leaving
-  // it untouched makes the whole route render on-demand instead of
-  // statically, even though nothing else here is actually dynamic.
-  await params;
-  const [t, { photos, videos }] = await Promise.all([getTranslations("Media"), getMedia()]);
+  const { locale } = await params;
+  const [t, nav, { photos, videos }] = await Promise.all([
+    getTranslations("Media"),
+    getTranslations("Nav"),
+    getMedia(),
+  ]);
 
   return (
     <>
@@ -60,6 +60,11 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
         </section>
       </div>
       <Footer variant="live" />
+      <JsonLd
+        data={breadcrumbJsonLd(parseLocale(locale), nav("home"), [
+          { name: t("title"), path: "/media" },
+        ])}
+      />
     </>
   );
 }

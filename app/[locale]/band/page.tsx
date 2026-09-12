@@ -7,7 +7,10 @@ import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
 import { Footer } from "@/components/layout/Footer";
 import { MemberCards } from "@/components/sections/MemberCards";
 import { PageHeader } from "@/components/sections/PageHeader";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { band } from "@/content/band";
+import { breadcrumbJsonLd } from "@/lib/seo/breadcrumbs";
+import { musicGroupJsonLd } from "@/lib/seo/musicGroup";
 
 // Renders Footer, whose copyright year is `new Date().getFullYear()` —
 // without this a static build freezes that year at build time. See the
@@ -32,11 +35,9 @@ export async function generateMetadata({
 
 
 export default async function BandPage({ params }: { params: Promise<{ locale: string }> }) {
-  // See the identical comment in app/[locale]/media/page.tsx — awaiting
-  // params (even though its value is unused) is what makes Next prerender
-  // this page statically against the layout's generateStaticParams.
-  await params;
-  const t = await getTranslations("We");
+  const { locale } = await params;
+  const appLocale = parseLocale(locale);
+  const [t, nav] = await Promise.all([getTranslations("We"), getTranslations("Nav")]);
 
   return (
     <>
@@ -83,6 +84,11 @@ export default async function BandPage({ params }: { params: Promise<{ locale: s
         </div>
       </div>
       <Footer variant="live" />
+      {/* Reuses the page's own meta description so the two can't disagree. */}
+      <JsonLd data={musicGroupJsonLd(appLocale, t("metaDescription"))} />
+      <JsonLd
+        data={breadcrumbJsonLd(appLocale, nav("home"), [{ name: t("title"), path: "/band" }])}
+      />
     </>
   );
 }

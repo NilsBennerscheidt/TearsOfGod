@@ -3,11 +3,13 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { parseLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Footer } from "@/components/layout/Footer";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { ShowTable } from "@/components/sections/ShowTable";
 import { TourHeader } from "@/components/sections/TourHeader";
 import { getUpcomingShows } from "@/lib/content/shows";
 import { musicEventJsonLd } from "@/lib/seo/musicEvent";
 import { tourYears } from "@/lib/seo/tourYears";
+import { breadcrumbJsonLd } from "@/lib/seo/breadcrumbs";
 
 // getUpcomingShows() filters against `new Date()` at render time — without
 // this, a statically-prerendered page freezes that filter at build time,
@@ -39,21 +41,27 @@ export async function generateMetadata({
 
 export default async function TourPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const shows = await getUpcomingShows();
+  const appLocale = parseLocale(locale);
+  const [t, nav, shows] = await Promise.all([
+    getTranslations("Tour"),
+    getTranslations("Nav"),
+    getUpcomingShows(),
+  ]);
 
   return (
     <>
       <TourHeader shows={shows} locale={locale} />
       <ShowTable shows={shows} locale={locale} />
       <Footer variant="live" />
+      {/* Built from the same getUpcomingShows() the table renders, never a second copy of the list. */}
       {shows.map((show) => (
-        <script
-          key={show.slug}
-          type="application/ld+json"
-          // Safe: every field comes from Zod-validated markdown frontmatter, not user input.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(musicEventJsonLd(show)) }}
-        />
+        <JsonLd key={show.slug} data={musicEventJsonLd(show, appLocale)} />
       ))}
+      <JsonLd
+        data={breadcrumbJsonLd(appLocale, nav("home"), [
+          { name: t("title", { years: tourYears(shows) }), path: "/tour" },
+        ])}
+      />
     </>
   );
 }

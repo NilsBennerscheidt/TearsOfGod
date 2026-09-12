@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbJsonLd } from "@/lib/seo/breadcrumbs";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/sections/PageHeader";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PostCard } from "@/components/sections/PostCard";
 import { PressKit } from "@/components/sections/PressKit";
 import { getPosts } from "@/lib/content/posts";
@@ -31,7 +33,11 @@ export async function generateMetadata({
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, posts] = await Promise.all([getTranslations("News"), getPosts(parseLocale(locale))]);
+  const [t, nav, posts] = await Promise.all([
+    getTranslations("News"),
+    getTranslations("Nav"),
+    getPosts(parseLocale(locale)),
+  ]);
 
   return (
     <>
@@ -51,6 +57,11 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
         <PressKit locale={locale} />
       </div>
       <Footer variant="live" />
+      <JsonLd
+        data={breadcrumbJsonLd(parseLocale(locale), nav("home"), [
+          { name: t("title"), path: "/news" },
+        ])}
+      />
     </>
   );
 }
