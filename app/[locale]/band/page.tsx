@@ -22,14 +22,11 @@ export async function generateMetadata({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("We");
-  // Landing.bandBody is still the shared description at this point; the
-  // per-page copy lands in the next commit.
-  const site = await getTranslations("Landing");
   return pageMetadata({
     locale: parseLocale(locale),
     path: "/band",
     title: t("title"),
-    description: site("bandBody"),
+    description: t("metaDescription"),
   });
 }
 

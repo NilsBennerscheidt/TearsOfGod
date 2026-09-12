@@ -45,7 +45,9 @@
     "bandHeadline": "TEARS OF GOD.",
     "bandBody": "Wir sind Tears of God. Purer Hardcore aus Castrop-Rauxel für dich",
     "nextShowEyebrow": "02 · NÄCHSTE SHOW",
-    "noUpcomingShows": "Aktuell keine Termine angekündigt."
+    "noUpcomingShows": "Aktuell keine Termine angekündigt.",
+    "metaTitle": "Tears of God — Hardcore/Metalcore aus Castrop-Rauxel",
+    "metaDescription": "Tears of God sind vier aus Castrop-Rauxel: Hardcore/Metalcore, laut und direkt. Alle Live-Termine, Videos und News auf einen Blick."
   },
   "Band": {
     "roles": {
@@ -74,14 +76,15 @@
     }
   },
   "Tour": {
-    "eyebrow": "TERMINE · 2026",
-    "title": "Shows",
+    "eyebrow": "TERMINE · {years}",
+    "title": "Live-Termine {years}",
     "dateCount": "{count, plural, one {# TERMIN} other {# TERMINE}}",
-    "noUpcomingShows": "Aktuell keine Termine angekündigt."
+    "noUpcomingShows": "Aktuell keine Termine angekündigt.",
+    "metaDescription": "Alle bestätigten Live-Termine von Tears of God — Datum, Venue, Stadt und Ticketlink für jede Show. Hardcore/Metalcore aus Castrop-Rauxel."
   },
   "Media": {
     "eyebrow": "03 · MEDIA",
-    "title": "Media",
+    "title": "Fotos & Videos",
     "photosHeading": "Fotos",
     "videosHeading": "Videos",
     "socialsHeading": "Folgt uns",
@@ -90,11 +93,12 @@
     "lightboxClose": "Schließen",
     "lightboxPrev": "Vorheriges Foto",
     "lightboxNext": "Nächstes Foto",
-    "lightboxCounter": "{current} / {total}"
+    "lightboxCounter": "{current} / {total}",
+    "metaDescription": "Bandfotos, Livebilder und Videos von Tears of God aus Castrop-Rauxel — plus alle Kanäle auf Instagram, Spotify, YouTube und TikTok."
   },
   "News": {
     "eyebrow": "04 · NEWS",
-    "title": "News",
+    "title": "News & Presse",
     "noPosts": "Aktuell keine News.",
     "readMore": "Weiterlesen →",
     "back": "← Zurück zu News",
@@ -104,7 +108,8 @@
     "prevPost": "← Älter",
     "nextPost": "Neuer →",
     "galleryHeading": "Galerie",
-    "listenOn": "Anhören →"
+    "listenOn": "Anhören →",
+    "metaDescription": "Aktuelle Meldungen von Tears of God: neue Songs, Shows, Videos und Pressematerial zum Download für Medien und Veranstalter."
   },
   "Press": {
     "heading": "Presse-Kit",
@@ -122,12 +127,13 @@
   },
   "We": {
     "eyebrow": "05 · WIR",
-    "title": "Wir",
+    "title": "Die Band",
     "storyHeadline": "Vier aus Castrop-Rauxel.",
     "storyBody": "Wir sind Tears of God — Bringer eines unausgesprochenen Grauens, das in uns allen schlummert. Die Emotionen, die unser Hardcore aus Castrop-Rauxel entfesselt, werden dein Fundament erschüttern. Unsere Konzerte beschwören eine Kraft herauf, die dein Lebensessenz als Opfer für das Groteske fordert. Bist du erst einmal von uns verschlungen, lassen dich sein unerbittlicher Sog und sein alles verzehrender Wahnsinn nie wieder los.",
     "factsFounded": "Gegründet",
     "factsBase": "Zuhause",
-    "membersHeading": "Die Besetzung"
+    "membersHeading": "Die Besetzung",
+    "metaDescription": "Wer hinter Tears of God steckt: vier Musiker aus Castrop-Rauxel, seit 2024. Besetzung, Geschichte und Bandfotos der Hardcore/Metalcore-Band."
   },
   "Games": {
     "eyebrow": "06 · ARCADE",

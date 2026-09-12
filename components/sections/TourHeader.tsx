@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/sections/PageHeader";
+import { tourYears } from "@/lib/seo/tourYears";
 import type { Show } from "@/types/content";
 
 interface TourHeaderProps {
@@ -26,9 +27,12 @@ export async function TourHeader({ shows, locale }: TourHeaderProps) {
   const t = await getTranslations("Tour");
   const first = shows[0];
   const last = shows[shows.length - 1];
+  // Same source as the title tag — see lib/seo/tourYears.ts for why the
+  // year isn't written into the message catalogue.
+  const years = tourYears(shows);
 
   return (
-    <PageHeader eyebrow={t("eyebrow")} title={t("title")}>
+    <PageHeader eyebrow={t("eyebrow", { years })} title={t("title", { years })}>
       {shows.length > 0 && first && last && (
         <p className="text-meta text-steel-text mt-3 font-mono tracking-wide uppercase">
           {t("dateCount", { count: shows.length })} · {formatRange(first.date, last.date, locale)}

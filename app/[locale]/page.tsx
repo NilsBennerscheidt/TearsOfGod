@@ -10,7 +10,6 @@ import { Marquee } from "@/components/sections/Marquee";
 import { MemberGrid } from "@/components/sections/MemberGrid";
 import { NextShowCard } from "@/components/sections/NextShowCard";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
-import { band } from "@/content/band";
 import { currentRelease } from "@/content/releases";
 import { slogans } from "@/content/slogans";
 
@@ -29,11 +28,11 @@ export async function generateMetadata({
   return pageMetadata({
     locale: parseLocale(locale),
     path: "",
-    // absoluteTitle: the landing title already names the band, so the
-    // layout's `%s — Tears of God` template would say it twice.
-    title: band.name,
+    // absoluteTitle: metaTitle already names the band, so the layout's
+    // `%s — Tears of God` template would say it twice.
+    title: t("metaTitle"),
     absoluteTitle: true,
-    description: t("bandBody"),
+    description: t("metaDescription"),
   });
 }
 

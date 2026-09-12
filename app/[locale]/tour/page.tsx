@@ -7,6 +7,7 @@ import { ShowTable } from "@/components/sections/ShowTable";
 import { TourHeader } from "@/components/sections/TourHeader";
 import { getUpcomingShows } from "@/lib/content/shows";
 import { musicEventJsonLd } from "@/lib/seo/musicEvent";
+import { tourYears } from "@/lib/seo/tourYears";
 
 // getUpcomingShows() filters against `new Date()` at render time — without
 // this, a statically-prerendered page freezes that filter at build time,
@@ -23,15 +24,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("Tour");
-  // Landing.bandBody is still the shared description at this point; the
-  // per-page copy lands in the next commit.
-  const site = await getTranslations("Landing");
+  const [t, shows] = await Promise.all([getTranslations("Tour"), getUpcomingShows()]);
   return pageMetadata({
     locale: parseLocale(locale),
     path: "/tour",
-    title: t("title"),
-    description: site("bandBody"),
+    // getUpcomingShows() is React-cached, so this shares one filesystem
+    // read with the page body below — the year in the title can't drift
+    // from the year above the table.
+    title: t("title", { years: tourYears(shows) }),
+    description: t("metaDescription"),
   });
 }
 

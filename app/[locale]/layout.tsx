@@ -40,7 +40,7 @@ export async function generateMetadata({
   return {
     metadataBase: new URL(SITE_URL),
     title: { default: band.name, template: `%s — ${band.name}` },
-    description: t("bandBody"),
+    description: t("metaDescription"),
   };
 }
 
