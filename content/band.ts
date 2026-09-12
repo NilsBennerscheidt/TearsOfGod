@@ -38,7 +38,12 @@ export type MemberRole = "vocals" | "leadGuitar" | "rhythmGuitar" | "bass" | "dr
 export interface Member {
   /** Given name. */
   name: string;
-  /** Stage/display form, rendered uppercase by the UI. */
+  /**
+   * Stage/display form, written the way the member does — the UI
+   * uppercases it in CSS. Stored title-case rather than already-shouting
+   * so it can also be read back as plain prose, e.g. in the image alt
+   * text ("Nils, Bassist von Tears of God", not "NILS, …").
+   */
   displayName: string;
   role: MemberRole;
   /**
@@ -61,7 +66,7 @@ const BANDFOTOS = "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos";
 
 export const members: Member[] = [
   { name: "Mirko", displayName: "Murk", role: "vocals", key: "murk", photo: `${BANDFOTOS}_Murk.jpg` },
-  { name: "Danijal", displayName: "DANJI", role: "leadGuitar", key: "danji", photo: `${BANDFOTOS}_Danji.jpg` },
-  { name: "Nils", displayName: "NILS", role: "bass", key: "nils", photo: `${BANDFOTOS}_Nols.jpg` },
-  { name: "Lars", displayName: "LARS", role: "drums", key: "lars", photo: `${BANDFOTOS}_Lars.jpg` }
+  { name: "Danijal", displayName: "Danji", role: "leadGuitar", key: "danji", photo: `${BANDFOTOS}_Danji.jpg` },
+  { name: "Nils", displayName: "Nils", role: "bass", key: "nils", photo: `${BANDFOTOS}_Nils.jpg` },
+  { name: "Lars", displayName: "Lars", role: "drums", key: "lars", photo: `${BANDFOTOS}_Lars.jpg` }
 ];

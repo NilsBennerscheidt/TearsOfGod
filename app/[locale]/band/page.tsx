@@ -46,7 +46,7 @@ export default async function BandPage({ params }: { params: Promise<{ locale: s
           {band.groupPhoto ? (
             <Image
               src={band.groupPhoto}
-              alt={band.name}
+              alt={t("groupPhotoAlt")}
               width={1600}
               height={900}
               sizes="(min-width: 768px) 80vw, 100vw"

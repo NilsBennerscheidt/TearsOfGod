@@ -19,7 +19,7 @@ export async function MemberCards() {
             {member.photo ? (
               <Image
                 src={member.photo}
-                alt={member.displayName}
+                alt={t("photoAlt", { name: member.displayName, role: t(`performerRoles.${member.role}`) })}
                 width={480}
                 height={640}
                 sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw"

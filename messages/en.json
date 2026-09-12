@@ -73,7 +73,15 @@
       "gary": {
         "bio": ""
       }
-    }
+    },
+    "performerRoles": {
+      "vocals": "vocalist",
+      "leadGuitar": "lead guitarist",
+      "rhythmGuitar": "rhythm guitarist",
+      "bass": "bassist",
+      "drums": "drummer"
+    },
+    "photoAlt": "{name}, {role} of Tears of God"
   },
   "Tour": {
     "eyebrow": "DATES · {years}",
@@ -133,7 +141,8 @@
     "factsFounded": "Founded",
     "factsBase": "Based in",
     "membersHeading": "The Lineup",
-    "metaDescription": "Who's behind Tears of God: four musicians from Castrop-Rauxel, together since 2024. Line-up, story and photos of the Hardcore/Metalcore band."
+    "metaDescription": "Who's behind Tears of God: four musicians from Castrop-Rauxel, together since 2024. Line-up, story and photos of the Hardcore/Metalcore band.",
+    "groupPhotoAlt": "Tears of God — band photo of the Hardcore/Metalcore band from Castrop-Rauxel"
   },
   "Games": {
     "eyebrow": "06 · ARCADE",
