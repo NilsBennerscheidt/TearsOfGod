@@ -50,6 +50,24 @@ interface PageMetadataOptions {
  * apply to it — so the layout's og:title rode along unchanged on every
  * subpage, and every share of /en/tour rendered as the landing page.
  */
+/**
+ * The share card every page falls back to: a 1200x630 crop of the band
+ * photo, which is the size Facebook, WhatsApp, Slack and Discord all
+ * expect. The full-resolution photo used to be handed over directly —
+ * 1920x1281 and 688KB, so scrapers with a size cap fetched most of a
+ * megabyte to render a thumbnail, and the 3:2 frame got centre-cropped
+ * differently by each of them. Declaring width/height lets a card render
+ * before the image itself has loaded.
+ */
+const DEFAULT_OG_IMAGE = [
+  {
+    url: "/brand/og-default.jpg",
+    width: 1200,
+    height: 630,
+    alt: `${band.name} — ${band.city}`,
+  },
+];
+
 export function pageMetadata({
   locale,
   path = "",
@@ -65,7 +83,7 @@ export function pageMetadata({
   // og:title gets no template applied, so spell out what the <title> will
   // resolve to rather than shipping a bare "Shows" to every share card.
   const displayTitle = absoluteTitle ? title : `${title} — ${band.name}`;
-  const ogImages = images ?? (band.groupPhoto ? [{ url: band.groupPhoto }] : []);
+  const ogImages = images ?? DEFAULT_OG_IMAGE;
 
   return {
     title: absoluteTitle ? { absolute: title } : title,
