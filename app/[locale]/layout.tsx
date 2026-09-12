@@ -9,13 +9,12 @@ import { Header } from "@/components/layout/Header";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { band } from "@/content/band";
 import { parseLocale, routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/seo/site";
 import "../globals.css";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
-
-const SITE_URL = "https://tearsofgod.net";
 
 /**
  * generateMetadata (not a static `metadata` export): `alternates.canonical`

@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/seo/site";
 import { getPosts } from "@/lib/content/posts";
-
-const SITE_URL = "https://tearsofgod.net";
 
 const STATIC_ROUTES = [
   "",

@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const SITE_URL = "https://tearsofgod.net";
+import { SITE_URL } from "@/lib/seo/site";
 
 /** /admin is dev-only (see lib/admin/guards.ts — a production build 404s the whole subtree already), but disallowing it here too costs nothing and keeps a stray crawl from ever showing it in results if that guard is ever loosened. */
 export default function robots(): MetadataRoute.Robots {
