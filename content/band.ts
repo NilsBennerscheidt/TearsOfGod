@@ -23,7 +23,7 @@ export const band = {
    * a duplicate copy under a second path. Omit to fall back to
    * PhotoPlaceholder on the /band page.
    */
-  groupPhoto: "/media/photos/2025-01-05-tears-of-god-bandfotos-0002.png" as string | undefined,
+  groupPhoto: "/media/photos/2026-09-18-tears-of-god-portrait-shooting-0016.jpg" as string | undefined,
 } as const;
 
 /**
@@ -55,7 +55,7 @@ export interface Member {
   key: string;
   /**
    * Path under public/media/photos/ — see the note on `band.groupPhoto`
-   * above for why these live there instead of public/band/. Omit to fall
+   * above for why these live there instead of public/band/. Omit to fall‚
    * back to PhotoPlaceholder on both the landing page's MemberGrid strip
    * and the /band page's MemberCards.
    */
@@ -65,8 +65,8 @@ export interface Member {
 const BANDFOTOS = "/media/photos/2025-01-05_-_Tears_of_God_Bandfotos";
 
 export const members: Member[] = [
-  { name: "Mirko", displayName: "Murk", role: "vocals", key: "murk", photo: `${BANDFOTOS}_Murk.jpg` },
-  { name: "Danijal", displayName: "Danji", role: "leadGuitar", key: "danji", photo: `${BANDFOTOS}_Danji.jpg` },
-  { name: "Nils", displayName: "Nils", role: "bass", key: "nils", photo: `${BANDFOTOS}_Nils.jpg` },
-  { name: "Lars", displayName: "Lars", role: "drums", key: "lars", photo: `${BANDFOTOS}_Lars.jpg` }
+  { name: "Mirko", displayName: "Murk", role: "vocals", key: "murk", photo: "/media/photos/2026-09-18_-_Tears_of_God_Portrait-Shooting_0001.jpg" },
+  { name: "Danijal", displayName: "Danji", role: "leadGuitar", key: "danji", photo: "/media/photos/2026-09-18_-_Tears_of_God_Portrait-Shooting_0008.jpg" },
+  { name: "Nils", displayName: "Nils", role: "bass", key: "nils", photo: "/media/photos/2026-09-18_-_Tears_of_God_Portrait-Shooting_0007.jpg" },
+  { name: "Lars", displayName: "Lars", role: "drums", key: "lars", photo: "/media/photos/2026-09-18_-_Tears_of_God_Portrait-Shooting_0006.jpg" }
 ];
