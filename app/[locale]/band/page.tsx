@@ -48,11 +48,11 @@ export default async function BandPage({ params }: { params: Promise<{ locale: s
             <Image
               src={band.groupPhoto}
               alt={t("groupPhotoAlt")}
-              width={1600}
-              height={900}
+              width={band.groupPhotoSize.width}
+              height={band.groupPhotoSize.height}
               sizes="(min-width: 768px) 80vw, 100vw"
               priority
-              className="w-full object-cover"
+              className="w-full max-h-[70vh] object-contain"
             />
           ) : (
             <PhotoPlaceholder label="GROUP · CASTROP-RAUXEL" aspect="16 / 9" />

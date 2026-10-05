@@ -1,6 +1,7 @@
 Drop band photos here:
 
   - group.jpg               → set band.groupPhoto in content/band.ts to "/band/group.jpg"
+                             and band.groupPhotoSize to the photo's pixel width/height
   - murk.jpg, danji.jpg, nils.jpg, lars.jpg, gary.jpg
                              → set the matching member's `photo` field in
                                content/band.ts to "/band/<name>.jpg"

@@ -24,6 +24,12 @@ export const band = {
    * PhotoPlaceholder on the /band page.
    */
   groupPhoto: "/media/photos/2026-09-18-tears-of-god-portrait-shooting-0016.jpg" as string | undefined,
+  /**
+   * Intrinsic pixel size of `groupPhoto`. The /band page passes these to
+   * next/image so the box reserves the photo's real aspect ratio before it
+   * loads. Update them whenever `groupPhoto` points at a different file.
+   */
+  groupPhotoSize: { width: 5464, height: 8192 },
 } as const;
 
 /**
