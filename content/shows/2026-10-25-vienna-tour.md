@@ -2,8 +2,9 @@
 date: '2026-10-25T18:00:00+01:00'
 city: Vienna
 country: AT
-venue: tba
+venue: replugged
 status: available
+ticketUrl: 'https://www.replugged.at/events-de/'
 note:
   de: >-
     Vienna calling - und wir antworten. Zusammen mit Eternal//God werden wir

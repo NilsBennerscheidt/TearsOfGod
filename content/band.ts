@@ -23,13 +23,13 @@ export const band = {
    * a duplicate copy under a second path. Omit to fall back to
    * PhotoPlaceholder on the /band page.
    */
-  groupPhoto: "/media/photos/2026-09-18-tears-of-god-portrait-shooting-0016.jpg" as string | undefined,
+  groupPhoto: "/media/photos/2026-09-18_-_Tears_of_God_Portrait-Shooting_0015.jpg" as string | undefined,
   /**
    * Intrinsic pixel size of `groupPhoto`. The /band page passes these to
    * next/image so the box reserves the photo's real aspect ratio before it
    * loads. Update them whenever `groupPhoto` points at a different file.
    */
-  groupPhotoSize: { width: 5464, height: 8192 },
+  groupPhotoSize: { width: 7816, height: 5214 },
 } as const;
 
 /**

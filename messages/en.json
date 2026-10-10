@@ -52,7 +52,7 @@
   "Band": {
     "roles": {
       "vocals": "Vocals",
-      "leadGuitar": "Lead Guitar",
+      "leadGuitar": "Guitar",
       "rhythmGuitar": "Rhythm Guitar",
       "bass": "Bass",
       "drums": "Drums"
@@ -76,7 +76,7 @@
     },
     "performerRoles": {
       "vocals": "vocalist",
-      "leadGuitar": "lead guitarist",
+      "leadGuitar": "guitarist",
       "rhythmGuitar": "rhythm guitarist",
       "bass": "bassist",
       "drums": "drummer"

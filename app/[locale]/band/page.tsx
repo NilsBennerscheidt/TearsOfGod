@@ -52,7 +52,7 @@ export default async function BandPage({ params }: { params: Promise<{ locale: s
               height={band.groupPhotoSize.height}
               sizes="(min-width: 768px) 80vw, 100vw"
               priority
-              className="w-full max-h-[70vh] object-contain"
+              className="w-full  object-contain"
             />
           ) : (
             <PhotoPlaceholder label="GROUP · CASTROP-RAUXEL" aspect="16 / 9" />
