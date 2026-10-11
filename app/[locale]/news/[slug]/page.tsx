@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/sections/PageHeader";
@@ -9,6 +8,7 @@ import { PhotoGrid } from "@/components/sections/PhotoGrid";
 import { PostEmbed } from "@/components/sections/PostEmbed";
 import { TagList } from "@/components/sections/TagList";
 import { ShareButton } from "@/components/ui/ShareButton";
+import { LoadingImage } from "@/components/ui/LoadingImage";
 import { Link } from "@/i18n/navigation";
 import { parseLocale, routing } from "@/i18n/routing";
 import { getPostBySlug, getPostNeighbours, getPosts } from "@/lib/content/posts";
@@ -93,7 +93,7 @@ export default async function NewsPostPage({
       <div className="gutter-x mx-auto max-w-2xl pt-12 md:pt-16">
         {post.cover && (
           <figure className="mt-6">
-            <Image
+            <LoadingImage
               src={post.cover.src}
               alt={post.cover.alt}
               width={post.cover.width}

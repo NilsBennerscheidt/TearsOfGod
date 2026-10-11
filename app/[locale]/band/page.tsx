@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { parseLocale } from "@/i18n/routing";
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
 import { Footer } from "@/components/layout/Footer";
 import { MemberCards } from "@/components/sections/MemberCards";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { LoadingImage } from "@/components/ui/LoadingImage";
 import { band } from "@/content/band";
 import { breadcrumbJsonLd } from "@/lib/seo/breadcrumbs";
 import { musicGroupJsonLd } from "@/lib/seo/musicGroup";
@@ -45,7 +45,7 @@ export default async function BandPage({ params }: { params: Promise<{ locale: s
       <div className="gutter-x flex flex-col gap-10 py-10 md:py-14">
         <div className="border border-ash">
           {band.groupPhoto ? (
-            <Image
+            <LoadingImage
               src={band.groupPhoto}
               alt={t("groupPhotoAlt")}
               width={band.groupPhotoSize.width}

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
+import { LoadingImage } from "@/components/ui/LoadingImage";
 import { members } from "@/content/band";
 
 /**
@@ -17,7 +17,7 @@ export async function MemberCards() {
         <li key={member.key}>
           <div className="tog-gold-glow-box border border-gold-deep">
             {member.photo ? (
-              <Image
+              <LoadingImage
                 src={member.photo}
                 alt={t("photoAlt", { name: member.displayName, role: t(`performerRoles.${member.role}`) })}
                 width={480}

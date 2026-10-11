@@ -15,9 +15,15 @@ const HERO_SQUARE = "/hero/break-the-walls-square.mp4";
 const SQUARE_QUERY = "(max-aspect-ratio: 4/5)";
 
 /** Longest the whole clip may take to arrive before the download is dropped. */
-const DOWNLOAD_BUDGET_MS = 20_000;
-/** How long the download runs before its speed is judged against the budget. */
-const PROBE_MS = 3_000;
+const DOWNLOAD_BUDGET_MS = 25_000;
+/**
+ * The download's speed is measured between these two points and judged
+ * against the budget once. The first seconds are left out: right after
+ * `load` the clip still shares the line with Next's link prefetches and
+ * the icons, and reads slower than the connection really is.
+ */
+const PROBE_FROM_MS = 2_000;
+const PROBE_UNTIL_MS = 5_000;
 
 interface NetworkInformation {
   saveData?: boolean;
@@ -37,7 +43,8 @@ async function downloadClip(src: string, signal: AbortSignal): Promise<string | 
   const chunks: BlobPart[] = [];
   const startedAt = performance.now();
   let received = 0;
-  let probed = false;
+  let probe: { at: number; received: number } | null = null;
+  let judged = false;
 
   for (;;) {
     const { done, value } = await reader.read();
@@ -46,9 +53,12 @@ async function downloadClip(src: string, signal: AbortSignal): Promise<string | 
     received += value.byteLength;
 
     const elapsed = performance.now() - startedAt;
-    if (!probed && total > 0 && elapsed >= PROBE_MS) {
-      probed = true;
-      if ((elapsed / received) * total > DOWNLOAD_BUDGET_MS) {
+    if (!probe && elapsed >= PROBE_FROM_MS) {
+      probe = { at: elapsed, received };
+    } else if (probe && !judged && total > 0 && elapsed >= PROBE_UNTIL_MS) {
+      judged = true;
+      const msPerByte = (elapsed - probe.at) / (received - probe.received);
+      if (elapsed + (total - received) * msPerByte > DOWNLOAD_BUDGET_MS) {
         await reader.cancel();
         return null;
       }

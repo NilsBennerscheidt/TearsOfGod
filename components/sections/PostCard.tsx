@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
+import { LoadingImage } from "@/components/ui/LoadingImage";
 import { Link } from "@/i18n/navigation";
 import type { Post } from "@/types/content";
 import { TagList } from "./TagList";
@@ -23,7 +23,7 @@ export async function PostCard({ post, locale }: PostCardProps) {
         // than a second meaningful destination, same treatment
         // SpinnableTearHalo gives its own decorative/duplicate link.
         <Link href={`/news/${post.slug}`} aria-hidden="true" tabIndex={-1} className="hidden shrink-0 sm:block">
-          <Image
+          <LoadingImage
             src={post.cover.src}
             alt=""
             width={post.cover.width}
