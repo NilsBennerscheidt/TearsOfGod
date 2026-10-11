@@ -1,11 +1,16 @@
 import { getTranslations } from "next-intl/server";
+import { preload } from "react-dom";
 import { Halftone } from "@/components/brand/Halftone";
-import { PhotoPlaceholder } from "@/components/brand/PhotoPlaceholder";
 import { SpinnableTearHalo } from "@/components/brand/SpinnableTearHalo";
 import { TearHalo } from "@/components/brand/TearHalo";
 import { CtaButton } from "@/components/ui/CtaButton";
 import type { Release } from "@/content/releases";
 import { youtubeUrl } from "@/content/social";
+import { HeroVideo } from "./HeroVideo";
+
+// Lives here, not in HeroVideo: a value exported from a "use client" module
+// reaches a server component as a client reference, not as the string.
+const HERO_POSTER = "/hero/break-the-walls-poster.jpg";
 
 interface HeroProps {
   release: Release;
@@ -19,12 +24,16 @@ interface HeroProps {
 export async function Hero({ release }: HeroProps) {
   const t = await getTranslations("Landing");
 
+  // The poster fills the hero, so it is the page's largest paint — fetch it
+  // alongside the CSS rather than when the parser reaches the <video>.
+  preload(HERO_POSTER, { as: "image", fetchPriority: "high" });
+
   return (
     // dvh, not vh: `vh` resolves against the viewport with mobile browser
     // chrome hidden, so with the URL bar showing the hero overflows the
     // screen and pushes the CTAs below the fold until chrome retracts.
     <div className="relative flex h-[80dvh] min-h-130 flex-col justify-end overflow-hidden">
-      <PhotoPlaceholder label="" style={{ position: "absolute", inset: 0 }} />
+      <HeroVideo poster={HERO_POSTER} className="absolute inset-0 h-full w-full object-cover" />
       <div
         aria-hidden="true"
         className="absolute inset-0"

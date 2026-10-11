@@ -15,7 +15,7 @@ export const slogans = {
    * copy on the site's most important page.
    */
   marquee: [
-    "Before the fateful night of the crescent siege, an unprecedented horror walked among all living. Merciless and cruel, it wrought atrocities for eons unforgettable. The flaming dawn, throne of enmity, nightmare divine.",
+    "Before the fateful night of the crescent siege, an unprecedented horror walked among all living. Merciless and cruel, it brought atrocities for eons unforgettable. The flaming dawn, throne of enmity, nightmare divine.",
   ],
   tourCreed: "ALL AGES · ALL PEOPLE · NO EXCUSES",
 } as const;

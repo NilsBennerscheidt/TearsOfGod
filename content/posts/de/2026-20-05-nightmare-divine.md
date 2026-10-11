@@ -11,5 +11,5 @@ cover:
   height: 8192
 gallery: []
 ---
-Before the fateful night of the crescent siege, an unprecedented horror walked among all living. Merciless and cruel, it wrought atrocities of eons unforgettable...
+Before the fateful night of the crescent siege, an unprecedented horror walked among all living. Merciless and cruel, it brought atrocities of eons unforgettable...
 The Flaming Dawn, Throne of Enmity, Nightmare Divine."
