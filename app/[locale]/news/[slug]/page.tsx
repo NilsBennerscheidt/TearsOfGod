@@ -128,7 +128,7 @@ export default async function NewsPostPage({
           </section>
         )}
 
-        <div className="mt-8 flex items-center justify-between border-t border-ash pt-6">
+        <div className="my-8 flex items-center justify-end border-t border-ash pt-6">
           <ShareButton title={post.title} />
         </div>
 
