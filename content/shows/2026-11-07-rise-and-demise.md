@@ -1,5 +1,5 @@
 ---
-date: '2026-10-07T19:00:00+02:00'
+date: '2026-11-07T19:00:00+02:00'
 city: Essen
 country: DE
 venue: Julius-Leber-Haus
