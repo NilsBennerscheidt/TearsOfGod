@@ -52,4 +52,4 @@ export const youtubeUrl = "https://youtu.be/aYQenY0PvQ0?si=wS0slG9uEEPqi9PF";
  * button points at a specific release instead (content/releases.ts).
  */
 export const spotifyUrl =
-  "https://open.spotify.com/track/55PsAD53eMEgOesFTsjlHT?si=02a50d30d74d48cb";
+  "https://open.spotify.com/track/55PsAD53eMEgOesFTsjlHT?si=411a93aa495e4629";

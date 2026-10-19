@@ -15,8 +15,8 @@ export interface Release {
 }
 
 export const currentRelease: Release = {
-  title: "I AM GOD",
-  catalogNumber: "TOG · EP · 001",
+  title: "Penumbra",
+  catalogNumber: "TOG · Album · Nightmare Divine",
   year: 2026,
-  listenUrl: "https://open.spotify.com/track/0b7KspFnq1lYGBCoB5XFR7",
+  listenUrl: "https://open.spotify.com/track/55PsAD53eMEgOesFTsjlHT?si=411a93aa495e4629",
 };
