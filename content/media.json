@@ -5,7 +5,16 @@
       "src": "/media/photos/2026-09-18-tears-of-god-portrait-shooting-0016.jpg",
       "alt": "Nightmare Divine",
       "width": 5464,
-      "height": 8192
+      "height": 8192,
+      "credit": "SB-Pictures | Sasha Becker"
+    },
+    {
+      "id": "album-teaser-cover-be80689c",
+      "src": "/media/photos/album-teaser-cover.jpg",
+      "alt": "Penumbra Cover",
+      "width": 5464,
+      "height": 5464,
+      "credit": "SB-Pictures | Sasha Becker"
     }
   ],
   "videos": []

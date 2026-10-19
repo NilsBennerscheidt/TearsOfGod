@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { DateTimeField } from "@/app/admin/_components/DateTimeField";
+import { JsonField } from "@/app/admin/_components/JsonField";
 import { routing } from "@/i18n/routing";
 import { fetchJson } from "@/lib/admin/fetch-json";
+import { COVER_TEMPLATES, EMBED_TEMPLATES, GALLERY_TEMPLATES, LINKS_TEMPLATES } from "@/lib/admin/json-templates";
 import type { Post } from "@/types/content";
 
 interface ListItem {
@@ -12,7 +14,10 @@ interface ListItem {
   missingLocales: string[];
 }
 
-type View = { kind: "list" } | { kind: "new" } | { kind: "edit"; locale: string; slug: string };
+type View =
+  | { kind: "list" }
+  | { kind: "new"; locale?: string; slug?: string; seedLocale?: string }
+  | { kind: "edit"; locale: string; slug: string };
 
 /**
  * List + inline create/edit, one page rather than a route per action —
@@ -52,10 +57,11 @@ export default function NewsAdminPage() {
   if (view.kind !== "list") {
     return (
       <PostForm
-        key={view.kind === "edit" ? `${view.locale}/${view.slug}` : "new"}
+        key={view.kind === "edit" ? `${view.locale}/${view.slug}` : `new/${view.locale ?? ""}/${view.slug ?? ""}`}
         mode={view.kind === "edit" ? "edit" : "create"}
-        initialLocale={view.kind === "edit" ? view.locale : undefined}
-        initialSlug={view.kind === "edit" ? view.slug : undefined}
+        initialLocale={view.locale}
+        initialSlug={view.slug}
+        seedLocale={view.kind === "new" ? view.seedLocale : undefined}
         onDone={() => {
           setView({ kind: "list" });
           reload();
@@ -103,9 +109,21 @@ export default function NewsAdminPage() {
                       Edit ({locale}): {post.title}
                     </button>
                   ) : (
-                    <span key={locale} className="text-meta text-steel-text uppercase">
-                      No {locale} file
-                    </span>
+                    <button
+                      key={locale}
+                      type="button"
+                      onClick={() =>
+                        setView({
+                          kind: "new",
+                          locale,
+                          slug: item.slug,
+                          seedLocale: routing.locales.find((l) => item.translations[l]),
+                        })
+                      }
+                      className="text-meta text-blood-text hover:text-gold-hi uppercase underline"
+                    >
+                      Add {locale} translation
+                    </button>
                   );
                 })}
               </div>
@@ -121,11 +139,13 @@ interface PostFormProps {
   mode: "create" | "edit";
   initialLocale?: string;
   initialSlug?: string;
+  /** Create mode only: locale of an existing translation to copy date/tags/media from. */
+  seedLocale?: string;
   onDone: () => void;
   onCancel: () => void;
 }
 
-function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFormProps) {
+function PostForm({ mode, initialLocale, initialSlug, seedLocale, onDone, onCancel }: PostFormProps) {
   const [locale, setLocale] = useState(initialLocale ?? routing.locales[0]);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
@@ -135,31 +155,40 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
   const [coverJson, setCoverJson] = useState("");
   const [galleryJson, setGalleryJson] = useState("");
   const [embedJson, setEmbedJson] = useState("");
+  const [linksJson, setLinksJson] = useState("");
   const [body, setBody] = useState("");
   const [preview, setPreview] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [loaded, setLoaded] = useState(mode === "create");
+  const [loaded, setLoaded] = useState(mode === "create" && !seedLocale);
 
   useEffect(() => {
-    if (mode !== "edit" || !initialLocale || !initialSlug) return;
+    const isEdit = mode === "edit";
+    const sourceLocale = isEdit ? initialLocale : seedLocale;
+    if (!sourceLocale || !initialSlug) return;
     fetchJson<{ frontmatter: Record<string, unknown>; body: string }>(
-      `/api/admin/posts/${initialLocale}/${initialSlug}`,
+      `/api/admin/posts/${sourceLocale}/${initialSlug}`,
     )
       .then(({ frontmatter, body: markdownBody }) => {
-        setTitle(String(frontmatter.title ?? ""));
+        // Seeding a translation copies only the language-neutral fields;
+        // title, excerpt and body stay empty for the translator to write.
+        if (isEdit) {
+          setTitle(String(frontmatter.title ?? ""));
+          setExcerpt(String(frontmatter.excerpt ?? ""));
+          setBody(markdownBody.trim());
+        }
         setDate(String(frontmatter.date ?? ""));
-        setExcerpt(String(frontmatter.excerpt ?? ""));
         setTags((Array.isArray(frontmatter.tags) ? frontmatter.tags : []).join(", "));
         setCoverJson(frontmatter.cover ? JSON.stringify(frontmatter.cover, null, 2) : "");
         const gallery = Array.isArray(frontmatter.gallery) ? frontmatter.gallery : [];
         setGalleryJson(gallery.length ? JSON.stringify(gallery, null, 2) : "");
         setEmbedJson(frontmatter.embed ? JSON.stringify(frontmatter.embed, null, 2) : "");
-        setBody(markdownBody.trim());
+        const links = Array.isArray(frontmatter.links) ? frontmatter.links : [];
+        setLinksJson(links.length ? JSON.stringify(links, null, 2) : "");
         setLoaded(true);
       })
       .catch((err: Error) => setError(`Couldn't load this post: ${err.message}`));
-  }, [mode, initialLocale, initialSlug]);
+  }, [mode, initialLocale, initialSlug, seedLocale]);
 
   async function handlePreview() {
     try {
@@ -191,9 +220,10 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
         cover: coverJson.trim() ? JSON.parse(coverJson) : undefined,
         gallery: galleryJson.trim() ? JSON.parse(galleryJson) : [],
         embed: embedJson.trim() ? JSON.parse(embedJson) : undefined,
+        links: linksJson.trim() ? JSON.parse(linksJson) : [],
       };
     } catch {
-      setError("cover/gallery/embed must be valid JSON (or left blank).");
+      setError("cover/gallery/embed/links must be valid JSON (or left blank).");
       return;
     }
 
@@ -245,9 +275,15 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
         </button>
       </div>
 
+      {mode === "create" && seedLocale && (
+        <p className="text-meta text-steel-text">
+          Translation of the {seedLocale} post — date, tags and media were copied; write title, excerpt and body.
+        </p>
+      )}
+
       {mode === "create" && (
         <Field label="Locale">
-          <select value={locale} onChange={(e) => setLocale(e.target.value)} className="border border-ash bg-transparent px-2 py-1">
+          <select value={locale} onChange={(e) => setLocale(e.target.value)} disabled={!!seedLocale} className="border border-ash bg-transparent px-2 py-1">
             {routing.locales.map((l) => (
               <option key={l} value={l}>
                 {l}
@@ -268,7 +304,7 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
           required
-          disabled={mode === "edit"}
+          disabled={mode === "edit" || !!seedLocale}
           className="w-full border border-ash bg-transparent px-2 py-1 disabled:opacity-50"
         />
       </Field>
@@ -281,17 +317,19 @@ function PostForm({ mode, initialLocale, initialSlug, onDone, onCancel }: PostFo
         <input value={tags} onChange={(e) => setTags(e.target.value)} className="w-full border border-ash bg-transparent px-2 py-1" />
       </Field>
 
-      <Field label="Cover (JSON, optional — {id, src, alt, width, height, credit?})">
-        <textarea value={coverJson} onChange={(e) => setCoverJson(e.target.value)} rows={4} className="w-full border border-ash bg-transparent px-2 py-1 font-mono text-xs" />
-      </Field>
+      <JsonField label="Cover (optional)" value={coverJson} onChange={setCoverJson} templates={COVER_TEMPLATES} pick="photo" />
 
-      <Field label="Gallery (JSON array, optional)">
-        <textarea value={galleryJson} onChange={(e) => setGalleryJson(e.target.value)} rows={4} className="w-full border border-ash bg-transparent px-2 py-1 font-mono text-xs" />
-      </Field>
+      <JsonField label="Gallery (JSON array, optional)" value={galleryJson} onChange={setGalleryJson} templates={GALLERY_TEMPLATES} pick="photos" />
 
-      <Field label='Embed (JSON, optional — {"kind":"spotify","url":"..."} or {"kind":"video",...})'>
-        <textarea value={embedJson} onChange={(e) => setEmbedJson(e.target.value)} rows={3} className="w-full border border-ash bg-transparent px-2 py-1 font-mono text-xs" />
-      </Field>
+      <JsonField label="Embed (optional)" value={embedJson} onChange={setEmbedJson} templates={EMBED_TEMPLATES} pick="video" rows={3} />
+
+      <JsonField
+        label='Links (JSON array, optional — {"platform":"youtube","url":"...","label"?: "..."})'
+        value={linksJson}
+        onChange={setLinksJson}
+        templates={LINKS_TEMPLATES}
+        rows={5}
+      />
 
       <Field label="Body (Markdown)">
         <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={10} className="w-full border border-ash bg-transparent px-2 py-1 font-mono text-xs" />

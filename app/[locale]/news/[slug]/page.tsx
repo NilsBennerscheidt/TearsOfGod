@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { PhotoGrid } from "@/components/sections/PhotoGrid";
 import { PostEmbed } from "@/components/sections/PostEmbed";
+import { PostLinks } from "@/components/sections/PostLinks";
 import { TagList } from "@/components/sections/TagList";
 import { ShareButton } from "@/components/ui/ShareButton";
 import { LoadingImage } from "@/components/ui/LoadingImage";
@@ -118,6 +119,12 @@ export default async function NewsPostPage({
         {post.embed && (
           <div className="mt-8">
             <PostEmbed embed={post.embed} />
+          </div>
+        )}
+
+        {post.links.length > 0 && (
+          <div className="mt-8">
+            <PostLinks links={post.links} />
           </div>
         )}
 

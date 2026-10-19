@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isoDateTime } from "./iso-date";
+import { POST_LINK_PLATFORM_KEYS, POST_LINK_PLATFORMS, urlMatchesPlatform } from "@/lib/post-links";
 import { mediaPhotoSchema } from "./media";
 
 /**
@@ -24,6 +25,18 @@ export const postEmbedSchema = z.discriminatedUnion("kind", [
     url: z.string().url(),
   }),
 ]);
+
+/** An outbound link to a platform page (YouTube, Instagram, TikTok, …). `label` overrides the platform name on the button. */
+export const postLinkSchema = z
+  .object({
+    platform: z.enum(POST_LINK_PLATFORM_KEYS),
+    url: z.string().url().refine((u) => /^https?:\/\//.test(u), "url must start with http(s)://"),
+    label: z.string().min(1).optional(),
+  })
+  .refine((l) => urlMatchesPlatform(l.platform, l.url), {
+    message: "url doesn't belong to the selected platform",
+    path: ["url"],
+  });
 
 /**
  * Post frontmatter — mirrored per locale
@@ -55,7 +68,10 @@ export const postFrontmatterSchema = z.object({
   /** Additional photos shown at the end of the post body, rendered through the same PhotoGrid/lightbox as the /media page. */
   gallery: z.array(mediaPhotoSchema).default([]),
   embed: postEmbedSchema.optional(),
+  /** Outbound links shown below the body, after the embed. */
+  links: z.array(postLinkSchema).default([]),
 });
 
 export type PostFrontmatter = z.infer<typeof postFrontmatterSchema>;
+export type PostLink = z.infer<typeof postLinkSchema>;
 export type PostEmbed = z.infer<typeof postEmbedSchema>;
