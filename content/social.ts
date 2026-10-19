@@ -44,7 +44,7 @@ export const socials: SocialLink[] = [
 ];
 
 /** Channel used for the hero's "watch" action. */
-export const youtubeUrl = "https://www.youtube.com/watch?v=-9vrt9lEyLk";
+export const youtubeUrl = "https://youtu.be/aYQenY0PvQ0?si=wS0slG9uEEPqi9PF";
 
 /**
  * Artist page — everything we've released, not one track. Used where the
@@ -52,4 +52,4 @@ export const youtubeUrl = "https://www.youtube.com/watch?v=-9vrt9lEyLk";
  * button points at a specific release instead (content/releases.ts).
  */
 export const spotifyUrl =
-  "https://open.spotify.com/artist/5fyxJSoXGtJJmEvF9zUj7O";
+  "https://open.spotify.com/track/55PsAD53eMEgOesFTsjlHT?si=02a50d30d74d48cb";

@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /** Encoded from the "Break the Walls" video — see public/hero/README.txt. */
-const HERO_WIDE = "/hero/break-the-walls-wide.mp4";
-const HERO_SQUARE = "/hero/break-the-walls-square.mp4";
+const HERO_WIDE = "/hero/video-hero-wide.mp4";
+const HERO_SQUARE = "/hero/video-hero-square.mp4";
 
 /**
  * The hero is 80dvh tall, so on a viewport narrower than 4:5 it is itself

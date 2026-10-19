@@ -10,7 +10,7 @@ import { HeroVideo } from "./HeroVideo";
 
 // Lives here, not in HeroVideo: a value exported from a "use client" module
 // reaches a server component as a client reference, not as the string.
-const HERO_POSTER = "/hero/break-the-walls-poster.jpg";
+const HERO_POSTER = "/hero/video-hero-poster.jpg";
 
 interface HeroProps {
   release: Release;
@@ -62,9 +62,7 @@ export async function Hero({ release }: HeroProps) {
         <div className="max-w-md">
           <p className="text-meta font-mono tracking-widest text-gold uppercase">{t("releaseEyebrow")}</p>
           <p className="text-hero font-brutal tracking-[-0.03em] text-bone uppercase">
-            Break
-            <br />
-            <span className="text-blood-text">the</span> Walls.
+            <span className="text-blood-text">Penumbra</span>.
           </p>
           <p className="sr-only">{release.title}</p>
           <div className="mt-3 flex flex-wrap gap-3">
